@@ -40,6 +40,7 @@ export default async function handler(req, res) {
     });
 
     const data = await openaiRes.json();
+    console.log('📦 OpenAI response:', JSON.stringify(data, null, 2)); // Додай це!
     const reply = data.choices?.[0]?.message?.content || '🤖 GPT не надав відповіді.';
     await bot.sendMessage(id, reply);
     res.status(200).send('ok');
