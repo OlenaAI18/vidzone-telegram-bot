@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import bot from '../bot'
+import bot from '../bot.mjs'
 
 export default async function (req: VercelRequest, res: VercelResponse) {
   const { body } = req
