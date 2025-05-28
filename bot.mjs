@@ -41,3 +41,4 @@ bot.on('message', async (msg) => {
     bot.sendMessage(chatId, '⚠️ Сталася помилка. Спробуйте пізніше.');
   }
 });
+export default bot;
