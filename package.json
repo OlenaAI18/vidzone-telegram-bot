@@ -2,10 +2,10 @@
   "name": "vidzone-telegram-bot",
   "version": "1.0.0",
   "description": "Telegram bot для кастомного GPT Vidzone",
-  "main": "bot.js",
+  "main": "bot.mjs",
   "type": "module",
   "scripts": {
-    "start": "node bot.js"
+    "start": "node bot.mjs"
   },
   "keywords": [
     "telegram",
