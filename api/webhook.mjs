@@ -1,4 +1,3 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import bot from '../bot.mjs';
 import fetch from 'node-fetch';
 
@@ -50,4 +49,3 @@ export default async function handler(req, res) {
     res.status(500).send('OpenAI error');
   }
 }
-
