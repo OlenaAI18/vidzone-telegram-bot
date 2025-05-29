@@ -1,6 +1,5 @@
 // webhook.mjs
-import api from '../bot.mjs';
-const { bot, jokes } = api;
+import bot from '../bot.mjs';
 import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
@@ -34,14 +33,7 @@ export default async function handler(req, res) {
     return res.status(200).send('Welcome sent');
   }
 
-  // 2. Анекдот
-  if (userMessage.includes('анекдот')) {
-    const random = jokes[Math.floor(Math.random() * jokes.length)];
-    await bot.sendMessage(id, random);
-    return res.status(200).send('Joke sent');
-  }
-
-  // 3. SOV-запити
+  // 2. SOV-запити (заглушка)
   if (userMessage.startsWith('sov')) {
     await bot.sendMessage(
       id,
@@ -50,7 +42,26 @@ export default async function handler(req, res) {
     return res.status(200).send('SOV stub sent');
   }
 
-  // 4. Запит до GPT з інструкцією
+  // 3. Запит до OpenAI з кастомним system prompt
+  const systemPrompt = `
+Ти — офіційний помічник Vidzone. Твій стиль спілкування дружній, але професійний. 
+Не ділись конфіденційною інформацією.
+
+1. Якщо користувач просить SOV або місячну активність певної категорії:
+  - Напиши, що ця команда наразі у розробці.
+  - Запропонуй уточнити приклади брендів або виробників у категорії, якщо назва некоректна.
+
+2. Якщо запит стосується підкатегорії — вкажи, якій категорії вона належить і уточни, що показати.
+
+3. Якщо запит стосується документів (довідки, шаблони, гарантії) — запропонуй надіслати відповідні шаблони.
+
+4. Якщо інформації немає — запропонуй звернутись до акаунт-менеджера: Анна Ільєнко, email: anna@vidzone.ua
+
+5. Для будь-яких загальних питань про Vidzone — поясни, що це компанія, яка допомагає брендам розміщати відеорекламу на DigitalTV (Sweet.tv, MEGOGO, Київстар ТБ, Vodafone TV та інші).
+
+Коротко: відповідай на основі бази знань, залишайся лаконічним, використовуй приклади з брендів, файлів і ринку відеореклами.
+`;
+
   try {
     const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -63,8 +74,7 @@ export default async function handler(req, res) {
         messages: [
           {
             role: 'system',
-            content: `Ти — офіційний помічник Vidzone. Твій стиль спілкування дружній, але професійний. 
-Користуйся файлами з бази знань, відповідай як кастомний GPT Vidzone. Якщо запит стосується документів — запропонуй надіслати шаблони.`,
+            content: systemPrompt,
           },
           {
             role: 'user',
@@ -84,3 +94,4 @@ export default async function handler(req, res) {
     res.status(500).send('OpenAI error');
   }
 }
+
