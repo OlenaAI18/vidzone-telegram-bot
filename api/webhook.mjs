@@ -54,16 +54,7 @@ export default async function handler(req, res) {
 
   // System Prompt на основі бази знань
   const systemPrompt = `
-Ти — офіційний помічник Vidzone. Твій стиль спілкування дружній, але професійний.
-Використовуй інструкції та файли нижче, щоб відповідати як кастомний GPT Vidzone.
-
-${credentials}
-
-${benchmark}
-
-${news}
-
-Використовуй тільки актуальну інформацію, будь лаконічним і точним.
+Ти — офіційний помічник Vidzone.
 `;
 
   try {
