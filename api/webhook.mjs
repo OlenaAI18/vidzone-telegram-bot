@@ -1,38 +1,16 @@
 // webhook.mjs
 import fs from 'fs';
-import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fetch from 'node-fetch';
+import bot from '../bot.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// Шляхи до файлів у /data
 const credentials = fs.readFileSync(path.join(__dirname, '../data/Vidzone_Credentials_Cleaned.md'), 'utf-8');
 const benchmark = fs.readFileSync(path.join(__dirname, '../data/Vidzone_Clutter_Benchmark_Cleaned.md'), 'utf-8');
 const news = fs.readFileSync(path.join(__dirname, '../data/DigitalTVNews_Cleaned_2025.md'), 'utf-8');
-const credentials = fs.readFileSync('data/Vidzone_Credentials_Cleaned.md', 'utf-8');
-const benchmark = fs.readFileSync('data/Vidzone_Clutter_Benchmark_Cleaned.md', 'utf-8');
-const news = fs.readFileSync('data/DigitalTVNews_Cleaned_2025.md', 'utf-8');
-
-import bot from '../bot.mjs';
-import fetch from 'node-fetch';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-// Завантажуємо тексти з Markdown і DOCX (тільки текстовий вміст)
-const credentials = fs.readFileSync(path.join(__dirname, '../mnt/data/Vidzone_Credentials_Cleaned.md'), 'utf-8');
-const digitalNews = fs.readFileSync(path.join(__dirname, '../mnt/data/DigitalTVNews_Cleaned_2025 (1).md'), 'utf-8');
-const benchmark = fs.readFileSync(path.join(__dirname, '../mnt/data/Vidzone_Clutter_Benchmark_Cleaned (1).md'), 'utf-8');
-
-const contextText = `# Знання Vidzone
-
-${credentials}
-
-${digitalNews}
-
-${benchmark}`;
 
 export default async function handler(req, res) {
   const { body } = req;
@@ -56,6 +34,7 @@ export default async function handler(req, res) {
 
   const userMessage = text?.toLowerCase().trim() || '';
 
+  // Вітальне повідомлення
   if (userMessage === '/start' || userMessage.includes('привіт')) {
     await bot.sendMessage(
       id,
@@ -64,6 +43,7 @@ export default async function handler(req, res) {
     return res.status(200).send('Welcome sent');
   }
 
+  // Заглушка для графіків
   if (userMessage.startsWith('sov')) {
     await bot.sendMessage(
       id,
@@ -72,12 +52,15 @@ export default async function handler(req, res) {
     return res.status(200).send('SOV stub sent');
   }
 
+  // System Prompt на основі бази знань
   const systemPrompt = `
 Ти — офіційний помічник Vidzone. Твій стиль спілкування дружній, але професійний.
 Використовуй інструкції та файли нижче, щоб відповідати як кастомний GPT Vidzone.
 
 ${credentials}
+
 ${benchmark}
+
 ${news}
 
 Використовуй тільки актуальну інформацію, будь лаконічним і точним.
@@ -109,5 +92,6 @@ ${news}
     res.status(500).send('OpenAI error');
   }
 }
+
 
 
