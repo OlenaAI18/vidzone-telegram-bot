@@ -1,24 +1,20 @@
 // webhook.mjs
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import bot, { jokes } from '../bot.mjs';
+import fetch from 'node-fetch';
 
-const systemPrompt = `
-Ти — офіційний помічник Vidzone. Твій стиль спілкування максимально дружній, але не виходить за межі, пам'ятай, що ти обличчя компанії, яка продає супер передову технологію.
-Не ділись конфіденційною інформацією.
-▪ Якщо користувач просить SOV або місячну активність певної категорії — скажи, що це трохи складніше, і зараз я працюю в текстовому режимі. Попроси зв'язатись з Анною Ільєнко або уточнити запит для текстової відповіді.
-▪ Для інших питань використовуй знання з файлів Markdown та сайту Vidzone.
-▪ Якщо інформації немає — запропонуй e-mail акаунт-менеджера. Напиши текст, що ця інформація достатньо складна, тому краще щоб її розказав наш комерційний директор Анна Ільєнко (anna.ilyenko@vidzone.com).
-▪ Якщо людину цікавлять документи - приклад музичної довідки, технічних вимог до роликів, або гарантійного листа — можеш сказати, що надішлеш і коротко описати, що це.
-`;
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   const { body } = req;
 
   if (!body.message) {
     return res.status(200).send('Non-message update skipped');
   }
 
-  const { chat: { id }, text, from: { id: userId } } = body.message;
+  const {
+    chat: { id },
+    text,
+    from: { id: userId },
+  } = body.message;
+
   const allowedIds = process.env.ALLOWED_USER_IDS?.split(',') || [];
 
   if (!allowedIds.includes(userId.toString())) {
@@ -26,19 +22,34 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).send('Unauthorized user');
   }
 
-  const userMessage = text.toLowerCase();
+  const userMessage = text?.toLowerCase().trim() || '';
 
-  if (userMessage.includes('старт') || userMessage.includes('почати') || userMessage.includes('привіт')) {
-    await bot.sendMessage(id, 'Привіт! Я перший віртуальний AI помічник Vidzone. Допоможу швидко розібратись з усіма тонкощами DigitalTV. Напиши, чим можу допомогти 😊');
-    return res.status(200).send('Greeting sent');
+  // 1. Вітальне повідомлення
+  if (userMessage === '/start' || userMessage.includes('привіт')) {
+    await bot.sendMessage(
+      id,
+      'Привіт! Я перший віртуальний AI помічник Vidzone. Допоможу швидко розібратись з усіма тонкощами DigitalTV, документами, SOV та іншим. Напиши, що саме тебе цікавить 📺'
+    );
+    return res.status(200).send('Welcome sent');
   }
 
+  // 2. Анекдот
   if (userMessage.includes('анекдот')) {
     const random = jokes[Math.floor(Math.random() * jokes.length)];
     await bot.sendMessage(id, random);
     return res.status(200).send('Joke sent');
   }
 
+  // 3. SOV-запити
+  if (userMessage.startsWith('sov')) {
+    await bot.sendMessage(
+      id,
+      '🔍 Ця команда передбачає побудову графіків. Функція в розробці. Якщо ви можете вказати приклади брендів або уточнити категорію — я підготую потрібні дані!'
+    );
+    return res.status(200).send('SOV stub sent');
+  }
+
+  // 4. Запит до GPT з інструкцією
   try {
     const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -49,8 +60,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       body: JSON.stringify({
         model: 'gpt-3.5-turbo',
         messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: text }
+          {
+            role: 'system',
+            content: `Ти — офіційний помічник Vidzone. Твій стиль спілкування дружній, але професійний. 
+Користуйся файлами з бази знань, відповідай як кастомний GPT Vidzone. Якщо запит стосується документів — запропонуй надіслати шаблони.`,
+          },
+          {
+            role: 'user',
+            content: text,
+          },
         ],
       }),
     });
@@ -65,3 +83,5 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(500).send('OpenAI error');
   }
 }
+
+
