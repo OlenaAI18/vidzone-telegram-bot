@@ -1,6 +1,14 @@
 // webhook.mjs
 import fs from 'fs';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const credentials = fs.readFileSync(path.join(__dirname, '../data/Vidzone_Credentials_Cleaned.md'), 'utf-8');
+const benchmark = fs.readFileSync(path.join(__dirname, '../data/Vidzone_Clutter_Benchmark_Cleaned.md'), 'utf-8');
+const news = fs.readFileSync(path.join(__dirname, '../data/DigitalTVNews_Cleaned_2025.md'), 'utf-8');
 const credentials = fs.readFileSync('data/Vidzone_Credentials_Cleaned.md', 'utf-8');
 const benchmark = fs.readFileSync('data/Vidzone_Clutter_Benchmark_Cleaned.md', 'utf-8');
 const news = fs.readFileSync('data/DigitalTVNews_Cleaned_2025.md', 'utf-8');
