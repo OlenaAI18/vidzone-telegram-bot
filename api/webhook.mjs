@@ -1,4 +1,10 @@
 // webhook.mjs
+import fs from 'fs';
+
+const credentials = fs.readFileSync('data/Vidzone_Credentials_Cleaned.md', 'utf-8');
+const benchmark = fs.readFileSync('data/Vidzone_Clutter_Benchmark_Cleaned.md', 'utf-8');
+const news = fs.readFileSync('data/DigitalTVNews_Cleaned_2025.md', 'utf-8');
+
 import bot from '../bot.mjs';
 import fetch from 'node-fetch';
 import fs from 'fs';
@@ -59,15 +65,14 @@ export default async function handler(req, res) {
   }
 
   const systemPrompt = `
-Ти — офіційний помічник Vidzone. Відповідай тільки згідно з цими знаннями:
+Ти — офіційний помічник Vidzone. Твій стиль спілкування дружній, але професійний.
+Використовуй інструкції та файли нижче, щоб відповідати як кастомний GPT Vidzone.
 
-${contextText}
+${credentials}
+${benchmark}
+${news}
 
-1. Якщо користувач просить SOV або місячну активність певної категорії — скажи, що ця функція ще в розробці. Запропонуй уточнити бренди або виробників у категорії.
-2. Якщо запит про підкатегорію — уточни, чи потрібна повна категорія чи лише підкатегорія.
-3. Якщо запит стосується документів (довідка, шаблони, гарантія) — запропонуй надіслати їх.
-4. Якщо інформації немає — порадь звернутись до акаунт-менеджера: Анна Ільєнко, email: anna@vidzone.ua
-5. Загальні запити: поясни, що Vidzone — це платформа для розміщення відеореклами на Sweet.tv, MEGOGO, Vodafone TV, Київстар ТБ та ін.
+Використовуй тільки актуальну інформацію, будь лаконічним і точним.
 `;
 
   try {
