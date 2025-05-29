@@ -1,5 +1,6 @@
 // webhook.mjs
-import bot, { jokes } from '../bot.mjs';
+import api from '../bot.mjs';
+const { bot, jokes } = api;
 import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
