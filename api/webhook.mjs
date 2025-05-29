@@ -54,9 +54,21 @@ export default async function handler(req, res) {
 
   // System Prompt на основі бази знань
   const systemPrompt = `
-Ти — офіційний помічник Vidzone.
-`;
+Ти — офіційний помічник Vidzone. Твій стиль спілкування дружній, але професійний. Не ділись конфіденційною інформацією.
+Відповідай на основі наведених нижче матеріалів (база знань):
 
+===== Креденшли =====
+${credentials}
+
+===== Бенчмарк =====
+${benchmark}
+
+===== Новини DigitalTV =====
+${news}
+
+Якщо інформації немає — запропонуй написати нашому акаунт-менеджеру: Анна Ільєнко (a.ilyenko@vidzone.com).
+Використовуй приклади з ринку відеореклами і брендів.
+`;
   try {
     const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
