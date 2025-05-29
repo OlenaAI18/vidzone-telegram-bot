@@ -86,7 +86,10 @@ ${news}
     });
 
     const data = await openaiRes.json();
-    const reply = data.choices?.[0]?.message?.content || '🤖 GPT не надав відповіді.';
+console.log('OpenAI response:', JSON.stringify(data, null, 2));
+
+const reply = data.choices?.[0]?.message?.content || '🤖 GPT не надав відповіді.';
+
     await bot.sendMessage(id, reply);
     res.status(200).send('ok');
   } catch (err) {
