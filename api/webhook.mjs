@@ -1,6 +1,24 @@
 // webhook.mjs
 import bot from '../bot.mjs';
 import fetch from 'node-fetch';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Завантажуємо тексти з Markdown і DOCX (тільки текстовий вміст)
+const credentials = fs.readFileSync(path.join(__dirname, '../mnt/data/Vidzone_Credentials_Cleaned.md'), 'utf-8');
+const digitalNews = fs.readFileSync(path.join(__dirname, '../mnt/data/DigitalTVNews_Cleaned_2025 (1).md'), 'utf-8');
+const benchmark = fs.readFileSync(path.join(__dirname, '../mnt/data/Vidzone_Clutter_Benchmark_Cleaned (1).md'), 'utf-8');
+
+const contextText = `# Знання Vidzone
+
+${credentials}
+
+${digitalNews}
+
+${benchmark}`;
 
 export default async function handler(req, res) {
   const { body } = req;
@@ -24,7 +42,6 @@ export default async function handler(req, res) {
 
   const userMessage = text?.toLowerCase().trim() || '';
 
-  // 1. Вітальне повідомлення
   if (userMessage === '/start' || userMessage.includes('привіт')) {
     await bot.sendMessage(
       id,
@@ -33,7 +50,6 @@ export default async function handler(req, res) {
     return res.status(200).send('Welcome sent');
   }
 
-  // 2. SOV-запити (заглушка)
   if (userMessage.startsWith('sov')) {
     await bot.sendMessage(
       id,
@@ -42,24 +58,16 @@ export default async function handler(req, res) {
     return res.status(200).send('SOV stub sent');
   }
 
-  // 3. Запит до OpenAI з кастомним system prompt
   const systemPrompt = `
-Ти — офіційний помічник Vidzone. Твій стиль спілкування дружній, але професійний. 
-Не ділись конфіденційною інформацією.
+Ти — офіційний помічник Vidzone. Відповідай тільки згідно з цими знаннями:
 
-1. Якщо користувач просить SOV або місячну активність певної категорії:
-  - Напиши, що ця команда наразі у розробці.
-  - Запропонуй уточнити приклади брендів або виробників у категорії, якщо назва некоректна.
+${contextText}
 
-2. Якщо запит стосується підкатегорії — вкажи, якій категорії вона належить і уточни, що показати.
-
-3. Якщо запит стосується документів (довідки, шаблони, гарантії) — запропонуй надіслати відповідні шаблони.
-
-4. Якщо інформації немає — запропонуй звернутись до акаунт-менеджера: Анна Ільєнко, email: anna@vidzone.ua
-
-5. Для будь-яких загальних питань про Vidzone — поясни, що це компанія, яка допомагає брендам розміщати відеорекламу на DigitalTV (Sweet.tv, MEGOGO, Київстар ТБ, Vodafone TV та інші).
-
-Коротко: відповідай на основі бази знань, залишайся лаконічним, використовуй приклади з брендів, файлів і ринку відеореклами.
+1. Якщо користувач просить SOV або місячну активність певної категорії — скажи, що ця функція ще в розробці. Запропонуй уточнити бренди або виробників у категорії.
+2. Якщо запит про підкатегорію — уточни, чи потрібна повна категорія чи лише підкатегорія.
+3. Якщо запит стосується документів (довідка, шаблони, гарантія) — запропонуй надіслати їх.
+4. Якщо інформації немає — порадь звернутись до акаунт-менеджера: Анна Ільєнко, email: anna@vidzone.ua
+5. Загальні запити: поясни, що Vidzone — це платформа для розміщення відеореклами на Sweet.tv, MEGOGO, Vodafone TV, Київстар ТБ та ін.
 `;
 
   try {
@@ -72,14 +80,8 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'gpt-3.5-turbo',
         messages: [
-          {
-            role: 'system',
-            content: systemPrompt,
-          },
-          {
-            role: 'user',
-            content: text,
-          },
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: text },
         ],
       }),
     });
