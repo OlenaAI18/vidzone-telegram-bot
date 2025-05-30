@@ -1,165 +1,50 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import fetch from 'node-fetch';
-import bot from '../bot.mjs';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-// Завантажуємо Markdown файли
-const guaranteeLetter = fs.readFileSync(path.join(__dirname, '../data/guarantee_letter.md'), 'utf-8');
-const techRequirements = fs.readFileSync(path.join(__dirname, '../data/technical_requirements.md'), 'utf-8');
-const musicCertificate = fs.readFileSync(path.join(__dirname, '../data/music_certificate.md'), 'utf-8');
-const credentials = fs.readFileSync(path.join(__dirname, '../data/Vidzone_Credentials_Cleaned.md'), 'utf-8');
-const benchmark = fs.readFileSync(path.join(__dirname, '../data/Vidzone_Clutter_Benchmark_Cleaned.md'), 'utf-8');
-const news = fs.readFileSync(path.join(__dirname, '../data/DigitalTVNews_Cleaned_2025.md'), 'utf-8');
-
-// Базові тексти
-const fallbackText = `Я ще вчуся, тому не на всі питання можу відповісти. Поки моїх знань недостатньо для твого запиту. Але точно допоможе наша команда! Звертайся до Анни Ільєнко: a.ilyenko@vidzone.com.`;
-
-const brandText = `Реклама на DigitalTV допомагає формувати довготривалий контакт бренду з аудиторією. Vidzone допомагає будувати довіру та підвищувати впізнаваність серед якісної аудиторії.`;
-
-const campaignPlanningText = `
-Під час планування кампанії рекомендується обирати цільову аудиторію, визначати мету кампанії, обирати канали просування (включаючи DigitalTV), встановлювати метрики успіху, створювати цікавий та залучений контент, регулярно аналізувати результати для корекцій. Важливо встановити чіткий бюджет і графік виконання.
-`;
-
-// Анекдоти
-const jokes = [
-  '— Чому рекламісти завжди усміхнені? — Бо реклама у них всюди 😄',
-  'Реклама на DigitalTV — як чарівник. Побачиш її навіть там, де не чекаєш!',
-  'У Vidzone ролик в ефірі швидше, ніж ви встигаєте взяти попкорн!'
-];
-
-// Вітальне повідомлення
-const welcomeMessage = `
-Привіт! Я — віртуальний помічник Vidzone.
-Допоможу вам:
-• отримати актуальну інформацію про Vidzone та ринок DigitalTV;
-• надати корисні шаблони документів (технічні вимоги, довідки, гарантійний лист);
-• спланувати кампанію Digital TV;
-• отримати трохи DigitalTV-шного гумору.
-
-📝 Просто напишіть запитання або тему, яка вас цікавить.
-Наприклад:
-«Скільки контактів потрібно для кампанії?»
-«Що таке Vidzone?»
-«Які технічні вимоги до роликів?»
-`;
-
-// Документи
-const documentsMenu = `
-Окей! Які документи вам потрібні? Виберіть один із варіантів:
-1. Музична довідка
-2. Технічні вимоги
-3. Гарантійний лист
-`;
-
-export default async function handler(req, res) {
-  const { body } = req;
-
-  if (!body.message) {
-    return res.status(200).send('Non-message update skipped');
-  }
-
-  const {
-    chat: { id },
-    text,
-    from: { id: userId },
-  } = body.message;
-
-  const userMessage = text?.toLowerCase().trim() || '';
-
-  // Вітання
-  if (userMessage === '/start' || userMessage.includes('привіт')) {
+// Вітання
+if (userMessage === '/start' || /привіт|хай|вітаю/.test(userMessage)) {
     await bot.sendMessage(id, welcomeMessage);
     return res.status(200).send('Welcome sent');
-  }
+}
 
-  // Запит на документи
-  if (userMessage.includes('довідка') || userMessage.includes('технічні вимоги') || userMessage.includes('гарантійний лист') || userMessage.includes('документ')) {
+// Запит на документи
+if (/довідка|документ|технічні вимоги|гарантійний лист/.test(userMessage)) {
     await bot.sendMessage(id, documentsMenu);
     return res.status(200).send('Document menu sent');
-  }
+}
 
-  // Відповіді на конкретні запити документів
-  if (userMessage.includes('музична довідка') || userMessage.includes('1')) {
+// Відповіді на конкретні запити документів
+if (/музична довідка/.test(userMessage) || userMessage === '1') {
     await bot.sendMessage(id, `🎼 Музична довідка:\n\n${musicCertificate}`);
     return res.status(200).send('Music certificate sent');
-  }
-  if (userMessage.includes('технічні вимоги') || userMessage.includes('2')) {
+}
+if (/технічні вимоги/.test(userMessage) || userMessage === '2') {
     await bot.sendMessage(id, `📄 Технічні вимоги:\n\n${techRequirements}`);
     return res.status(200).send('Technical requirements sent');
-  }
-  if (userMessage.includes('гарантійний лист') || userMessage.includes('3')) {
+}
+if (/гарантійний лист/.test(userMessage) || userMessage === '3') {
     await bot.sendMessage(id, `📝 Гарантійний лист:\n\n${guaranteeLetter}`);
     return res.status(200).send('Guarantee letter sent');
-  }
+}
 
-  // Відповідь про керівника/CEO
-  if (userMessage.includes('керівник') || userMessage.includes('сео') || userMessage.includes('директор') || userMessage.includes('головний')) {
+// Відповідь про керівника/CEO
+if (/керівник|сео|директор|головний/.test(userMessage)) {
     await bot.sendMessage(id, `CEO Vidzone — Євген Левченко.`);
     return res.status(200).send('CEO answer sent');
-  }
+}
 
-  // Запитання про бренди
-  if (userMessage.includes('бренд') || userMessage.includes('реклама') || userMessage.includes('побудова бренду')) {
+// Бренди, реклама, побудова бренду
+if (/бренд|реклама|побудова бренду/.test(userMessage)) {
     await bot.sendMessage(id, brandText);
     return res.status(200).send('Brand answer sent');
-  }
+}
 
-  // Питання про планування
-  if (userMessage.includes('планування') || userMessage.includes('кампанія') || userMessage.includes('контактів') || userMessage.includes('скільки контактів')) {
+// Планування кампанії
+if (/планування|кампанія|контактів|скільки контактів/.test(userMessage)) {
     await bot.sendMessage(id, campaignPlanningText);
     return res.status(200).send('Planning answer sent');
-  }
+}
 
-  // Анекдоти
-  if (userMessage.includes('анекдот') || userMessage.includes('жарт')) {
+// Анекдоти
+if (/анекдот|жарт/.test(userMessage)) {
     const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
     await bot.sendMessage(id, `😄 Ось вам жарт:\n${randomJoke}`);
     return res.status(200).send('Joke sent');
-  }
-
-  // System Prompt GPT
-  const systemPrompt = `
-Ти — офіційний помічник Vidzone. Відповідай коротко, професійно і дружньо.
-Використовуй тільки інформацію нижче:
-
-${credentials}
-
-${benchmark}
-
-${news}
-`;
-
-  try {
-    const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: text },
-        ],
-      }),
-    });
-
-    const data = await openaiRes.json();
-    const reply = data.choices?.[0]?.message?.content;
-
-    if (reply) {
-      await bot.sendMessage(id, reply);
-    } else {
-      await bot.sendMessage(id, fallbackText);
-    }
-    res.status(200).send('ok');
-  } catch (err) {
-    console.error(err);
-    await bot.sendMessage(id, '⚠️ Помилка. Спробуйте ще раз пізніше.');
-    res.status(500).send('OpenAI error');
-  }
 }
