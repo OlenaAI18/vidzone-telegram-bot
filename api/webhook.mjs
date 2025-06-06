@@ -7,23 +7,13 @@ import bot from '../bot.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// База знань
+// Завантаження бази знань
 const credentials = fs.readFileSync(path.join(__dirname, '../data/Vidzone_Credentials_Cleaned.md'), 'utf-8');
 
-// Додаткові документи
+// Завантаження шаблонів документів
 const guaranteeLetter = fs.readFileSync(path.join(__dirname, '../data/guarantee_letter.md'), 'utf-8');
 const techRequirements = fs.readFileSync(path.join(__dirname, '../data/technical_requirements.md'), 'utf-8');
 const musicCertificate = fs.readFileSync(path.join(__dirname, '../data/music_certificate.md'), 'utf-8');
-
-// Клаттер-бенчмарк для питань про контакти
-const benchmark = fs.readFileSync(path.join(__dirname, '../data/Vidzone_Clutter_Benchmark_Cleaned.md'), 'utf-8');
-
-// Гумор
-const jokes = [
-  "Чому реклама ніколи не втомлюється? Бо вона завжди в ефірі! 📺",
-  "Що сказав рекламний ролик телевізору? «Дякую за ефір!» 😄",
-  "На DigitalTV реклама така таргетована, що встигаєш подумати «це ж про мене!» 🎯",
-];
 
 export default async function handler(req, res) {
   const { body } = req;
@@ -36,7 +26,7 @@ export default async function handler(req, res) {
     from: { id: userId },
   } = body.message;
 
-  console.log(`User asked: ${text}`);
+  console.log(`User asked: ${text}`); // Логування запиту
 
   const allowedIds = process.env.ALLOWED_USER_IDS?.split(',') || [];
 
@@ -47,15 +37,15 @@ export default async function handler(req, res) {
 
   const userMessage = text?.toLowerCase().trim() || '';
 
-  // === ЛОГІКА ПРЯМИХ ВІДПОВІДЕЙ ===
+  // === ЛОГІКА: спочатку перевіряємо відомі запити
 
-  // Про керівника
-  if (userMessage.includes('керівник') || userMessage.includes('директор') || userMessage.includes('сео') || userMessage.includes('головний') || userMessage.includes('шеф')) {
+  // Керівник компанії
+  if (userMessage.includes('керівник') || userMessage.includes('директор') || userMessage.includes('сео') || userMessage.includes('головний')) {
     await bot.sendMessage(id, 'CEO Vidzone — Євген Левченко.');
     return res.status(200).send('CEO Answer Sent');
   }
 
-  // Запити на документи
+  // Документи
   if (userMessage.includes('музична довідка') || userMessage.includes('шаблон музичної довідки')) {
     await bot.sendMessage(id, `🎼 Музична довідка:\n\n${musicCertificate}`);
     return res.status(200).send('Music Certificate Sent');
@@ -69,29 +59,21 @@ export default async function handler(req, res) {
     return res.status(200).send('Guarantee Letter Sent');
   }
 
-  // Питання про контакти або планування кампанії
-  if (
-    userMessage.includes('контактів') ||
-    userMessage.includes('скільки контактів') ||
-    userMessage.includes('планування кампанії') ||
-    userMessage.includes('купити контакти')
-  ) {
-    await bot.sendMessage(id, `📊 Ось інформація щодо планування та контактів:\n\n${benchmark}`);
-    return res.status(200).send('Benchmark Info Sent');
-  }
-
-  // Гумор
-  if (userMessage.includes('анекдот') || userMessage.includes('жарт')) {
-    const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
-    await bot.sendMessage(id, `🎉 Ось тобі жарт:\n${randomJoke}`);
-    return res.status(200).send('Joke Sent');
-  }
-
-  // === GPT-Підключення ===
+  // === GPT
   const systemPrompt = `
-Ти — офіційний AI-помічник Vidzone. Відповідай професійно і стисло, на основі знань компанії.
-Не вигадуй інформацію. Якщо не впевнений — скажи, що не знаєш.
+Ти — офіційний AI-помічник компанії Vidzone.
 
+Відповідай коротко, дружньо і професійно. Не використовуй складні терміни або важкі формулювання — говори так, ніби пояснюєш клієнту.
+
+Якщо запит стосується Vidzone (послуги, історія, конкурентні переваги) — використовуй базу знань нижче, навіть якщо відповідь загальна або коротка.
+
+Якщо точної інформації немає — надай загальну відповідь на основі наявних даних і запропонуй звернутися до Анни Ільєнко (a.ilyenko@vidzone.com).
+
+Не вигадуй дані. Якщо запит не стосується Vidzone або OTT-реклами — поясни, що можеш допомогти тільки з інформацією про Vidzone.
+
+Важливо: надавай приклади, якщо вони є в базі знань. Використовуй факти.
+
+# База знань Vidzone:
 ${credentials}
 `;
 
@@ -112,13 +94,14 @@ ${credentials}
     });
 
     const data = await openaiRes.json();
-    console.log('OpenAI full response:', JSON.stringify(data, null, 2));
+    console.log('OpenAI full response:', JSON.stringify(data, null, 2)); // Лог відповіді
 
     const reply = data.choices?.[0]?.message?.content;
 
     if (reply && !reply.toLowerCase().includes('немає інформації')) {
       await bot.sendMessage(id, reply);
     } else {
+      // Fallback якщо GPT нічого не знайшов
       await bot.sendMessage(id, `Я ще вчуся, тому не на всі питання можу відповісти. Але точно допоможе наша команда! Звертайся до Анни Ільєнко: a.ilyenko@vidzone.com.`);
     }
 
