@@ -53,11 +53,11 @@ export default async function handler(req, res) {
   }
 
   // Документи
-  if (userMessage.includes('музична довідка') || userMessage.includes('шаблон музичної довідки'))|| userMessage.includes('музичну довідку')) {
+  if (userMessage.includes('музична довідка') || userMessage.includes('шаблон музичної довідки')|| userMessage.includes('музичну довідку') {
     await bot.sendMessage(id, `🎼 Шаблон музичної довідки:\n\n${musicCertificate}`);
     return res.status(200).send('Music Certificate Sent');
   }
-  if (userMessage.includes('технічні вимоги') || userMessage.includes('шаблон технічних вимог'))|| userMessage.includes('тех вимоги'))|| userMessage.includes('вимоги до роликів')) {
+  if (userMessage.includes('технічні вимоги') || userMessage.includes('шаблон технічних вимог')|| userMessage.includes('тех вимоги')|| userMessage.includes('вимоги до роликів')) {
     await bot.sendMessage(id, `📄 Технічні вимоги:\n\n${techRequirements}`);
     return res.status(200).send('Technical Requirements Sent');
   }
