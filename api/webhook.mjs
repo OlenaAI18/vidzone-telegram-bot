@@ -47,7 +47,7 @@ export default async function handler(req, res) {
   // === ЛОГІКА: пріоритет шаблонних відповідей
 
   // Керівник компанії
-  if (userMessage.includes('керівник') || userMessage.includes('CEO') userMessage.includes('директор') || userMessage.includes('сео') || userMessage.includes('шеф') || userMessage.includes('CEO') || userMessage.includes('головний')) {
+  if (userMessage.includes('керівник') || userMessage.includes('CEO') || userMessage.includes('директор') || userMessage.includes('сео') || userMessage.includes('шеф') || userMessage.includes('CEO') || userMessage.includes('головний')) {
     await bot.sendMessage(id, 'CEO Vidzone — Євген Левченко.');
     return res.status(200).send('CEO Answer Sent');
   }
