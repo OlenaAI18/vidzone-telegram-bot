@@ -35,12 +35,8 @@ export default async function handler(req, res) {
 
   console.log(`User asked: ${text}`);
 
-  const allowedIds = process.env.ALLOWED_USER_IDS?.split(',') || [];
-
-  if (!allowedIds.includes(userId.toString())) {
-    await bot.sendMessage(id, '⛔️ Цей бот є приватним.');
-    return res.status(200).send('Unauthorized user');
-  }
+  // Коментар або видалення перевірки ID
+// console.log(`User ${userId} is accessing the bot`);
 
   const userMessage = text?.toLowerCase().trim() || '';
 
