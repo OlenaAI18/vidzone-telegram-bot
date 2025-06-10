@@ -67,7 +67,7 @@ export default async function handler(req, res) {
   }
 
   // Анекдот
-  if (userMessage.includes('анекдот') || userMessage.includes('жарт')) {
+  if (userMessage.includes('анекдот') || userMessage.includes('жарт') || userMessage.includes('смішне')|| userMessage.includes('веселе')) {
     const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
     await bot.sendMessage(id, randomJoke);
     return res.status(200).send('Joke Sent');
