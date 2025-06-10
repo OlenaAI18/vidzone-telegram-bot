@@ -53,7 +53,7 @@ export default async function handler(req, res) {
   }
 
   // Документи
-  if (userMessage.includes('музична довідка') || userMessage.includes('шаблон музичної довідки')|| userMessage.includes('музичну довідку') {
+  if {(userMessage.includes('музична довідка') || userMessage.includes('шаблон музичної довідки')|| userMessage.includes('музичну довідку') {
     await bot.sendMessage(id, `🎼 Шаблон музичної довідки:\n\n${musicCertificate}`);
     return res.status(200).send('Music Certificate Sent');
   }
