@@ -62,14 +62,24 @@ if (
   return res.status(200).send('Music Certificate Sent');
 }
 
-  if (userMessage.includes('технічні вимоги') || userMessage.includes('шаблон технічних вимог')|| userMessage.includes('тех вимоги')|| userMessage.includes('вимоги до роликів')) {
-    await bot.sendMessage(id, `📄 Технічні вимоги:\n\n${techRequirements}`);
-    return res.status(200).send('Technical Requirements Sent');
-  }
-  if (userMessage.includes('гарантійний лист') || userMessage.includes('шаблон гарантійного листа')) {
-    await bot.sendMessage(id, `📝 Гарантійний лист:\n\n${guaranteeLetter}`);
-    return res.status(200).send('Guarantee Letter Sent');
-  }
+if (
+  userMessage.includes('технічні вимоги') ||
+  userMessage.includes('шаблон технічних вимог') ||
+  userMessage.includes('тех вимоги') ||
+  userMessage.includes('вимоги до роликів')
+) {
+  await bot.sendMessage(id, `📄 Технічні вимоги:\n\n${techRequirements}`);
+  return res.status(200).send('Technical Requirements Sent');
+}
+
+if (
+  userMessage.includes('гарантійний лист') ||
+  userMessage.includes('шаблон гарантійного листа')
+) {
+  await bot.sendMessage(id, `📝 Гарантійний лист:\n\n${guaranteeLetter}`);
+  return res.status(200).send('Guarantee Letter Sent');
+}
+
 
   // Анекдот
   if (userMessage.includes('анекдот') || userMessage.includes('жарт') || userMessage.includes('смішне')|| userMessage.includes('веселе')) {
