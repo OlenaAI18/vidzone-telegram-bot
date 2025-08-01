@@ -1,4 +1,5 @@
 // webhook.mjs
+import { retrieveRelevantChunks } from '../data/rag.mjs';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
