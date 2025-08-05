@@ -1,5 +1,5 @@
 // webhook.mjs
-import { retrieveRelevantChunks } from '../data/rag.mjs'; // перевір шлях
+import { retrieveRelevantChunks } from '../lib/rag.mjs'; // перевір шлях
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
