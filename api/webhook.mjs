@@ -90,19 +90,18 @@ export default async function handler(req, res) {
   }
 
   // === RAG: релевантні фрагменти для GPT ===
-  let rag = { blocks: [], debug: [] };
-  try {
-    rag = await retrieveRelevantChunks(text, process.env.OPENAI_API_KEY);
-    // для діагностики у верцел-логах:
-    console.log('RAG top:', rag.debug.map(x => ({ file: x.filename, score: Number(x.score?.toFixed?.(3) ?? x.score) })));
-  } catch (e) {
-    console.error('RAG error:', e);
-  }
+ let relevantChunks = [];
+try {
+  relevantChunks = await retrieveRelevantChunks(text, process.env.OPENAI_API_KEY);
+  console.log('RAG top:', relevantChunks.slice(0, 2).map(t => t.slice(0, 80)));
+} catch (e) {
+  console.error('RAG error:', e);
+}
 
-  const knowledgeBlock =
-    Array.isArray(rag.blocks) && rag.blocks.length
-      ? rag.blocks.join('\n\n---\n\n')
-      : '⚠️ Релевантні фрагменти у базі знань не знайдено. Якщо питання критичне — порадь звернутися до менеджера.';
+const knowledgeBlock =
+  Array.isArray(relevantChunks) && relevantChunks.length
+    ? relevantChunks.join('\n\n---\n\n')
+    : '';
 
   // Один-єдиний system prompt (без дублювань)
   const systemPrompt = `
