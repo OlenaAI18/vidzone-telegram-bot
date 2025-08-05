@@ -1,5 +1,5 @@
 // webhook.mjs
-import { retrieveRelevantChunks } from '../data/rag.mjs'; // ← або '../lib/rag.mjs' якщо в тебе інша структура
+import { retrieveRelevantChunks } from '../data/rag.mjs'; // перевір шлях
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -8,12 +8,12 @@ import bot from '../bot.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Завантаження шаблонів документів (залишаємо як є)
+// Шаблони документів
 const guaranteeLetter = fs.readFileSync(path.join(__dirname, '../data/guarantee_letter.md'), 'utf-8');
 const techRequirements = fs.readFileSync(path.join(__dirname, '../data/technical_requirements.md'), 'utf-8');
 const musicCertificate = fs.readFileSync(path.join(__dirname, '../data/music_certificate.md'), 'utf-8');
 
-// Анекдоти про Vidzone
+// Анекдоти
 const jokes = [
   "Чому реклама на Vidzone ніколи не спить? Бо вона в ефірі навіть уночі! 😄",
   "Що каже Vidzone перед стартом кампанії? «Тримайся, ефір зараз вибухне!» 📺",
@@ -31,7 +31,6 @@ export default async function handler(req, res) {
   } = body.message;
 
   console.log(`User asked: ${text}`);
-
   const userMessage = text?.toLowerCase().trim() || '';
 
   // === Пріоритет шаблонних відповідей ===
@@ -43,7 +42,6 @@ export default async function handler(req, res) {
     return res.status(200).send('Welcome Sent');
   }
 
-  // Керівник компанії (усі ключі в lower-case)
   if (
     userMessage.includes('керівник') ||
     userMessage.includes('ceo') ||
@@ -56,7 +54,6 @@ export default async function handler(req, res) {
     return res.status(200).send('CEO Answer Sent');
   }
 
-  // Документи
   if (
     userMessage.includes('музична довідка') ||
     userMessage.includes('шаблон музичної довідки') ||
@@ -76,15 +73,11 @@ export default async function handler(req, res) {
     return res.status(200).send('Technical Requirements Sent');
   }
 
-  if (
-    userMessage.includes('гарантійний лист') ||
-    userMessage.includes('шаблон гарантійного листа')
-  ) {
+  if (userMessage.includes('гарантійний лист') || userMessage.includes('шаблон гарантійного листа')) {
     await bot.sendMessage(id, `📝 Гарантійний лист:\n\n${guaranteeLetter}`);
     return res.status(200).send('Guarantee Letter Sent');
   }
 
-  // Анекдот
   if (
     userMessage.includes('анекдот') ||
     userMessage.includes('жарт') ||
@@ -101,4 +94,58 @@ export default async function handler(req, res) {
   try {
     relevantChunks = await retrieveRelevantChunks(text, process.env.OPENAI_API_KEY);
   } catch (e) {
+    console.error('RAG error:', e);
+  }
 
+  const knowledgeBlock =
+    Array.isArray(relevantChunks) && relevantChunks.length
+      ? relevantChunks.join('\n\n---\n\n')
+      : 'Немає релевантної інформації у базі знань. Якщо питання критичне — порадь звернутися до менеджера.';
+
+  const systemPrompt = `
+Ти — офіційний AI-помічник Vidzone. Відповідай професійно, стисло, але дружелюбно, тільки на основі наданих фрагментів знань компанії нижче.
+Не вигадуй інформацію. Якщо у фрагментах немає відповіді — скажи, що краще звернутися до менеджера.
+У відповіді вказуй контакти лише комерційного директора: Анна Ільєнко (a.ilyenko@vidzone.com).
+
+Фрагменти бази знань:
+${knowledgeBlock}
+  `.trim();
+
+  try {
+    const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: text },
+        ],
+        // temperature: 0.2, // опційно
+      }),
+    });
+
+    const data = await openaiRes.json();
+    console.log('OpenAI full response:', JSON.stringify(data, null, 2));
+
+    const reply = data?.choices?.[0]?.message?.content?.trim();
+
+    if (reply && !reply.toLowerCase().includes('немає інформації')) {
+      await bot.sendMessage(id, reply);
+    } else {
+      await bot.sendMessage(
+        id,
+        'Я ще вчуся, тому не на всі питання можу відповісти. Але точно допоможе наша команда! Звертайся до Анни Ільєнко: a.ilyenko@vidzone.com.'
+      );
+    }
+
+    return res.status(200).send('ok');
+  } catch (err) {
+    console.error('OpenAI error:', err);
+    await bot.sendMessage(id, '⚠️ Помилка. Спробуйте ще раз пізніше.');
+    return res.status(500).send('OpenAI error');
+  }
+}
