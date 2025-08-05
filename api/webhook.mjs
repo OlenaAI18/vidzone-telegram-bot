@@ -8,8 +8,9 @@ import bot from '../bot.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Завантаження бази знань
-const credentials = fs.readFileSync(path.join(__dirname, '../data/Vidzone_Credentials_Cleaned.md'), 'utf-8');
+// Отримати релевантні частини бази знань
+const relevantChunks = await retrieveRelevantChunks(text, process.env.OPENAI_API_KEY);
+
 
 // Завантаження шаблонів документів
 const guaranteeLetter = fs.readFileSync(path.join(__dirname, '../data/guarantee_letter.md'), 'utf-8');
@@ -90,7 +91,19 @@ if (
     return res.status(200).send('Joke Sent');
   }
 
- 
+ // Отримати релевантні частини бази знань
+const relevantChunks = await retrieveRelevantChunks(text, process.env.OPENAI_API_KEY);
+
+// Побудувати system prompt
+const systemPrompt = `
+Ти — офіційний AI-помічник Vidzone. Відповідай професійно, стисло, але дружелюбно тільки на основі знань компанії.
+Не вигадуй інформацію. Якщо не впевнений — скажи, що краще звернутися до менеджера.
+У відповіді вказуй контакти лише комерційного директора: Анна Ільєнко (a.ilyenko@vidzone.com).
+
+Ось релевантні фрагменти з бази знань:
+${relevantChunks.join('\n\n---\n\n')}
+`;
+
 
   // Інші питання → GPT
   const systemPrompt = `
