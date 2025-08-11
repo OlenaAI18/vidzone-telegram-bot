@@ -206,28 +206,31 @@ ${knowledgeBlock}
     const reply = data?.choices?.[0]?.message?.content?.trim() || '';
 
     const suspiciousPhrases = [
-       'не впевнений',
-  'не знаю',
-  'немає інформації',
-  'не можу відповісти',
-  'передбачаю',
-  'гіпотетично',
-  'уявіть',
-  'в теорії',
+      'не впевнений',
+      'не знаю',
+      'немає інформації',
+      'не можу відповісти',
+      'передбачаю',
+      'гіпотетично',
+      'уявіть',
+      'в теорії',
     ];
 
     const containsSuspicious = suspiciousPhrases.some((phrase) =>
       reply.toLowerCase().includes(phrase)
     );
-    // Логування у Google Sheets
-  const timestamp = new Date().toISOString();
 
-  await logToGoogleSheet({
-    timestamp,
-    userId,
-    userMessage,
-    botResponse: reply || 'Відповідь відсутня або замінена на шаблон',
-  });
+    // Логування у Google Sheets
+    const timestamp = new Date().toISOString();
+
+    console.log('Logging:', { timestamp, userId, userMessage, botResponse: reply });
+
+    await logToGoogleSheet({
+      timestamp,
+      userId,
+      userMessage,
+      botResponse: reply || 'Відповідь відсутня або замінена на шаблон',
+    });
 
     if (!reply || containsSuspicious) {
       await bot.sendMessage(
@@ -239,16 +242,7 @@ ${knowledgeBlock}
     }
 
     return res.status(200).send('ok');
-  } 
-    console.log('Logging:', { timestamp, userId, userMessage, botResponse: reply });
-await logToGoogleSheet({
-  timestamp,
-  userId,
-  userMessage,
-  botResponse: reply || 'Відповідь відсутня або замінена на шаблон',
-});
-
-  catch (err) {
+  } catch (err) {
     console.error('OpenAI error:', err);
     await bot.sendMessage(id, '⚠️ Помилка. Спробуйте ще раз пізніше.');
     return res.status(500).send('OpenAI error');
