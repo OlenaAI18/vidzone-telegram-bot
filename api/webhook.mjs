@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 import fetch from 'node-fetch';
 import bot from '../bot.mjs';
 
-import { logToGoogleSheet } from '../googleSheetsLogger.js'; // або відкоригуй шлях
+import { logToGoogleSheet } from '../googleSheetsLogger.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Текстові шаблони
@@ -18,7 +18,7 @@ const guaranteeLetterDocx = path.join(__dirname, '../data/guarantee_letter.docx'
 const techRequirementsDocx = path.join(__dirname, '../data/technical_requirements.docx');
 const musicCertificateDocx = path.join(__dirname, '../data/music_certificate.docx');
 
-// Веселі факти про Vidzone (жарти)
+// Веселі жарти про Vidzone
 const jokes = [
   'Vidzone — єдине місце, де «Skip Ad» не кнопка, а життєва позиція.',
   'У нас 98% VTR. Ті 2% — це кіт, що випадково наступив на пульт.',
@@ -32,105 +32,147 @@ const jokes = [
   'Vidzone — це коли «рекламу дивляться всі», і навіть собака.',
 ];
 
-// Кнопки головного меню
+// Клавіатура головного меню
 const mainMenuKeyboard = {
-  reply_markup: {
-    resize_keyboard: true,
-    keyboard: [
-      [{ text: '📺 Про Vidzone' }, { text: '📃 Шаблони документів' }],
-      [{ text: '😄 Веселе про Vidzone' }, { text: '❓ Допомога' }],
-    ],
-  },
-};
-
-// Кнопки вибору документа
-const documentsMenuKeyboard = {
   reply_markup: {
     inline_keyboard: [
       [
-        { text: '📃 Гарантійний лист', callback_data: 'doc_guaranteeLetter' },
-        { text: '⚙️ Технічні вимоги', callback_data: 'doc_techRequirements' },
+        { text: '📺 Про Vidzone', callback_data: 'menu_about' },
+        { text: '📄 Шаблони документів', callback_data: 'menu_documents' },
       ],
-      [{ text: '🎵 Музична довідка', callback_data: 'doc_musicCertificate' }],
-      [{ text: '⬅️ Повернутися в меню', callback_data: 'back_to_menu' }],
+      [
+        { text: '😄 Веселе про Vidzone', callback_data: 'menu_jokes' },
+        { text: '❓ Допомога', callback_data: 'menu_help' },
+      ],
     ],
   },
 };
 
-// Кнопки вибору формату документа
+// Клавіатура вибору документа
+const documentMenuKeyboard = {
+  reply_markup: {
+    inline_keyboard: [
+      [
+        { text: '📝 Гарантійний лист', callback_data: 'doc_guaranteeLetter' },
+        { text: '📄 Технічні вимоги', callback_data: 'doc_techRequirements' },
+      ],
+      [
+        { text: '🎼 Музична довідка', callback_data: 'doc_musicCertificate' },
+      ],
+      [
+        { text: '↩️ Повернутися в меню', callback_data: 'back_to_menu' },
+      ],
+    ],
+  },
+};
+
+// Клавіатура вибору формату документа
 const documentFormatKeyboard = {
   reply_markup: {
     inline_keyboard: [
       [
-        { text: '📄 Текстом', callback_data: 'doc_text' },
-        { text: '📝 Файлом Word', callback_data: 'doc_word' },
+        { text: '📄 Текстом', callback_data: 'format_text' },
+        { text: '📝 Файлом Word', callback_data: 'format_word' },
       ],
-      [{ text: '⬅️ Повернутися в меню', callback_data: 'back_to_menu' }],
+      [
+        { text: '↩️ Повернутися до вибору документів', callback_data: 'back_to_documents' },
+      ],
     ],
   },
 };
 
-// Збережемо поточний вибір користувача
+// Тимчасова памʼять вибору документів користувачем
 const userDocumentRequests = new Map();
 
 export default async function handler(req, res) {
   const { body } = req;
-
   if (!body?.message?.text && !body?.callback_query) return res.status(200).send('Non-message update skipped');
 
-  // Обробка callback_query (натискання кнопок)
   if (body.callback_query) {
     const callbackQuery = body.callback_query;
     const chatId = callbackQuery.message.chat.id;
     const userId = callbackQuery.from.id;
     const data = callbackQuery.data;
 
-    if (data === 'back_to_menu') {
-      userDocumentRequests.delete(userId);
-      await bot.sendMessage(chatId, 'Головне меню:', mainMenuKeyboard);
+    // Обробка навігації меню
+    if (data === 'menu_about') {
+      await bot.sendMessage(chatId, 
+        'Vidzone — технологічна DSP-платформа для автоматизованої реклами на цифровому телебаченні (Smart TV, OTT). Платформа дозволяє рекламодавцям запускати программатік-рекламу з гнучким таргетингом і контролем бюджету. Основна мета Vidzone — забезпечити ефективне розміщення реклами з таргетингом на аудиторії цифрового ТВ.',
+        mainMenuKeyboard
+      );
       await bot.answerCallbackQuery(callbackQuery.id);
       return res.status(200).send('ok');
     }
 
-    if (data === 'show_documents') {
-      userDocumentRequests.set(userId, 'menu'); // позначка, що зараз в меню документів
-      await bot.sendMessage(chatId, 'Оберіть документ:', documentsMenuKeyboard);
+    if (data === 'menu_documents') {
+      await bot.sendMessage(chatId, 'Оберіть шаблон документа:', documentMenuKeyboard);
       await bot.answerCallbackQuery(callbackQuery.id);
       return res.status(200).send('ok');
     }
 
-    if (data.startsWith('doc_') && !data.includes('text') && !data.includes('word')) {
-      // Вибір конкретного документа
-      const docKey = data.replace('doc_', '');
-      userDocumentRequests.set(userId, docKey);
+    if (data === 'menu_jokes') {
+      const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+      await bot.sendMessage(chatId, randomJoke, mainMenuKeyboard);
+      await bot.answerCallbackQuery(callbackQuery.id);
+      return res.status(200).send('ok');
+    }
+
+    if (data === 'menu_help') {
+      await bot.sendMessage(chatId,
+        'Пишіть будь-яке питання, я допоможу знайти інформацію. Якщо не знаю — скажу звернутися до менеджера: a.ilyenko@vidzone.com',
+        mainMenuKeyboard
+      );
+      await bot.answerCallbackQuery(callbackQuery.id);
+      return res.status(200).send('ok');
+    }
+
+    // Обробка вибору документа
+    if (data.startsWith('doc_')) {
+      userDocumentRequests.set(userId, data.replace('doc_', ''));
       await bot.sendMessage(chatId, 'Оберіть формат документа:', documentFormatKeyboard);
       await bot.answerCallbackQuery(callbackQuery.id);
       return res.status(200).send('ok');
     }
 
-    if (data === 'doc_text' || data === 'doc_word') {
+    // Обробка вибору формату документа
+    if (data === 'format_text' || data === 'format_word') {
       const docKey = userDocumentRequests.get(userId);
 
       if (!docKey) {
-        await bot.sendMessage(chatId, 'Вибачте, не зміг визначити, який документ ви запитували. Будь ласка, спробуйте ще раз.');
+        await bot.sendMessage(chatId, 'Вибачте, не можу визначити, який документ ви обрали. Будь ласка, спробуйте знову.', mainMenuKeyboard);
         await bot.answerCallbackQuery(callbackQuery.id);
         return res.status(200).send('ok');
       }
 
-      if (data === 'doc_text') {
-        let textContent = '';
-        if (docKey === 'guaranteeLetter') textContent = guaranteeLetter;
-        else if (docKey === 'techRequirements') textContent = techRequirements;
-        else if (docKey === 'musicCertificate') textContent = musicCertificate;
-
-        await bot.sendMessage(chatId, textContent || 'Текст наразі недоступний.');
-        await logToGoogleSheet({
-          timestamp: new Date().toISOString(),
-          userId,
-          userMessage: `Відправка документа текстом: ${docKey}`,
-          botResponse: 'Відправлено текст',
-        });
-      } else if (data === 'doc_word') {
+      if (data === 'format_text') {
+        // Відправка текстового варіанту
+        if (docKey === 'guaranteeLetter') {
+          await bot.sendMessage(chatId, guaranteeLetter, documentMenuKeyboard);
+          await logToGoogleSheet({
+            timestamp: new Date().toISOString(),
+            userId,
+            userMessage: `Вибрав документ Гарантійний лист (текст)`,
+            botResponse: guaranteeLetter,
+          });
+        } else if (docKey === 'techRequirements') {
+          await bot.sendMessage(chatId, techRequirements, documentMenuKeyboard);
+          await logToGoogleSheet({
+            timestamp: new Date().toISOString(),
+            userId,
+            userMessage: `Вибрав документ Технічні вимоги (текст)`,
+            botResponse: techRequirements,
+          });
+        } else if (docKey === 'musicCertificate') {
+          await bot.sendMessage(chatId, musicCertificate, documentMenuKeyboard);
+          await logToGoogleSheet({
+            timestamp: new Date().toISOString(),
+            userId,
+            userMessage: `Вибрав документ Музична довідка (текст)`,
+            botResponse: musicCertificate,
+          });
+        }
+      } else {
+        // Відправка Word-файлу
         let filePath = null;
         if (docKey === 'guaranteeLetter') filePath = guaranteeLetterDocx;
         else if (docKey === 'techRequirements') filePath = techRequirementsDocx;
@@ -141,24 +183,38 @@ export default async function handler(req, res) {
           await logToGoogleSheet({
             timestamp: new Date().toISOString(),
             userId,
-            userMessage: `Відправка документа Word файлом: ${docKey}`,
-            botResponse: 'Відправлено Word файл',
+            userMessage: `Вибрав документ ${docKey} (Word-файл)`,
+            botResponse: `Відправлено файл ${filePath}`,
           });
         } else {
-          await bot.sendMessage(chatId, 'Файл наразі недоступний.');
+          await bot.sendMessage(chatId, 'Файл наразі недоступний.', documentMenuKeyboard);
         }
       }
 
-      userDocumentRequests.delete(userId); // очищаємо після відповіді
+      userDocumentRequests.delete(userId);
       await bot.answerCallbackQuery(callbackQuery.id);
       return res.status(200).send('ok');
     }
 
+    // Повернення в меню
+    if (data === 'back_to_menu') {
+      await bot.sendMessage(chatId, 'Головне меню:', mainMenuKeyboard);
+      await bot.answerCallbackQuery(callbackQuery.id);
+      return res.status(200).send('ok');
+    }
+
+    if (data === 'back_to_documents') {
+      await bot.sendMessage(chatId, 'Оберіть шаблон документа:', documentMenuKeyboard);
+      await bot.answerCallbackQuery(callbackQuery.id);
+      return res.status(200).send('ok');
+    }
+
+    // Відповідь на callback, якщо немає інших обробок
     await bot.answerCallbackQuery(callbackQuery.id);
     return res.status(200).send('ok');
   }
 
-  // Звичайний текстовий запит (message.text)
+  // Якщо це звичайний текстовий запит (message.text)
   const {
     chat: { id },
     text,
@@ -168,7 +224,7 @@ export default async function handler(req, res) {
   console.log(`User asked: ${text}`);
   const userMessage = text?.toLowerCase().trim() || '';
 
-  // === Пріоритет шаблонних відповідей ===
+  // === Пріоритетні відповіді ===
   if (userMessage === '/start' || userMessage.includes('привіт')) {
     await bot.sendMessage(
       id,
@@ -176,7 +232,7 @@ export default async function handler(req, res) {
       `• Розповісти про компанію, послуги, планування все що тебе цікавить з цифрами та фактами\n` +
       `• Надати шаблони документів (технічні вимоги, музична довідка, гарантійний лист)\n` +
       `• Розповісти щось веселе про Vidzone\n` +
-      `• Допомогти з інформацією по рекламним кейсам і аудиторії  ринку, в якому ми працюємо. Все те, що допоможе зробити розміщення максимально ефективним`,
+      `• Допомогти з інформацією по рекламним кейсам і аудиторії ринку, в якому ми працюємо. Все те, що допоможе зробити розміщення максимально ефективним`,
       mainMenuKeyboard
     );
     return res.status(200).send('Welcome Sent');
@@ -190,50 +246,19 @@ export default async function handler(req, res) {
     userMessage.includes('шеф') ||
     userMessage.includes('головний')
   ) {
-    await bot.sendMessage(id, 'CEO Vidzone — Євген Левченко.');
-    await logToGoogleSheet({
-      timestamp: new Date().toISOString(),
-      userId,
-      userMessage,
-      botResponse: 'CEO Vidzone — Євген Левченко.',
-    });
+    await bot.sendMessage(id, 'CEO Vidzone — Євген Левченко.', mainMenuKeyboard);
     return res.status(200).send('CEO Answer Sent');
   }
 
   if (
-    userMessage.includes('веселе') ||
-    userMessage.includes('жарт') ||
     userMessage.includes('анекдот') ||
-    userMessage.includes('смішне')
+    userMessage.includes('жарт') ||
+    userMessage.includes('смішне') ||
+    userMessage.includes('веселе')
   ) {
     const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
-    await bot.sendMessage(id, randomJoke);
-    await logToGoogleSheet({
-      timestamp: new Date().toISOString(),
-      userId,
-      userMessage,
-      botResponse: `Жарт: ${randomJoke}`,
-    });
+    await bot.sendMessage(id, randomJoke, mainMenuKeyboard);
     return res.status(200).send('Joke Sent');
-  }
-
-  if (
-    userMessage.includes('документ') ||
-    userMessage.includes('шаблон') ||
-    userMessage.includes('гарантійний лист') ||
-    userMessage.includes('технічні вимоги') ||
-    userMessage.includes('музична довідка')
-  ) {
-    // Запропонувати меню документів
-    userDocumentRequests.set(userId, 'menu');
-    await bot.sendMessage(id, 'Оберіть документ:', documentsMenuKeyboard);
-    await logToGoogleSheet({
-      timestamp: new Date().toISOString(),
-      userId,
-      userMessage,
-      botResponse: 'Запропоновано вибір документа',
-    });
-    return res.status(200).send('Document menu sent');
   }
 
   // === RAG: релевантні фрагменти для GPT ===
@@ -284,22 +309,25 @@ ${knowledgeBlock}
     const reply = data?.choices?.[0]?.message?.content?.trim() || '';
 
     const suspiciousPhrases = [
-       'не впевнений',
-       'не знаю',
-       'немає інформації',
-       'не можу відповісти',
-       'передбачаю',
-       'гіпотетично',
-       'уявіть',
-       'в теорії',
+      'не впевнений',
+      'не знаю',
+      'немає інформації',
+      'не можу відповісти',
+      'передбачаю',
+      'гіпотетично',
+      'уявіть',
+      'в теорії',
     ];
 
     const containsSuspicious = suspiciousPhrases.some((phrase) =>
       reply.toLowerCase().includes(phrase)
     );
 
+    // Логування у Google Sheets
+    const timestamp = new Date().toISOString();
+
     await logToGoogleSheet({
-      timestamp: new Date().toISOString(),
+      timestamp,
       userId,
       userMessage,
       botResponse: reply || 'Відповідь відсутня або замінена на шаблон',
@@ -308,16 +336,17 @@ ${knowledgeBlock}
     if (!reply || containsSuspicious) {
       await bot.sendMessage(
         id,
-        'Я ще вчуся, тому не на всі питання можу відповісти. Але точно допоможе наша команда! Звертайся до Анни Ільєнко: a.ilyenko@vidzone.com.'
+        'Я ще вчуся, тому не на всі питання можу відповісти. Але точно допоможе наша команда! Звертайся до Анни Ільєнко: a.ilyenko@vidzone.com.',
+        mainMenuKeyboard
       );
     } else {
-      await bot.sendMessage(id, reply);
+      await bot.sendMessage(id, reply, mainMenuKeyboard);
     }
 
     return res.status(200).send('ok');
   } catch (err) {
     console.error('OpenAI error:', err);
-    await bot.sendMessage(id, '⚠️ Помилка. Спробуйте ще раз пізніше.');
+    await bot.sendMessage(id, '⚠️ Помилка. Спробуйте ще раз пізніше.', mainMenuKeyboard);
     return res.status(500).send('OpenAI error');
   }
 }
