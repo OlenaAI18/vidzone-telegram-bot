@@ -5,8 +5,7 @@ import { fileURLToPath } from 'url';
 import fetch from 'node-fetch';
 import bot from '../bot.mjs';
 
-import { logToGoogleSheet } from '../googleSheetsLogger.js'; // перевір шлях
-
+import { logToGoogleSheet } from '../googleSheetsLogger.js'; // або відкоригуй шлях
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Текстові шаблони
@@ -14,12 +13,12 @@ const guaranteeLetter = fs.readFileSync(path.join(__dirname, '../data/guarantee_
 const techRequirements = fs.readFileSync(path.join(__dirname, '../data/technical_requirements.md'), 'utf-8');
 const musicCertificate = fs.readFileSync(path.join(__dirname, '../data/music_certificate.md'), 'utf-8');
 
-// Шляхи до .docx файлів (потрібно попередньо створити і покласти сюди)
+// Шляхи до .docx файлів
 const guaranteeLetterDocx = path.join(__dirname, '../data/guarantee_letter.docx');
 const techRequirementsDocx = path.join(__dirname, '../data/technical_requirements.docx');
 const musicCertificateDocx = path.join(__dirname, '../data/music_certificate.docx');
 
-// Веселі факти про Vidzone
+// Веселі факти про Vidzone (жарти)
 const jokes = [
   'Vidzone — єдине місце, де «Skip Ad» не кнопка, а життєва позиція.',
   'У нас 98% VTR. Ті 2% — це кіт, що випадково наступив на пульт.',
@@ -33,41 +32,50 @@ const jokes = [
   'Vidzone — це коли «рекламу дивляться всі», і навіть собака.',
 ];
 
-// Кнопки меню
+// Кнопки головного меню
 const mainMenuKeyboard = {
   reply_markup: {
-    inline_keyboard: [
-      [
-        { text: '📺 Про Vidzone', callback_data: 'about_vidzone' },
-        { text: '📄 Шаблони документів', callback_data: 'show_documents' },
-      ],
-      [
-        { text: '😄 Веселе про Vidzone', callback_data: 'funny_vidzone' },
-        { text: '❓ Допомога', callback_data: 'help' },
-      ],
+    resize_keyboard: true,
+    keyboard: [
+      [{ text: '📺 Про Vidzone' }, { text: '📃 Шаблони документів' }],
+      [{ text: '😄 Веселе про Vidzone' }, { text: '❓ Допомога' }],
     ],
   },
 };
 
-const documentOptionsKeyboard = {
+// Кнопки вибору документа
+const documentsMenuKeyboard = {
+  reply_markup: {
+    inline_keyboard: [
+      [
+        { text: '📃 Гарантійний лист', callback_data: 'doc_guaranteeLetter' },
+        { text: '⚙️ Технічні вимоги', callback_data: 'doc_techRequirements' },
+      ],
+      [{ text: '🎵 Музична довідка', callback_data: 'doc_musicCertificate' }],
+      [{ text: '⬅️ Повернутися в меню', callback_data: 'back_to_menu' }],
+    ],
+  },
+};
+
+// Кнопки вибору формату документа
+const documentFormatKeyboard = {
   reply_markup: {
     inline_keyboard: [
       [
         { text: '📄 Текстом', callback_data: 'doc_text' },
         { text: '📝 Файлом Word', callback_data: 'doc_word' },
       ],
-      [
-        { text: '⬅️ Повернутися в меню', callback_data: 'back_to_menu' },
-      ],
+      [{ text: '⬅️ Повернутися в меню', callback_data: 'back_to_menu' }],
     ],
   },
 };
 
-// Збережемо контекст для користувача — який документ обирає
+// Збережемо поточний вибір користувача
 const userDocumentRequests = new Map();
 
 export default async function handler(req, res) {
   const { body } = req;
+
   if (!body?.message?.text && !body?.callback_query) return res.status(200).send('Non-message update skipped');
 
   // Обробка callback_query (натискання кнопок)
@@ -77,63 +85,50 @@ export default async function handler(req, res) {
     const userId = callbackQuery.from.id;
     const data = callbackQuery.data;
 
-    if (data === 'about_vidzone') {
-      const aboutText = `Vidzone — технологічна DSP-платформа для автоматизованої реклами на цифровому телебаченні (Smart TV, OTT). Платформа дозволяє рекламодавцям запускати программатік-рекламу з гнучким таргетингом і контролем бюджету. Основна мета Vidzone — забезпечити ефективне розміщення реклами з таргетингом на аудиторії цифрового ТВ.`;
-      await bot.sendMessage(chatId, aboutText);
-      await logToGoogleSheet({
-        timestamp: new Date().toISOString(),
-        userId,
-        userMessage: 'Натиснута кнопка: Про Vidzone',
-        botResponse: aboutText,
-      });
-      await bot.answerCallbackQuery(callbackQuery.id);
-      return res.status(200).send('ok');
-    }
-
-    if (data === 'funny_vidzone') {
-      const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
-      await bot.sendMessage(chatId, randomJoke);
-      await logToGoogleSheet({
-        timestamp: new Date().toISOString(),
-        userId,
-        userMessage: 'Натиснута кнопка: Веселе про Vidzone',
-        botResponse: randomJoke,
-      });
+    if (data === 'back_to_menu') {
+      userDocumentRequests.delete(userId);
+      await bot.sendMessage(chatId, 'Головне меню:', mainMenuKeyboard);
       await bot.answerCallbackQuery(callbackQuery.id);
       return res.status(200).send('ok');
     }
 
     if (data === 'show_documents') {
       userDocumentRequests.set(userId, 'menu'); // позначка, що зараз в меню документів
-      await bot.sendMessage(chatId, 'Оберіть шаблон документа:', documentOptionsKeyboard);
+      await bot.sendMessage(chatId, 'Оберіть документ:', documentsMenuKeyboard);
       await bot.answerCallbackQuery(callbackQuery.id);
       return res.status(200).send('ok');
     }
 
-    if (data === 'back_to_menu') {
-      await bot.sendMessage(chatId, 'Головне меню:', mainMenuKeyboard);
+    if (data.startsWith('doc_') && !data.includes('text') && !data.includes('word')) {
+      // Вибір конкретного документа
+      const docKey = data.replace('doc_', '');
+      userDocumentRequests.set(userId, docKey);
+      await bot.sendMessage(chatId, 'Оберіть формат документа:', documentFormatKeyboard);
       await bot.answerCallbackQuery(callbackQuery.id);
       return res.status(200).send('ok');
     }
 
-    // Обробка вибору формату документа
     if (data === 'doc_text' || data === 'doc_word') {
       const docKey = userDocumentRequests.get(userId);
-      if (!docKey || docKey === 'menu') {
-        await bot.sendMessage(chatId, 'Будь ласка, спочатку оберіть документ з меню.');
+
+      if (!docKey) {
+        await bot.sendMessage(chatId, 'Вибачте, не зміг визначити, який документ ви запитували. Будь ласка, спробуйте ще раз.');
         await bot.answerCallbackQuery(callbackQuery.id);
         return res.status(200).send('ok');
       }
 
       if (data === 'doc_text') {
-        if (docKey === 'guaranteeLetter') await bot.sendMessage(chatId, guaranteeLetter);
-        else if (docKey === 'techRequirements') await bot.sendMessage(chatId, techRequirements);
-        else if (docKey === 'musicCertificate') await bot.sendMessage(chatId, musicCertificate);
+        let textContent = '';
+        if (docKey === 'guaranteeLetter') textContent = guaranteeLetter;
+        else if (docKey === 'techRequirements') textContent = techRequirements;
+        else if (docKey === 'musicCertificate') textContent = musicCertificate;
+
+        await bot.sendMessage(chatId, textContent || 'Текст наразі недоступний.');
         await logToGoogleSheet({
           timestamp: new Date().toISOString(),
           userId,
-          userMessage: `Вибір формату: Текстовий документ (${docKey})`,
-          botResponse: 'Відправлено текст документа',
+          userMessage: `Відправка документа текстом: ${docKey}`,
+          botResponse: 'Відправлено текст',
         });
       } else if (data === 'doc_word') {
         let filePath = null;
@@ -146,7 +141,7 @@ export default async function handler(req, res) {
           await logToGoogleSheet({
             timestamp: new Date().toISOString(),
             userId,
-            userMessage: `Вибір формату: Word документ (${docKey})`,
+            userMessage: `Відправка документа Word файлом: ${docKey}`,
             botResponse: 'Відправлено Word файл',
           });
         } else {
@@ -154,36 +149,11 @@ export default async function handler(req, res) {
         }
       }
 
-      userDocumentRequests.delete(userId);
+      userDocumentRequests.delete(userId); // очищаємо після відповіді
       await bot.answerCallbackQuery(callbackQuery.id);
       return res.status(200).send('ok');
     }
 
-    // Обробка вибору документа з меню (тут додамо, щоб кнопки були)
-    if (
-      data === 'doc_guaranteeLetter' ||
-      data === 'doc_techRequirements' ||
-      data === 'doc_musicCertificate'
-    ) {
-      let docKey = '';
-      if (data === 'doc_guaranteeLetter') docKey = 'guaranteeLetter';
-      else if (data === 'doc_techRequirements') docKey = 'techRequirements';
-      else if (data === 'doc_musicCertificate') docKey = 'musicCertificate';
-
-      userDocumentRequests.set(userId, docKey);
-      await bot.sendMessage(chatId, 'Оберіть формат документа:', documentOptionsKeyboard);
-      await bot.answerCallbackQuery(callbackQuery.id);
-      return res.status(200).send('ok');
-    }
-
-    // Обробка кнопки допомоги
-    if (data === 'help') {
-      await bot.sendMessage(chatId, 'Якщо потрібна допомога, напишіть нам на a.ilyenko@vidzone.com');
-      await bot.answerCallbackQuery(callbackQuery.id);
-      return res.status(200).send('ok');
-    }
-
-    // Якщо callback не розпізнаний
     await bot.answerCallbackQuery(callbackQuery.id);
     return res.status(200).send('ok');
   }
@@ -202,13 +172,11 @@ export default async function handler(req, res) {
   if (userMessage === '/start' || userMessage.includes('привіт')) {
     await bot.sendMessage(
       id,
-      `Привіт! Я — віртуальний помічник Vidzone. Ось що я можу:
-
-• Розповісти про компанію, послуги, планування все що тебе цікавить з цифрами та фактами
-• Надати шаблони документів (технічні вимоги, музична довідка, гарантійний лист)
-• Розповісти щось веселе про Vidzone
-• Допомогти з інформацією по рекламним кейсам і аудиторії ринку, в якому ми працюємо. Все те, що допоможе зробити розміщення максимально ефективним
-`,
+      `Привіт! Я — віртуальний помічник Vidzone. Ось що я можу:\n\n` +
+      `• Розповісти про компанію, послуги, планування все що тебе цікавить з цифрами та фактами\n` +
+      `• Надати шаблони документів (технічні вимоги, музична довідка, гарантійний лист)\n` +
+      `• Розповісти щось веселе про Vidzone\n` +
+      `• Допомогти з інформацією по рекламним кейсам і аудиторії  ринку, в якому ми працюємо. Все те, що допоможе зробити розміщення максимально ефективним`,
       mainMenuKeyboard
     );
     return res.status(200).send('Welcome Sent');
@@ -222,49 +190,21 @@ export default async function handler(req, res) {
     userMessage.includes('шеф') ||
     userMessage.includes('головний')
   ) {
-    const ceoAnswer = 'CEO Vidzone — Євген Левченко.';
-    await bot.sendMessage(id, ceoAnswer);
+    await bot.sendMessage(id, 'CEO Vidzone — Євген Левченко.');
     await logToGoogleSheet({
       timestamp: new Date().toISOString(),
       userId,
       userMessage,
-      botResponse: ceoAnswer,
+      botResponse: 'CEO Vidzone — Євген Левченко.',
     });
     return res.status(200).send('CEO Answer Sent');
   }
 
   if (
-    userMessage.includes('музична довідка') ||
-    userMessage.includes('шаблон музичної довідки') ||
-    userMessage.includes('музичну довідку')
-  ) {
-    userDocumentRequests.set(userId, 'musicCertificate');
-    await bot.sendMessage(id, 'Оберіть шаблон музичної довідки:', documentOptionsKeyboard);
-    return res.status(200).send('Music Certificate options sent');
-  }
-
-  if (
-    userMessage.includes('технічні вимоги') ||
-    userMessage.includes('шаблон технічних вимог') ||
-    userMessage.includes('тех вимоги') ||
-    userMessage.includes('вимоги до роликів')
-  ) {
-    userDocumentRequests.set(userId, 'techRequirements');
-    await bot.sendMessage(id, 'Оберіть шаблон технічних вимог:', documentOptionsKeyboard);
-    return res.status(200).send('Technical Requirements options sent');
-  }
-
-  if (userMessage.includes('гарантійний лист') || userMessage.includes('шаблон гарантійного листа')) {
-    userDocumentRequests.set(userId, 'guaranteeLetter');
-    await bot.sendMessage(id, 'Оберіть шаблон гарантійного листа:', documentOptionsKeyboard);
-    return res.status(200).send('Guarantee Letter options sent');
-  }
-
-  if (
-    userMessage.includes('анекдот') ||
+    userMessage.includes('веселе') ||
     userMessage.includes('жарт') ||
-    userMessage.includes('смішне') ||
-    userMessage.includes('веселе')
+    userMessage.includes('анекдот') ||
+    userMessage.includes('смішне')
   ) {
     const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
     await bot.sendMessage(id, randomJoke);
@@ -272,9 +212,28 @@ export default async function handler(req, res) {
       timestamp: new Date().toISOString(),
       userId,
       userMessage,
-      botResponse: randomJoke,
+      botResponse: `Жарт: ${randomJoke}`,
     });
     return res.status(200).send('Joke Sent');
+  }
+
+  if (
+    userMessage.includes('документ') ||
+    userMessage.includes('шаблон') ||
+    userMessage.includes('гарантійний лист') ||
+    userMessage.includes('технічні вимоги') ||
+    userMessage.includes('музична довідка')
+  ) {
+    // Запропонувати меню документів
+    userDocumentRequests.set(userId, 'menu');
+    await bot.sendMessage(id, 'Оберіть документ:', documentsMenuKeyboard);
+    await logToGoogleSheet({
+      timestamp: new Date().toISOString(),
+      userId,
+      userMessage,
+      botResponse: 'Запропоновано вибір документа',
+    });
+    return res.status(200).send('Document menu sent');
   }
 
   // === RAG: релевантні фрагменти для GPT ===
@@ -325,25 +284,22 @@ ${knowledgeBlock}
     const reply = data?.choices?.[0]?.message?.content?.trim() || '';
 
     const suspiciousPhrases = [
-      'не впевнений',
-      'не знаю',
-      'немає інформації',
-      'не можу відповісти',
-      'передбачаю',
-      'гіпотетично',
-      'уявіть',
-      'в теорії',
+       'не впевнений',
+       'не знаю',
+       'немає інформації',
+       'не можу відповісти',
+       'передбачаю',
+       'гіпотетично',
+       'уявіть',
+       'в теорії',
     ];
 
     const containsSuspicious = suspiciousPhrases.some((phrase) =>
       reply.toLowerCase().includes(phrase)
     );
 
-    // Логування у Google Sheets
-    const timestamp = new Date().toISOString();
-
     await logToGoogleSheet({
-      timestamp,
+      timestamp: new Date().toISOString(),
       userId,
       userMessage,
       botResponse: reply || 'Відповідь відсутня або замінена на шаблон',
