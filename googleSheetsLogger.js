@@ -15,7 +15,7 @@ const sheets = google.sheets({ version: 'v4', auth });
 export async function logToGoogleSheet({ timestamp, userId, userMessage, botResponse }) {
   try {
     console.log('Trying to write log to Google Sheets:', { timestamp, userId, userMessage, botResponse });
-    await sheets.spreadsheets.values.append({
+    const res = await sheets.spreadsheets.values.append({
       spreadsheetId: SPREADSHEET_ID,
       range: 'Логи!A:D',
       valueInputOption: 'RAW',
@@ -23,6 +23,7 @@ export async function logToGoogleSheet({ timestamp, userId, userMessage, botResp
         values: [[timestamp, userId, userMessage, botResponse]],
       },
     });
+    console.log('Google Sheets API response status:', res.status);
     console.log('Log successfully written to Google Sheets');
   } catch (error) {
     console.error('Error writing log to Google Sheets:', error);
