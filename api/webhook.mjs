@@ -1,4 +1,3 @@
-// /api/webhook.mjs
 import { retrieveRelevantChunks } from '../lib/rag.mjs'; // шлях перевірено
 import fs from 'fs';
 import path from 'path';
@@ -90,18 +89,18 @@ export default async function handler(req, res) {
   }
 
   // === RAG: релевантні фрагменти для GPT ===
- let relevantChunks = [];
-try {
-  relevantChunks = await retrieveRelevantChunks(text, process.env.OPENAI_API_KEY);
-  console.log('RAG top:', relevantChunks.slice(0, 2).map(t => t.slice(0, 80)));
-} catch (e) {
-  console.error('RAG error:', e);
-}
+  let relevantChunks = [];
+  try {
+    relevantChunks = await retrieveRelevantChunks(text, process.env.OPENAI_API_KEY);
+    console.log('RAG top:', relevantChunks.slice(0, 2).map(t => t.slice(0, 80)));
+  } catch (e) {
+    console.error('RAG error:', e);
+  }
 
-const knowledgeBlock =
-  Array.isArray(relevantChunks) && relevantChunks.length
-    ? relevantChunks.join('\n\n---\n\n')
-    : '';
+  const knowledgeBlock =
+    Array.isArray(relevantChunks) && relevantChunks.length
+      ? relevantChunks.join('\n\n---\n\n')
+      : '';
 
   // Один-єдиний system prompt (без дублювань)
   const systemPrompt = `
@@ -110,9 +109,10 @@ const knowledgeBlock =
 Не вигадуй, не додавай інформацію, якої немає у знаннях.
 У відповідях вказуй контакти лише комерційного директора: Анна Ільєнко (a.ilyenko@vidzone.com).
 Не відповідай на питання, які виходять за межі бази знань.
+
 # База знань (релевантні фрагменти):
 ${knowledgeBlock}
-`.trim();
+  `.trim();
 
   try {
     const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -123,53 +123,45 @@ ${knowledgeBlock}
       },
       body: JSON.stringify({
         model: 'gpt-3.5-turbo',
-        temperature: 0.2,     // менше креативу → менше «вигадок»
+        temperature: 0.2, // менше креативу → менше «вигадок»
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: text },
         ],
       }),
     });
-const suspiciousPhrases = [
-  'я можу',
-  'уявіть',
-  'в теорії',
-  'гіпотетично',
-  'на мою думку',
-  'можливо',
-  'не впевнений',
-  'не знаю',
-  'немає інформації',
-  'не можу відповісти',
-  'я думаю',
-  'передбачаю',
-];
-
-const containsSuspicious = suspiciousPhrases.some(phrase =>
-  reply.toLowerCase().includes(phrase)
-);
-
-if (!reply || containsSuspicious) {
-  await bot.sendMessage(
-    id,
-    'Я ще вчуся, тому не на всі питання можу відповісти. Але точно допоможе наша команда! Звертайся до Анни Ільєнко: a.ilyenko@vidzone.com.'
-  );
-} else {
-  await bot.sendMessage(id, reply);
-}
 
     const data = await openaiRes.json();
     console.log('OpenAI full response:', JSON.stringify(data, null, 2));
 
-    const reply = data?.choices?.[0]?.message?.content?.trim();
+    const reply = data?.choices?.[0]?.message?.content?.trim() || '';
 
-    if (reply && !reply.toLowerCase().includes('немає інформації')) {
-      await bot.sendMessage(id, reply);
-    } else {
+    const suspiciousPhrases = [
+      'я можу',
+      'уявіть',
+      'в теорії',
+      'гіпотетично',
+      'на мою думку',
+      'можливо',
+      'не впевнений',
+      'не знаю',
+      'немає інформації',
+      'не можу відповісти',
+      'я думаю',
+      'передбачаю',
+    ];
+
+    const containsSuspicious = suspiciousPhrases.some((phrase) =>
+      reply.toLowerCase().includes(phrase)
+    );
+
+    if (!reply || containsSuspicious) {
       await bot.sendMessage(
         id,
         'Я ще вчуся, тому не на всі питання можу відповісти. Але точно допоможе наша команда! Звертайся до Анни Ільєнко: a.ilyenko@vidzone.com.'
       );
+    } else {
+      await bot.sendMessage(id, reply);
     }
 
     return res.status(200).send('ok');
