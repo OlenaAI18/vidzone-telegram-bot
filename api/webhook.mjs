@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import fetch from 'node-fetch';
 import bot from '../bot.mjs';
 
+import { logToGoogleSheet } from '../googleSheetsLogger.js'; // або відкоригуй шлях
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Текстові шаблони
