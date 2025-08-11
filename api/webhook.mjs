@@ -105,10 +105,11 @@ const knowledgeBlock =
 
   // Один-єдиний system prompt (без дублювань)
   const systemPrompt = `
-Ти — офіційний AI‑помічник Vidzone. Відповідай стисло, професійно та дружньо.
+Ти — офіційний AI‑помічник Vidzone. Відповідай стисло, професійно і дружньо.
 Використовуй ТІЛЬКИ наведені нижче фрагменти знань. Якщо відповіді немає у фрагментах — скажи, що краще звернутися до менеджера.
+Не вигадуй, не додавай інформацію, якої немає у знаннях.
 У відповідях вказуй контакти лише комерційного директора: Анна Ільєнко (a.ilyenko@vidzone.com).
-
+Не відповідай на питання, які виходять за межі бази знань.
 # База знань (релевантні фрагменти):
 ${knowledgeBlock}
 `.trim();
@@ -121,7 +122,7 @@ ${knowledgeBlock}
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini', // можна залишити 'gpt-3.5-turbo', але цей точніший/стабільніший
+        model: 'gpt-3.5-turbo',
         temperature: 0.2,     // менше креативу → менше «вигадок»
         messages: [
           { role: 'system', content: systemPrompt },
@@ -129,6 +130,33 @@ ${knowledgeBlock}
         ],
       }),
     });
+const suspiciousPhrases = [
+  'я можу',
+  'уявіть',
+  'в теорії',
+  'гіпотетично',
+  'на мою думку',
+  'можливо',
+  'не впевнений',
+  'не знаю',
+  'немає інформації',
+  'не можу відповісти',
+  'я думаю',
+  'передбачаю',
+];
+
+const containsSuspicious = suspiciousPhrases.some(phrase =>
+  reply.toLowerCase().includes(phrase)
+);
+
+if (!reply || containsSuspicious) {
+  await bot.sendMessage(
+    id,
+    'Я ще вчуся, тому не на всі питання можу відповісти. Але точно допоможе наша команда! Звертайся до Анни Ільєнко: a.ilyenko@vidzone.com.'
+  );
+} else {
+  await bot.sendMessage(id, reply);
+}
 
     const data = await openaiRes.json();
     console.log('OpenAI full response:', JSON.stringify(data, null, 2));
