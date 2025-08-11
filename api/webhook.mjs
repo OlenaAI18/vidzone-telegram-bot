@@ -223,6 +223,15 @@ ${knowledgeBlock}
     const containsSuspicious = suspiciousPhrases.some((phrase) =>
       reply.toLowerCase().includes(phrase)
     );
+    // Логування у Google Sheets
+  const timestamp = new Date().toISOString();
+
+  await logToGoogleSheet({
+    timestamp,
+    userId,
+    userMessage,
+    botResponse: reply || 'Відповідь відсутня або замінена на шаблон',
+  });
 
     if (!reply || containsSuspicious) {
       await bot.sendMessage(
