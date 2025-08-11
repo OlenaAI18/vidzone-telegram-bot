@@ -1,4 +1,4 @@
-import { retrieveRelevantChunks } from '../lib/rag.mjs'; // шлях перевірено
+import { retrieveRelevantChunks } from '../lib/rag.mjs';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -7,10 +7,15 @@ import bot from '../bot.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Шаблони документів
+// Текстові шаблони
 const guaranteeLetter = fs.readFileSync(path.join(__dirname, '../data/guarantee_letter.md'), 'utf-8');
 const techRequirements = fs.readFileSync(path.join(__dirname, '../data/technical_requirements.md'), 'utf-8');
 const musicCertificate = fs.readFileSync(path.join(__dirname, '../data/music_certificate.md'), 'utf-8');
+
+// Шляхи до .docx файлів (потрібно попередньо створити і покласти сюди)
+const guaranteeLetterDocx = path.join(__dirname, '../data/guarantee_letter.docx');
+const techRequirementsDocx = path.join(__dirname, '../data/technical_requirements.docx');
+const musicCertificateDocx = path.join(__dirname, '../data/music_certificate.docx');
 
 // Анекдоти
 const jokes = [
@@ -19,10 +24,70 @@ const jokes = [
   'На Vidzone рекламу бачать навіть ті, хто не дивиться телевізор! 😎',
 ];
 
+// Кнопки вибору формату документа
+const documentOptionsKeyboard = {
+  reply_markup: {
+    inline_keyboard: [
+      [
+        { text: 'Текстом 📄', callback_data: 'doc_text' },
+        { text: 'Файлом Word 📝', callback_data: 'doc_word' },
+      ],
+    ],
+  },
+};
+
+// Збережемо в тимчасовому обʼєкті, який документ зараз пропонуємо (щоб callback міг знати контекст)
+const userDocumentRequests = new Map();
+
 export default async function handler(req, res) {
   const { body } = req;
-  if (!body?.message?.text) return res.status(200).send('Non-message update skipped');
+  if (!body?.message?.text && !body?.callback_query) return res.status(200).send('Non-message update skipped');
 
+  // Обробка callback_query (натискання кнопок)
+  if (body.callback_query) {
+    const callbackQuery = body.callback_query;
+    const chatId = callbackQuery.message.chat.id;
+    const userId = callbackQuery.from.id;
+    const data = callbackQuery.data;
+
+    // Дізнаємось, який документ цей користувач вибрав раніше
+    const docKey = userDocumentRequests.get(userId);
+
+    if (!docKey) {
+      await bot.sendMessage(chatId, 'Вибачте, не зміг визначити, який документ ви запитували. Будь ласка, спробуйте ще раз.');
+      await bot.answerCallbackQuery(callbackQuery.id);
+      return res.status(200).send('ok');
+    }
+
+    if (data === 'doc_text') {
+      // Відправка текстового варіанту
+      if (docKey === 'guaranteeLetter') {
+        await bot.sendMessage(chatId, guaranteeLetter);
+      } else if (docKey === 'techRequirements') {
+        await bot.sendMessage(chatId, techRequirements);
+      } else if (docKey === 'musicCertificate') {
+        await bot.sendMessage(chatId, musicCertificate);
+      }
+    } else if (data === 'doc_word') {
+      // Відправка Word-файлу
+      let filePath = null;
+      if (docKey === 'guaranteeLetter') filePath = guaranteeLetterDocx;
+      else if (docKey === 'techRequirements') filePath = techRequirementsDocx;
+      else if (docKey === 'musicCertificate') filePath = musicCertificateDocx;
+
+      if (filePath) {
+        await bot.sendDocument(chatId, filePath);
+      } else {
+        await bot.sendMessage(chatId, 'Файл наразі недоступний.');
+      }
+    }
+
+    userDocumentRequests.delete(userId); // чистимо запис після відповіді
+    await bot.answerCallbackQuery(callbackQuery.id);
+    return res.status(200).send('ok');
+  }
+
+  // Звичайний текстовий запит (message.text)
   const {
     chat: { id },
     text,
@@ -58,8 +123,10 @@ export default async function handler(req, res) {
     userMessage.includes('шаблон музичної довідки') ||
     userMessage.includes('музичну довідку')
   ) {
-    await bot.sendMessage(id, `🎼 Шаблон музичної довідки:\n\n${musicCertificate}`);
-    return res.status(200).send('Music Certificate Sent');
+    // Зберігаємо, що користувач хоче цей документ
+    userDocumentRequests.set(userId, 'musicCertificate');
+    await bot.sendMessage(id, 'Оберіть формат документа:', documentOptionsKeyboard);
+    return res.status(200).send('Music Certificate options sent');
   }
 
   if (
@@ -68,13 +135,15 @@ export default async function handler(req, res) {
     userMessage.includes('тех вимоги') ||
     userMessage.includes('вимоги до роликів')
   ) {
-    await bot.sendMessage(id, `📄 Технічні вимоги:\n\n${techRequirements}`);
-    return res.status(200).send('Technical Requirements Sent');
+    userDocumentRequests.set(userId, 'techRequirements');
+    await bot.sendMessage(id, 'Оберіть формат документа:', documentOptionsKeyboard);
+    return res.status(200).send('Technical Requirements options sent');
   }
 
   if (userMessage.includes('гарантійний лист') || userMessage.includes('шаблон гарантійного листа')) {
-    await bot.sendMessage(id, `📝 Гарантійний лист:\n\n${guaranteeLetter}`);
-    return res.status(200).send('Guarantee Letter Sent');
+    userDocumentRequests.set(userId, 'guaranteeLetter');
+    await bot.sendMessage(id, 'Оберіть формат документа:', documentOptionsKeyboard);
+    return res.status(200).send('Guarantee Letter options sent');
   }
 
   if (
@@ -102,7 +171,6 @@ export default async function handler(req, res) {
       ? relevantChunks.join('\n\n---\n\n')
       : '';
 
-  // Один-єдиний system prompt (без дублювань)
   const systemPrompt = `
 Ти — офіційний AI‑помічник Vidzone. Відповідай стисло, професійно і дружньо.
 Використовуй ТІЛЬКИ наведені нижче фрагменти знань. Якщо відповіді немає у фрагментах — скажи, що краще звернутися до менеджера.
@@ -123,7 +191,7 @@ ${knowledgeBlock}
       },
       body: JSON.stringify({
         model: 'gpt-3.5-turbo',
-        temperature: 0.2, // менше креативу → менше «вигадок»
+        temperature: 0.2,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: text },
