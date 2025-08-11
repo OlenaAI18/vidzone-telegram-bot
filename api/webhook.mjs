@@ -239,7 +239,16 @@ ${knowledgeBlock}
     }
 
     return res.status(200).send('ok');
-  } catch (err) {
+  } 
+    console.log('Logging:', { timestamp, userId, userMessage, botResponse: reply });
+await logToGoogleSheet({
+  timestamp,
+  userId,
+  userMessage,
+  botResponse: reply || 'Відповідь відсутня або замінена на шаблон',
+});
+
+  catch (err) {
     console.error('OpenAI error:', err);
     await bot.sendMessage(id, '⚠️ Помилка. Спробуйте ще раз пізніше.');
     return res.status(500).send('OpenAI error');
