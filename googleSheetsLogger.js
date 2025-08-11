@@ -2,8 +2,8 @@ import { google } from 'googleapis';
 
 const serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
 
-const SPREADSHEET_ID = '1OFqpUNXIayjpeq1ezX00fAtgNZt7fEQdpb77DNfDQLY
-';
+const SPREADSHEET_ID = '1OFqpUNXIayjpeq1ezX00fAtgNZt7fEQdpb77DNfDQLY';
+;
 
 const auth = new google.auth.GoogleAuth({
   credentials: serviceAccount,
