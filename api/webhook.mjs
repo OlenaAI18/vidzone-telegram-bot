@@ -74,7 +74,7 @@ const INTENT = {
   META: 'meta',
 };
 
-// Ключові патерни (Vidzone-домен)
+// Vidzone-домен
 const VIDZONE_PATTERNS = [
   /\bvidzone\b/i, /\bвідзон\w*\b/i, /\bвидзон\w*\b/i,
   /\bott\b/i, /\bctv\b/i, /\bsmart ?tv\b/i, /\bпрограмматік\b/i,
@@ -89,38 +89,47 @@ const VIDZONE_PATTERNS = [
   /\bшкодкін\b/i, /\bєвген левченко\b/i
 ];
 
-// Off-topic (усе «ліве», чутливе) — без ескалації
+// Off-topic
 const OFFTOPIC_PATTERNS = [
+  // історія/енциклопедія/політика
   /\bдруга\s+світов\w*\b/i, /\bсвітов\w*\s+війна\b/i, /\bколи\s+почал\w*\s+(?:2|ii|друг\w*)\s+світов\w*\s+війна\b/i,
   /\bвійна\b/i, /\bполітик\w*\b/i, /\bісторі\w*\b/i,
   /\bтелевізор\s+(?:коли|коли було)\s+(?:винайдено|винайшли)\b/i, /\bколи\s+винайдено\b/i, /\bколи\s+винайшли\b/i,
+  // побутове
   /\bрецепт\w*\b/i, /\bвареник\w*\b/i, /\bборщ\b/i, /\bпогода\b/i, /\bкурс(и)?\s+(долара|валют)\b/i,
-  /\bзарплат\w*\b/i, /\bсекрет\w*\b/i
+  // чутливе
+  /\bзарплат\w*\b/i, /\bсекрет\w*\b/i,
+  // схуднення/дієти
+  /\bсхудн\w*\b/i, /\bпохуд\w*\b/i, /\bдієт\w*\b/i,
 ];
 
-// Ескалація (всередині Vidzone-домена)
+// “хто такий/що таке” поза доменом
+const GENERIC_WHO_WHAT = /\b(хто\s+такий|що\s+таке)\b/i;
+
+// Ескалація (всередині домена)
 const ESCALATE_PATTERNS = [
   /\b(?:a\/?b|avb)(?:[\s-]?тест\w*)?\b/i,
   /\bспонсорств\w*\b/i,
-  /\bу\s+звіті\s+є\b/i, /\bяк\s+так\s+сталося\b/i, /\bнетипов\w*\s+вихід\b/i
+  /\bу\s+звіті\s+є\b/i, /\bяк\s+так\s+сталося\b/i, /\bнетипов\w*\s+вихід\b/i,
 ];
 
 // Meta
 const META_PATTERNS = [
   /\bчим\s+можеш\s+допомогти\b/i, /\bщо\s+ти\s+вмієш\b/i, /\bщо\s+ти\s+можеш\b/i,
-  /\bну\s+ти.*розумн\w*\b/i, /\bдякую\b/i
+  /\bну\s+ти.*розумн\w*\b/i, /\bдякую\b/i,
 ];
 
-// >>> ВАЖЛИВО: офтоп перевіряємо ПЕРШИМ
+// >>> ВАЖЛИВО: офтоп перший
 function classifyByRules(text) {
   if (OFFTOPIC_PATTERNS.some(p => p.test(text))) return INTENT.OFFTOPIC;
+  if (GENERIC_WHO_WHAT.test(text) && !VIDZONE_PATTERNS.some(p => p.test(text))) return INTENT.OFFTOPIC;
   if (ESCALATE_PATTERNS.some(p => p.test(text))) return INTENT.ESCALATE;
   if (META_PATTERNS.some(p => p.test(text))) return INTENT.META;
   if (VIDZONE_PATTERNS.some(p => p.test(text))) return INTENT.VIDZONE;
   return null;
 }
 
-// Шаблони відповідей
+// Шаблони
 const TEMPLATES = {
   META_CAPS:
     'Я допомагаю з усім, що стосується Vidzone: тарифи/CPM, пакети та аудиторії, OTT/CTV (загальні тренди з прив’язкою до наших продуктів), технічні вимоги й документи. Також підкажу з плануванням кампаній.',
@@ -132,21 +141,13 @@ const TEMPLATES = {
     'Я спеціалізуюся на Vidzone. Сформулюй, будь ласка, питання в рамках OTT/CTV, пакетів, таргетингу, цін або технічних вимог.',
 };
 
-// Забороняємо згадки внутрішніх документів у відповіді
+// Прибрати згадки внутрішніх файлів у відповіді
 function sanitizeInternalRefs(text) {
   if (!text) return text;
   let out = text;
-
-  // # Назва.розширення
   out = out.replace(/#\s*[^#"“”\n]+\.(txt|md|docx|doc|xlsx|xls|pptx|pdf)/gi, 'внутрішні матеріали команди Vidzone');
-
-  // «документ/файл "Назва..."»
   out = out.replace(/(?:документ(у|а|ом)?|файл(у|а|ом)?|document)\s+["“][^"”]+["”]/gi, 'внутрішні матеріали команди Vidzone');
-
-  // «звернутися до документу …» → узагальнюємо
   out = out.replace(/зверну[тт]ися\s+до\s+документ[ауі][^.,;]*[, ]*/gi, 'звернутися до внутрішніх матеріалів команди Vidzone, ');
-
-  // приберемо можливі подвоєні пробіли/коми
   out = out.replace(/\s{2,}/g, ' ').replace(/,\s*,/g, ', ').trim();
   return out;
 }
@@ -330,13 +331,10 @@ export default async function handler(req, res) {
   }
   const knowledgeBlock = Array.isArray(relevantChunks) && relevantChunks.length ? relevantChunks.join('\n\n---\n\n') : '';
 
-  // Якщо правила не визначили, але RAG знайшов — це Vidzone
-  if (!intent && knowledgeBlock) intent = INTENT.VIDZONE;
-  // Якщо взагалі нічого — оффтоп
+  // >>> БІЛЬШЕ НЕ АПҐРЕЙДИМО НАМІР ЧЕРЕЗ RAG <<<
   if (!intent) intent = INTENT.OFFTOPIC;
 
   // Крок 3: роутинг
-  // 3.1 Offtopic — м’яко відсікаємо (без ескалації)
   if (intent === INTENT.OFFTOPIC) {
     const botResponse = TEMPLATES.OFFTOPIC_POLITE;
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse });
@@ -344,7 +342,6 @@ export default async function handler(req, res) {
     return res.status(200).send('Offtopic');
   }
 
-  // 3.2 Ескалація — прямо до А. Ільєнко
   if (intent === INTENT.ESCALATE) {
     const botResponse = TEMPLATES.ESCALATE_ANI;
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse });
@@ -352,7 +349,6 @@ export default async function handler(req, res) {
     return res.status(200).send('Escalated');
   }
 
-  // 3.3 Meta
   if (intent === INTENT.META) {
     const botResponse = TEMPLATES.META_CAPS;
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse });
@@ -360,8 +356,7 @@ export default async function handler(req, res) {
     return res.status(200).send('Meta');
   }
 
-  // 3.4 Vidzone:
-  // Якщо знань нема — ескалюємо до Ільєнко
+  // VIDZONE: якщо знань нема — ескалація
   if (intent === INTENT.VIDZONE && !knowledgeBlock) {
     const botResponse = TEMPLATES.ESCALATE_ANI;
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse });
@@ -369,11 +364,10 @@ export default async function handler(req, res) {
     return res.status(200).send('VidzoneNoKB_Escalated');
   }
 
-  // Інакше — питаємо LLM тільки з RAG-контекстом
   const systemPrompt = `
 Ти — офіційний AI-помічник Vidzone. Відповідай стисло, професійно і дружньо.
 Використовуй ТІЛЬКИ наведені нижче фрагменти знань. Не вигадуй.
-Не згадуй назви або шляхи внутрішніх файлів/документів (типу "# Кейси.txt") у відповідях — кажи просто "внутрішні матеріали команди Vidzone".
+Не згадуй у відповідях назви або шляхи внутрішніх документів/файлів (типу "# Кейси.txt") — пиши просто "внутрішні матеріали команди Vidzone".
 Якщо у фрагментах немає чіткої відповіді — порадь ескалувати питання до ${CONTACT_ANI}.
 
 # База знань (релевантні фрагменти):
@@ -401,10 +395,9 @@ ${knowledgeBlock}
     const suspiciousPhrases = ['не впевнений', 'не знаю', 'немає інформації', 'не можу відповісти', 'передбачаю', 'гіпотетично', 'уявіть', 'в теорії'];
     const containsSuspicious = reply && suspiciousPhrases.some((phrase) => reply.toLowerCase().includes(phrase));
 
-    // Санітизуємо внутрішні посилання на документи
+    // Прибираємо згадки внутрішніх документів
     reply = sanitizeInternalRefs(reply);
 
-    // Якщо LLM дав порожньо/сумнівно — ескалюємо
     if (!reply || containsSuspicious) {
       const botResponse = TEMPLATES.ESCALATE_ANI;
       await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse });
@@ -412,7 +405,6 @@ ${knowledgeBlock}
       return res.status(200).send('VidzoneLLM_FallbackEscalated');
     }
 
-    // OK
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: userMessage, botResponse: reply });
     await bot.sendMessage(id, reply, mainMenuKeyboard);
     return res.status(200).send('ok');
