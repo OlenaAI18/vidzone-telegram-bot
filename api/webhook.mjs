@@ -96,7 +96,6 @@ const VIDZONE_PATTERNS = [
   /(?:на|у|в)\s+відзон\w*/i, /(?:на|у|в)\s+vidzone\b/i
 ];
 
-];
 
 
 // Off-topic
