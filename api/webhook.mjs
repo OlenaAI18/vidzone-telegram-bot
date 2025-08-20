@@ -74,7 +74,7 @@ const INTENT = {
   META: 'meta',
 };
 
-// Ключові патерни: усе, що має стосунок до Vidzone/CTV/OTT/таргетингу/пакетів/цін
+// Ключові патерни (Vidzone-домен)
 const VIDZONE_PATTERNS = [
   /\bvidzone\b/i, /\bвідзон\w*\b/i, /\bвидзон\w*\b/i,
   /\bott\b/i, /\bctv\b/i, /\bsmart ?tv\b/i, /\bпрограмматік\b/i,
@@ -89,48 +89,34 @@ const VIDZONE_PATTERNS = [
   /\bшкодкін\b/i, /\bєвген левченко\b/i
 ];
 
-// Off-topic (все «ліве», включно з чутливим — без ескалації)
+// Off-topic (усе «ліве», чутливе) — без ескалації
 const OFFTOPIC_PATTERNS = [
-  // історія/війна/політика/енциклопедія
-  /\bдруга\s+світов\w*\b/i,
-  /\bсвітов\w*\s+війна\b/i,
-  /\bколи\s+почал\w*\s+(?:2|ii|друг\w*)\s+світов\w*\s+війна\b/i,
-  /\bвійна\b/i,
-  /\bполітик\w*\b/i,
-  /\bісторі\w*\b/i,
-  /\bтелевізор\s+(?:коли|коли було)\s+(?:винайдено|винайшли)\b/i,
-  /\bколи\s+винайдено\b/i,
-  /\bколи\s+винайшли\b/i,
-  // побутове
-  /\bрецепт\w*\b/i,
-  /\bвареник\w*\b/i,
-  /\bборщ\b/i,
-  /\bпогода\b/i,
-  /\bкурс(и)?\s+(долара|валют)\b/i,
-  // чутливе/особисте
-  /\bзарплат\w*\b/i,
-  /\bсекрет\w*\b/i
+  /\bдруга\s+світов\w*\b/i, /\bсвітов\w*\s+війна\b/i, /\bколи\s+почал\w*\s+(?:2|ii|друг\w*)\s+світов\w*\s+війна\b/i,
+  /\bвійна\b/i, /\bполітик\w*\b/i, /\bісторі\w*\b/i,
+  /\bтелевізор\s+(?:коли|коли було)\s+(?:винайдено|винайшли)\b/i, /\bколи\s+винайдено\b/i, /\bколи\s+винайшли\b/i,
+  /\bрецепт\w*\b/i, /\bвареник\w*\b/i, /\bборщ\b/i, /\bпогода\b/i, /\bкурс(и)?\s+(долара|валют)\b/i,
+  /\bзарплат\w*\b/i, /\bсекрет\w*\b/i
 ];
 
-// Ескалація: A/B, спонсорство, запити по конкретних звітах/інцидентах (всередині Vidzone-домену)
+// Ескалація (всередині Vidzone-домена)
 const ESCALATE_PATTERNS = [
   /\b(?:a\/?b|avb)(?:[\s-]?тест\w*)?\b/i,
   /\bспонсорств\w*\b/i,
   /\bу\s+звіті\s+є\b/i, /\bяк\s+так\s+сталося\b/i, /\bнетипов\w*\s+вихід\b/i
 ];
 
-// Meta (про бота/похвала)
+// Meta
 const META_PATTERNS = [
   /\bчим\s+можеш\s+допомогти\b/i, /\bщо\s+ти\s+вмієш\b/i, /\bщо\s+ти\s+можеш\b/i,
   /\bну\s+ти.*розумн\w*\b/i, /\bдякую\b/i
 ];
 
-// Класифікатор (до RAG)
+// >>> ВАЖЛИВО: офтоп перевіряємо ПЕРШИМ
 function classifyByRules(text) {
+  if (OFFTOPIC_PATTERNS.some(p => p.test(text))) return INTENT.OFFTOPIC;
   if (ESCALATE_PATTERNS.some(p => p.test(text))) return INTENT.ESCALATE;
   if (META_PATTERNS.some(p => p.test(text))) return INTENT.META;
   if (VIDZONE_PATTERNS.some(p => p.test(text))) return INTENT.VIDZONE;
-  if (OFFTOPIC_PATTERNS.some(p => p.test(text))) return INTENT.OFFTOPIC;
   return null;
 }
 
@@ -145,6 +131,25 @@ const TEMPLATES = {
   FALLBACK_VIDZONE_HINT:
     'Я спеціалізуюся на Vidzone. Сформулюй, будь ласка, питання в рамках OTT/CTV, пакетів, таргетингу, цін або технічних вимог.',
 };
+
+// Забороняємо згадки внутрішніх документів у відповіді
+function sanitizeInternalRefs(text) {
+  if (!text) return text;
+  let out = text;
+
+  // # Назва.розширення
+  out = out.replace(/#\s*[^#"“”\n]+\.(txt|md|docx|doc|xlsx|xls|pptx|pdf)/gi, 'внутрішні матеріали команди Vidzone');
+
+  // «документ/файл "Назва..."»
+  out = out.replace(/(?:документ(у|а|ом)?|файл(у|а|ом)?|document)\s+["“][^"”]+["”]/gi, 'внутрішні матеріали команди Vidzone');
+
+  // «звернутися до документу …» → узагальнюємо
+  out = out.replace(/зверну[тт]ися\s+до\s+документ[ауі][^.,;]*[, ]*/gi, 'звернутися до внутрішніх матеріалів команди Vidzone, ');
+
+  // приберемо можливі подвоєні пробіли/коми
+  out = out.replace(/\s{2,}/g, ' ').replace(/,\s*,/g, ', ').trim();
+  return out;
+}
 
 // ===== Клавіатури
 const mainMenuKeyboard = {
@@ -356,7 +361,7 @@ export default async function handler(req, res) {
   }
 
   // 3.4 Vidzone:
-  // Якщо знань нема (knowledgeBlock порожній) — ескалюємо до Ільєнко
+  // Якщо знань нема — ескалюємо до Ільєнко
   if (intent === INTENT.VIDZONE && !knowledgeBlock) {
     const botResponse = TEMPLATES.ESCALATE_ANI;
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse });
@@ -368,8 +373,8 @@ export default async function handler(req, res) {
   const systemPrompt = `
 Ти — офіційний AI-помічник Vidzone. Відповідай стисло, професійно і дружньо.
 Використовуй ТІЛЬКИ наведені нижче фрагменти знань. Не вигадуй.
-
-Якщо в наведених фрагментах НІЧОГО про запит немає — скажи ескалювати питання до ${CONTACT_ANI} (і не відповідай загальними даними поза фрагментами).
+Не згадуй назви або шляхи внутрішніх файлів/документів (типу "# Кейси.txt") у відповідях — кажи просто "внутрішні матеріали команди Vidzone".
+Якщо у фрагментах немає чіткої відповіді — порадь ескалувати питання до ${CONTACT_ANI}.
 
 # База знань (релевантні фрагменти):
 ${knowledgeBlock}
@@ -391,10 +396,13 @@ ${knowledgeBlock}
 
     const data = await openaiRes.json();
     console.log('OpenAI full response:', JSON.stringify(data, null, 2));
-    const reply = data?.choices?.[0]?.message?.content?.trim() || '';
+    let reply = data?.choices?.[0]?.message?.content?.trim() || '';
 
     const suspiciousPhrases = ['не впевнений', 'не знаю', 'немає інформації', 'не можу відповісти', 'передбачаю', 'гіпотетично', 'уявіть', 'в теорії'];
-    const containsSuspicious = suspiciousPhrases.some((phrase) => reply.toLowerCase().includes(phrase));
+    const containsSuspicious = reply && suspiciousPhrases.some((phrase) => reply.toLowerCase().includes(phrase));
+
+    // Санітизуємо внутрішні посилання на документи
+    reply = sanitizeInternalRefs(reply);
 
     // Якщо LLM дав порожньо/сумнівно — ескалюємо
     if (!reply || containsSuspicious) {
