@@ -86,8 +86,13 @@ const VIDZONE_PATTERNS = [
   /\bводафон\b/i, /\bvodafone tv\b/i, /\bплатформ\w*\b/i, /\bканал\w*\b/i,
   /\bмоніторинг\b/i, /\bохопленн\w*\b/i, /\bчастот\w*\b/i,
   /\bпрогноз\b/i, /\bтренд\w*\b/i,
-  /\bшкодкін\b/i, /\bєвген левченко\b/i
+  /\bшкодкін\b/i, /\bєвген левченко\b/i,
+  // нове
+  /\bfmcg\b/i, /\bретейл\b/i, /\bretail\b/i,
+  /\bкейс(?:и|ів)?\b/i, /\bбренд\w*\b/i,
+  /\bкампані(?:я|ї|ю|ями|ях)\b/i, /\bрозміщенн\w*\b/i, /\bреклам\w*\b/i
 ];
+
 
 // Off-topic
 const OFFTOPIC_PATTERNS = [
@@ -108,10 +113,11 @@ const GENERIC_WHO_WHAT = /\b(хто\s+такий|що\s+таке)\b/i;
 
 // Ескалація (всередині домена)
 const ESCALATE_PATTERNS = [
-  /\b(?:a\/?b|avb)(?:[\s-]?тест\w*)?\b/i,
+  /\b(?:a\/?b|avb|а\/?б|авб)(?:[\s-]?тест\w*)?\b/i,   // додано кириличне «авб»
   /\bспонсорств\w*\b/i,
-  /\bу\s+звіті\s+є\b/i, /\bяк\s+так\s+сталося\b/i, /\bнетипов\w*\s+вихід\b/i,
+  /\bу\s+звіті\s+є\b/i, /\bяк\s+так\s+сталося\b/i, /\bнетипов\w*\s+вихід\b/i
 ];
+
 
 // Meta
 const META_PATTERNS = [
@@ -121,11 +127,22 @@ const META_PATTERNS = [
 
 // >>> ВАЖЛИВО: офтоп перший
 function classifyByRules(text) {
+  // 1) оффтоп — першим
   if (OFFTOPIC_PATTERNS.some(p => p.test(text))) return INTENT.OFFTOPIC;
   if (GENERIC_WHO_WHAT.test(text) && !VIDZONE_PATTERNS.some(p => p.test(text))) return INTENT.OFFTOPIC;
+
+  // 2) ескалація та мета
   if (ESCALATE_PATTERNS.some(p => p.test(text))) return INTENT.ESCALATE;
   if (META_PATTERNS.some(p => p.test(text))) return INTENT.META;
+
+  // 3) явні Vidzone-патерни
   if (VIDZONE_PATTERNS.some(p => p.test(text))) return INTENT.VIDZONE;
+
+  // 4) 🔸 резервний місток у Vidzone за бізнес-хінтами
+  const HINTS_VIDZONE = [/\bfmcg\b/i, /\bкейс\w*\b/i, /\bкампані\w*\b/i, /\bбренд\w*\b/i];
+  if (HINTS_VIDZONE.some(p => p.test(text))) return INTENT.VIDZONE;
+
+  // 5) інакше — невідомо (піде в OFFTOPIC далі за логікою)
   return null;
 }
 
