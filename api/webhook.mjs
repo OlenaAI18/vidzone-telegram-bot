@@ -96,6 +96,23 @@ function sanitizeInternalRefs(text) {
   return out;
 }
 
+// Нормалізація запиту: «відзон/видзон» -> "vidzone", прибираємо зайве
+function normalizeQuery(s = '') {
+  let t = (s || '').toLowerCase();
+  t = t.replace(/\bвідзон\w*\b/gi, 'vidzone')
+       .replace(/\bвидзон\w*\b/gi, 'vidzone')
+       .replace(/\s{2,}/g, ' ')
+       .trim();
+  return t;
+}
+
+// Розширення запиту для ретрівера (додаємо корисні синоніми/контекст)
+function expandForRetriever(s = '') {
+  const base = normalizeQuery(s);
+  const booster = ' | синоніми: Vidzone, платформа Vidzone, DSP Vidzone, OTT/CTV, Smart TV, programmatic, що таке Vidzone, опис Vidzone';
+  return base.length < 20 ? (base + booster) : (base + ' ' + booster);
+}
+
 // коректна оцінка релевантності KB до запиту (Unicode)
 function overlapScore(userText, kb) {
   if (!kb) return 0;
@@ -283,11 +300,9 @@ export default async function handler(req, res) {
 
   // ---- Пріоритетні відповіді (перед гейтами)
 
-  // (1) CEO / Євген Левченко — ширший матч (евген/євген/yevhen/evgen, "ceo vidzone" тощо)
-  const CEO_RX =
-    /\b((є|е)вген(ий)?|yevhen|evhen|evgen|yevgen)\s+левченко\b/i;
-  const CEO_ALT_RX =
-    /\b(ceo|сео|керівник|директор)\s+(vidzone|відзон\w*|видзон\w*)\b/i;
+  // (1) CEO / Євген Левченко — ширший матч
+  const CEO_RX = /\b((є|е)вген(ий)?|yevhen|evhen|evgen|yevgen)\s+левченко\b/i;
+  const CEO_ALT_RX = /\b(ceo|сео|керівник|директор)\s+(vidzone|відзон\w*|видзон\w*)\b/i;
 
   if (CEO_RX.test(userMessage) || CEO_ALT_RX.test(userMessage) || /levchenko\b/i.test(userMessage)) {
     await bot.sendMessage(id, 'CEO Vidzone — Євген Левченко.', mainMenuKeyboard);
@@ -336,19 +351,44 @@ export default async function handler(req, res) {
 
   // === КРОК 2. RAG ===
   let relevantChunks = [];
+  const vidzoneHint = VIDZONE_HINT_RX.test(userMessage);
+
   try {
-    relevantChunks = await retrieveRelevantChunks(text, process.env.OPENAI_API_KEY);
-    console.log('RAG top:', relevantChunks.slice(0, 2).map(t => t.slice(0, 80)));
+    // 1-а спроба: підсилений запит для ретрівера
+    const expandedQuery = expandForRetriever(text);
+    relevantChunks = await retrieveRelevantChunks(expandedQuery, process.env.OPENAI_API_KEY);
+
+    // 2-а спроба: якщо явно про Vidzone і релевантність слабка — додатковий запит-уточнення
+    const kbJoined1 = Array.isArray(relevantChunks) ? relevantChunks.join('\n\n---\n\n') : '';
+    const score1 = overlapScore(normalizeQuery(userMessage), kbJoined1);
+
+    if (vidzoneHint && (!kbJoined1 || score1 < 0.08)) {
+      const secondChanceQuery = 'що таке Vidzone? опис платформи Vidzone. Vidzone — DSP для реклами на Smart TV (OTT/CTV).';
+      const sc = await retrieveRelevantChunks(secondChanceQuery, process.env.OPENAI_API_KEY);
+      if (Array.isArray(sc) && sc.length) {
+        const seen = new Set(relevantChunks);
+        for (const c of sc) if (!seen.has(c)) relevantChunks.push(c);
+      }
+    }
   } catch (e) {
     console.error('RAG error:', e);
   }
+
   const knowledgeBlock = Array.isArray(relevantChunks) && relevantChunks.length ? relevantChunks.join('\n\n---\n\n') : '';
 
-  // Якщо KB порожній або “не про це” — ескалація
-  const kbRelevance = overlapScore(userMessage, knowledgeBlock);
-  if (!knowledgeBlock || kbRelevance < 0.12) {
+  // Якщо KB порожній або “не про це” — ескалація (поріг м’якший для явних запитів про Vidzone)
+  const kbRelevance = overlapScore(normalizeQuery(userMessage), knowledgeBlock);
+  const MIN_SCORE = vidzoneHint ? 0.0 : 0.12;
+
+  if (!knowledgeBlock || kbRelevance < MIN_SCORE) {
     const botResponse = TEMPLATES.ESCALATE_ANI;
-    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse, note: `Escalate: KB=${!!knowledgeBlock}, score=${kbRelevance.toFixed(2)}` });
+    await logToGoogleSheet({
+      timestamp: new Date().toISOString(),
+      userId,
+      userMessage: text,
+      botResponse,
+      note: `Escalate: KB=${!!knowledgeBlock}, score=${kbRelevance.toFixed(2)}, vidzoneHint=${vidzoneHint}`
+    });
     await bot.sendMessage(id, botResponse, mainMenuKeyboard);
     return res.status(200).send('NoOrLowKB_Escalated');
   }
