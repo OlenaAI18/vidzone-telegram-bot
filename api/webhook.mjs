@@ -63,128 +63,21 @@ const jokes = [
 ];
 
 // ============================
-// Намір-класифікація
+// Константи
 // ============================
 const CONTACT_ANI = 'Анна Ільєнко — a.ilyenko@vidzone.com';
 
-const INTENT = {
-  VIDZONE: 'vidzone',
-  ADTECH: 'adtech',      // 🔸 додано — загальні рекламні терміни
-  ESCALATE: 'escalate',
-  OFFTOPIC: 'offtopic',
-  META: 'meta',
-};
-
-// Vidzone-домен
-const VIDZONE_PATTERNS = [
-  /\bvidzone\b/i, /\bвідзон\w*\b/i, /\bвидзон\w*\b/i,
-  /\bott\b/i, /\bctv\b/i, /\bsmart ?tv\b/i, /\bпрограмматік\b/i,
-  /\bсегмент\w*\b/i, /\bтаргет(ин|ін)г\b/i, /\bгео-?таргетинг\b/i,
-  /\bпакет\w*\b/i, /\bжіноч(ий|і)\b/i, /\bчоловіч(ий|і)\b/i, /\bунісекс\b/i, /\bмандрівник\w*\b/i,
-  /\bціна\b/i, /\bвартіст\w*\b/i, /\bcpm\b/i, /\bcpt\b/i, /\bхронометраж\b/i,
-  /\bтехнічн\w+\s+вимог\w*\b/i, /\bролик\w*\b/i, /\bдодивленн\w*\b/i,
-  /\bофіс\b/i, /\bадреса\b/i, /\bрік заснуванн\w*\b/i, /\bскільки років працює\b/i,
-  /\bводафон\b/i, /\bvodafone tv\b/i, /\bплатформ\w*\b/i, /\bканал\w*\b/i,
-  /\bмоніторинг\b/i, /\bохопленн\w*\b/i, /\bчастот\w*\b/i,
-  /\bпрогноз\b/i, /\bтренд\w*\b/i,
-  /\bшкодкін\b/i, /\bєвген левченко\b/i,
-
-  // бізнес-хінти, які теж відносимо до Vidzone
-  /\bfmcg\b/i, /\bрите?йл\b/i, /\bretail\b/i,
-  /\bкейс(?:и|ів)?\b/i, /\bбренд\w*\b/i, /\bкампані\w*\b/i, /\bрозміщенн\w*\b/i, /\bреклам\w*\b/i,
-
-  // формулювання «на/у/в Vidzone»
-  /(?:на|у|в)\s+відзон\w*/i, /(?:на|у|в)\s+vidzone\b/i
-];
-
-// Загальні adtech-терміни (для «що таке …»)
-const ADTECH_TERMS = [
-  { key: 'геотаргетинг', rx: /\bгео-?таргетинг\b/i },
-  { key: 'таргетинг', rx: /\bтаргетинг\b/i },
-  { key: 'programmatic', rx: /\bпрограмматік\b/i },
-  { key: 'cpm', rx: /\bcpm\b/i },
-  { key: 'cpt', rx: /\bcpt\b/i },
-  { key: 'vtr', rx: /\bvtr\b/i },
-];
-
-// міні-словничок для «живих» коротких пояснень
-const GLOSSARY = {
-  'геотаргетинг': 'Геотаргетинг — показ реклами користувачам у вибраних географічних зонах (країна, місто, радіус, точки інтересу).',
-  'таргетинг': 'Таргетинг — підбір аудиторії за ознаками: демографія, інтереси, поведінка, пристрої, гео тощо.',
-  'programmatic': 'Programmatic — автоматизована закупівля показів через аукціони та платформи (DSP/SSP) із гнучкими налаштуваннями.',
-  'cpm': 'CPM — вартість тисячі показів (Cost per Mille). Метрика для планування охоплення.',
-  'cpt': 'CPT — вартість тисячі контактів/глядачів у конкретній аудиторії (Cost per Target).',
-  'vtr': 'VTR — частка переглядів ролика до кінця або до контрольної точки (View-Through Rate).',
-};
-
-// Off-topic
-const OFFTOPIC_PATTERNS = [
-  /\bдруга\s+світов\w*\b/i, /\bсвітов\w*\s+війна\b/i, /\bколи\s+почал\w*\s+(?:2|ii|друг\w*)\s+світов\w*\s+війна\b/i,
-  /\bвійна\b/i, /\bполітик\w*\b/i, /\bісторі\w*\b/i,
-  /\bтелевізор\s+(?:коли|коли було)\s+(?:винайдено|винайшли)\b/i, /\bколи\s+винайдено\b/i, /\bколи\s+винайшли\b/i,
-  /\bрецепт\w*\b/i, /\bвареник\w*\b/i, /\bборщ\b/i, /\bпогода\b/i, /\bкурс(и)?\s+(долара|валют)\b/i,
-  /\bзарплат\w*\b/i, /\bсекрет\w*\b/i,
-  /\bсхудн\w*\b/i, /\bпохуд\w*\b/i, /\bдієт\w*\b/i,
-];
-
-// “хто такий/що таке …”
-const GENERIC_WHO_WHAT = /\b(хто\s+такий|що\s+таке)\b/i;
-
-// ескалація (всередині домена)
-const ESCALATE_PATTERNS = [
-  /\b(?:a\/?b|avb|а\/?б|авб)(?:[\s-]?тест\w*)?\b/i,
-  /\bспонсорств\w*\b/i,
-  /\bу\s+звіті\s+є\b/i, /\bяк\s+так\s+сталося\b/i, /\bнетипов\w*\s+вихід\b/i
-];
-
-// Meta
-const META_PATTERNS = [
-  /\bчим\s+можеш\s+допомогти\b/i, /\bщо\s+ти\s+вмієш\b/i, /\bщо\s+ти\s+можеш\b/i,
-  /\bну\s+ти.*розумн\w*\b/i, /\bдякую\b/i,
-];
-
-// ===== Класифікатор
-function classifyByRules(text) {
-  // 1) оффтоп — першим
-  if (OFFTOPIC_PATTERNS.some(p => p.test(text))) return INTENT.OFFTOPIC;
-
-  // 2) якщо «що таке …» і це adtech або Vidzone — НЕ оффтоп
-  const mentionsVidzone = VIDZONE_PATTERNS.some(p => p.test(text));
-  const matchedAdtech = ADTECH_TERMS.find(t => t.rx.test(text));
-
-  if (GENERIC_WHO_WHAT.test(text)) {
-    if (mentionsVidzone) return INTENT.VIDZONE;
-    if (matchedAdtech) return INTENT.ADTECH; // коротке пояснення терміна
-    // інакше далі за правилами…
-  }
-
-  // 3) ескалація / мета
-  if (ESCALATE_PATTERNS.some(p => p.test(text))) return INTENT.ESCALATE;
-  if (META_PATTERNS.some(p => p.test(text))) return INTENT.META;
-
-  // 4) явні Vidzone-патерни
-  if (mentionsVidzone) return INTENT.VIDZONE;
-
-  // 5) загальні adtech-терміни без «що таке»
-  if (matchedAdtech) return INTENT.ADTECH;
-
-  // 6) інакше — невідомо (піде в OFFTOPIC далі)
-  return null;
-}
-
-// Шаблони
+// Шаблони відповідей
 const TEMPLATES = {
   META_CAPS:
-    'Я допомагаю з усім, що стосується Vidzone: тарифи/CPM, пакети та аудиторії, OTT/CTV (загальні тренди з прив’язкою до наших продуктів), технічні вимоги й документи. Також підкажу з плануванням кампаній.',
+    'Я допомагаю з усім, що стосується Vidzone: тарифи/CPM, пакети та аудиторії, OTT/CTV, технічні вимоги й документи. Також підкажу з плануванням кампаній.',
   OFFTOPIC_POLITE:
     'Вибачте, але я можу надавати інформацію лише про рекламні послуги та продукти компанії Vidzone. Якщо у вас є питання щодо реклами — із радістю допоможу.',
   ESCALATE_ANI:
     `Це краще уточнити з комерційним директором. Контакт: ${CONTACT_ANI}.`,
-  FALLBACK_VIDZONE_HINT:
-    'Я спеціалізуюся на Vidzone. Сформулюй, будь ласка, питання в рамках OTT/CTV, пакетів, таргетингу, цін або технічних вимог.',
 };
 
-// прибрати згадки внутрішніх файлів
+// Прибрати згадки внутрішніх файлів/шляхів
 function sanitizeInternalRefs(text) {
   if (!text) return text;
   let out = text;
@@ -224,6 +117,41 @@ const documentFormatKeyboard = {
 
 // Тимчасова памʼять вибору документів
 const userDocumentRequests = new Map();
+
+/**
+ * === РЕЛЕВАНТНІСТЬ ЗАПИТУ (LLM-gate) ===
+ * Повертає true, якщо запит стосується TV/OTT/CTV/Vidzone/реклами/медіабаїнгу/техвимог/документів/цін/аудиторій тощо.
+ */
+async function isRelevantToVidzone(userText) {
+  try {
+    const system = `
+Ти класифікатор. Визнач, чи запит користувача тематично стосується реклами на ТБ/CTV/OTT, медіабаїнгу, adtech, або конкретно платформи Vidzone (послуги, пакети, CPM/CPT, аудиторії, технічні вимоги/документи, планування/звіти, інтеграції/спонсорство).
+Відповідай рівно одним словом: "relevant" або "offtopic".
+Не вважай релевантними теми типу погода, курс валют, історія, кулінарія, спорт, біографії тощо.
+    `.trim();
+
+    const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        temperature: 0,
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: userText },
+        ],
+      }),
+    });
+
+    const data = await resp.json();
+    const answer = (data?.choices?.[0]?.message?.content || '').trim().toLowerCase();
+    return answer.startsWith('relevant');
+  } catch (e) {
+    // На збої класифікації — краще бути суворим (оффтоп), аби не халюцинував
+    console.error('Relevance gate error:', e);
+    return false;
+  }
+}
 
 export default async function handler(req, res) {
   const { body } = req;
@@ -361,10 +289,17 @@ export default async function handler(req, res) {
     return res.status(200).send('Joke Sent');
   }
 
-  // Крок 1: класифікація
-  let intent = classifyByRules(userMessage); // може бути null
+  // === КРОК 1. РЕЛЕВАНТНІСТЬ ===
+  const relevant = await isRelevantToVidzone(text);
 
-  // Крок 2: RAG
+  if (!relevant) {
+    const botResponse = TEMPLATES.OFFTOPIC_POLITE;
+    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse });
+    await bot.sendMessage(id, botResponse, mainMenuKeyboard);
+    return res.status(200).send('OfftopicByGate');
+  }
+
+  // === КРОК 2. RAG ===
   let relevantChunks = [];
   try {
     relevantChunks = await retrieveRelevantChunks(text, process.env.OPENAI_API_KEY);
@@ -374,69 +309,20 @@ export default async function handler(req, res) {
   }
   const knowledgeBlock = Array.isArray(relevantChunks) && relevantChunks.length ? relevantChunks.join('\n\n---\n\n') : '';
 
-  // >>> не підвищуємо намір через RAG
-  if (!intent) intent = INTENT.OFFTOPIC;
-
-  // Крок 3: роутинг
-  if (intent === INTENT.OFFTOPIC) {
-    const botResponse = TEMPLATES.OFFTOPIC_POLITE;
-    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse });
-    await bot.sendMessage(id, botResponse, mainMenuKeyboard);
-    return res.status(200).send('Offtopic');
-  }
-
-  if (intent === INTENT.ESCALATE) {
+  // Якщо знань нема — ескалюємо до А.І.
+  if (!knowledgeBlock) {
     const botResponse = TEMPLATES.ESCALATE_ANI;
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse });
     await bot.sendMessage(id, botResponse, mainMenuKeyboard);
-    return res.status(200).send('Escalated');
+    return res.status(200).send('NoKB_Escalated');
   }
 
-  if (intent === INTENT.META) {
-    const botResponse = TEMPLATES.META_CAPS;
-    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse });
-    await bot.sendMessage(id, botResponse, mainMenuKeyboard);
-    return res.status(200).send('Meta');
-  }
-
-  // 🔸 ADTECH: коротке дружнє пояснення терміна
-  if (intent === INTENT.ADTECH) {
-    const term = (ADTECH_TERMS.find(t => t.rx.test(userMessage)) || {}).key;
-    let reply = '';
-
-    if (term && GLOSSARY[term]) {
-      reply = GLOSSARY[term];
-      // якщо є згадка Vidzone або формулювання «на/у/в Vidzone» — при відсутності знань ескалуємо
-      const mentionsVidzone = VIDZONE_PATTERNS.some(p => p.test(userMessage));
-      if (mentionsVidzone && !knowledgeBlock) {
-        reply += `\n\nДля деталей саме на платформі Vidzone — краще уточнити з комерційним директором. Контакт: ${CONTACT_ANI}.`;
-      } else {
-        reply += `\n\nЯкщо потрібні деталі саме по Vidzone — допоможу сформувати запит або можу ескалювати до ${CONTACT_ANI}.`;
-      }
-    } else {
-      // запасний варіант (мати не повинен спрацьовувати)
-      reply = 'Це загальний рекламний термін. Якщо цікавить, як він застосовується на Vidzone — підкажу або ескалую до відповідального менеджера.';
-    }
-
-    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse: reply });
-    await bot.sendMessage(id, reply, mainMenuKeyboard);
-    return res.status(200).send('AdtechGlossary');
-  }
-
-  // VIDZONE: якщо знань нема — ескалація
-  if (intent === INTENT.VIDZONE && !knowledgeBlock) {
-    const botResponse = TEMPLATES.ESCALATE_ANI;
-    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse });
-    await bot.sendMessage(id, botResponse, mainMenuKeyboard);
-    return res.status(200).send('VidzoneNoKB_Escalated');
-  }
-
-  // Інакше — питаємо LLM тільки з RAG-контекстом
+  // === КРОК 3. Відповідь LLM лише з RAG-контекстом ===
   const systemPrompt = `
-Ти — офіційний AI-помічник Vidzone. Відповідай стисло, дружньо й «по суті».
+Ти — офіційний AI-помічник Vidzone. Відповідай стисло, професійно і дружньо.
 Використовуй ТІЛЬКИ наведені нижче фрагменти знань. Не вигадуй.
 Не згадуй у відповідях назви або шляхи внутрішніх документів/файлів (типу "# Кейси.txt") — пиши просто "внутрішні матеріали команди Vidzone".
-Якщо у фрагментах немає чіткої відповіді — порадь ескалувати питання до ${CONTACT_ANI}.
+Якщо у фрагментах немає чіткої відповіді — порадь ескалувати питання до ${CONTACT_ANI}.Ніколи не відповідай російською мовою
 
 # База знань (релевантні фрагменти):
 ${knowledgeBlock}
@@ -463,14 +349,13 @@ ${knowledgeBlock}
     const suspiciousPhrases = ['не впевнений', 'не знаю', 'немає інформації', 'не можу відповісти', 'передбачаю', 'гіпотетично', 'уявіть', 'в теорії'];
     const containsSuspicious = reply && suspiciousPhrases.some((phrase) => reply.toLowerCase().includes(phrase));
 
-    // санітизація
     reply = sanitizeInternalRefs(reply);
 
     if (!reply || containsSuspicious) {
       const botResponse = TEMPLATES.ESCALATE_ANI;
       await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse });
       await bot.sendMessage(id, botResponse, mainMenuKeyboard);
-      return res.status(200).send('VidzoneLLM_FallbackEscalated');
+      return res.status(200).send('LLM_FallbackEscalated');
     }
 
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: userMessage, botResponse: reply });
@@ -483,3 +368,4 @@ ${knowledgeBlock}
     return res.status(500).send('OpenAI error');
   }
 }
+
