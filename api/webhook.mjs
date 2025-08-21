@@ -326,22 +326,22 @@ export default async function handler(req, res) {
     }
   }
 
-  const knowledgeBlock = Array.isArray(relevantChunks) && relevantChunks.length ? relevantChunks.join('\n\n---\n\n') : '';
-  const kbRelevance = overlapScore(normalizeQuery(userMessage), knowledgeBlock);
-  const MIN_SCORE = 0.06; // м’який поріг, щоб ловити запити типу «хто такий левченко»
+  const knowledgeBlock = Array.isArray(relevantChunks) && relevantChunks.length
+  ? relevantChunks.join('\n\n---\n\n')
+  : '';
 
-  // (D) Якщо RAG нічого корисного не дав — ввічливий офтоп
-  if (!knowledgeBlock || kbRelevance < MIN_SCORE) {
-    const botResponse = TEMPLATES.OFFTOPIC_POLITE;
-    await logToGoogleSheet({
-      timestamp: new Date().toISOString(),
-      userId,
-      userMessage: rawText,
-      botResponse,
-      note: `Offtopic: KB=${!!knowledgeBlock}, score=${kbRelevance.toFixed(2)}`
-    });
-    await bot.sendMessage(id, botResponse, mainMenuKeyboard);
-    return res.status(200).send('Offtopic_NoKB');
+if (!knowledgeBlock) {
+  const botResponse = TEMPLATES.OFFTOPIC_POLITE;
+  await logToGoogleSheet({
+    timestamp: new Date().toISOString(),
+    userId,
+    userMessage: rawText,
+    botResponse,
+    note: 'Offtopic: KB empty'
+  });
+  await bot.sendMessage(id, botResponse, mainMenuKeyboard);
+  return res.status(200).send('Offtopic_NoKB');
+
   }
 
   // (E) Відповідь LLM лише з RAG-контекстом
