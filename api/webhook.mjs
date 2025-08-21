@@ -89,13 +89,15 @@ function normInput(s = '') {
 // Нормалізація ключових назв: «відзон/видзон» -> "vidzone"
 function normalizeQuery(s = '') {
   let t = normInput((s || '').toLowerCase());
+  // зберігаємо попередній символ через $1
   t = t
-    .replace(/(?<!\p{L})відзон\p{L}*/gu, 'vidzone')
-    .replace(/(?<!\p{L})видзон\p{L}*/gu, 'vidzone')
+    .replace(/(^|[^\p{L}])відзон\p{L}*/gu, '$1vidzone')
+    .replace(/(^|[^\p{L}])видзон\p{L}*/gu, '$1vidzone')
     .replace(/\s{2,}/g, ' ')
     .trim();
   return t;
 }
+
 
 // Очищений запит для RAG (без «booster»-шуму)
 function expandForRetriever(s = '') {
@@ -127,18 +129,22 @@ function overlapScore(userText, kb) {
 }
 
 // ===== Регекси з Юнікод-границями (без \b)
+// було: VIDZONE_HINT_RX = /(?<!\p{L})(...)(?!\p{L})/iu
 const VIDZONE_HINT_RX =
-  /(?<!\p{L})(vidzone|відзон\p{L}*|видзон\p{L}*|ott|ctv|smart ?tv|dsp|ssp|programmatic|программатік|tv|телебач\p{L}*|реклама|ролик|пакет|аудиторі\p{L}*|таргет\p{L}*|гео-?таргет\p{L}*|cpm|cpt|vtr|спонсорств\p{L}*|звіти|охопленн\p{L}*|частот\p{L}*)(?!\p{L})/iu;
+  /(^|[^\p{L}])(vidzone|відзон\p{L}*|видзон\p{L}*|ott|ctv|smart ?tv|dsp|ssp|programmatic|программатік|tv|телебач\p{L}*|реклама|ролик|пакет|аудиторі\p{L}*|таргет\p{L}*|гео-?таргет\p{L}*|cpm|cpt|vtr|спонсорств\p{L}*|звіти|охопленн\p{L}*|частот\p{L}*)(?!\p{L})/iu;
 
-const AVB_RX = /(?<!\p{L})(avb|audio\s*video\s*bridging|a\/?b|а\/?б|авб)(?!\p{L})/iu;
+const AVB_RX =
+  /(^|[^\p{L}])(avb|audio\s*video\s*bridging|a\/?b|а\/?б|авб)(?!\p{L})/iu;
 
 const BRAND_SPECIFIC_RX =
-  /(?<!\p{L})(клієнт\p{L}*|бренд\p{L}*|для)\s+[A-Za-zА-Яа-яІЇЄҐієї0-9][\w&\-.]{1,}(?!\p{L})/u;
+  /(клієнт\p{L}*|бренд\p{L}*|для)\s+[A-Za-zА-Яа-яІЇЄҐієї0-9][\w&\-.]{1,}/u;
 
+// виправлено: прибрана зайва дужка та без lookbehind
 const CEO_RX =
-  /(?<!\p{L})((є|е)вген(ий)?|yevhen|evhen|evgen|yevgen)\s+левченко(?!\p{L}))/iu;
+  /(^|[^\p{L}])((?:є|е)вген(?:ий)?|yevhen|evhen|evgen|yevgen)\s+левченко(?!\p{L})/iu;
+
 const CEO_ALT_RX =
-  /(?<!\p{L})(ceo|сео|керівник|директор)\s+(vidzone|відзон\p{L}*|видзон\p{L}*)(?!\p{L})/iu;
+  /(^|[^\p{L}])(ceo|сео|керівник|директор)\s+(vidzone|відзон\p{L}*|видзон\p{L}*)(?!\p{L})/iu;
 
 // ===== Клавіатури
 const mainMenuKeyboard = {
