@@ -77,12 +77,12 @@ const TEMPLATES = {
 };
 
 // ключові слова, які роблять запит “очевидно дотичним” (обхід gate)
-const VIDZONE_HINT_RX = /\b(vidzone|відзон\w*|видзон\w*|ott|ctv|smart ?tv|dsp|ssp|programmatic|программатік|реклама|ролик|пакет|аудиторі|таргет|гео|cpm|cpt|vtr|спонсорств\w*|звіти|охопленн\w*|частот\w*)\b/i;
+const VIDZONE_HINT_RX = /\b(vidzone|відзон\w*|видзон\w*|ott|ctv|smart ?tv|dsp|ssp|programmatic|программатік|tv|телебач\w*|реклама|ролик|пакет|аудиторі\w*|таргет\w*|гео-?таргет\w*|cpm|cpt|vtr|спонсорств\w*|звіти|охопленн\w*|частот\w*)\b/i;
 
 // AVB/A-B
-const AVB_RX = /\b(avb|audio\s*video\s*bridging|а\/?б|авб)\b/i;
+const AVB_RX = /\b(avb|audio\s*video\s*bridging|a\/?b|а\/?б|авб)\b/i;
 
-// бренд-специфічні запити типу “для клієнта Nestle”, “умови для бренду …”
+// бренд-специфічні запити типу “для клієнта Nestle”
 const BRAND_SPECIFIC_RX = /\b(клієнт\w*|бренд\w*|для)\s+[A-Za-zА-Яа-яІЇЄҐієї0-9][\w&\-.]{1,}\b/i;
 
 // швидка санітизація внутр. посилань
@@ -96,11 +96,11 @@ function sanitizeInternalRefs(text) {
   return out;
 }
 
-// проста оцінка релевантності KB до запиту
+// коректна оцінка релевантності KB до запиту (Unicode)
 function overlapScore(userText, kb) {
   if (!kb) return 0;
-  const stop = new Set(['та','і','або','на','в','у','до','про','за','що','як','чи','це','ми','ви','є','з','по','для','від','без']);
-  const tokens = (userText || '').toLowerCase().match(/[a-zа-язіїєґ0-9\-]{3,}/gi) || [];
+  const stop = new Set(['та','і','й','або','на','в','у','до','про','за','що','як','чи','це','ми','ви','є','з','по','для','від','без']);
+  const tokens = (userText || '').toLowerCase().match(/\p{L}{3,}/gu) || []; // лише слова (будь-яка літера)
   const keys = tokens.filter(t => !stop.has(t) && t.length >= 4);
   if (!keys.length) return 0;
   const text = kb.toLowerCase();
@@ -139,10 +139,7 @@ const documentFormatKeyboard = {
 // Тимчасова памʼять вибору документів
 const userDocumentRequests = new Map();
 
-/**
- * === LLM gate (fallback) ===
- * Якщо не спрацьовують наші «очевидні» ключові слова – питаємо модель, чи запит про Vidzone/CTV/adtech.
- */
+/** === LLM gate (fallback) === */
 async function isRelevantToVidzone(userText) {
   try {
     const system = `
@@ -284,21 +281,27 @@ export default async function handler(req, res) {
   console.log(`User asked: ${text}`);
   const userMessage = (text || '').toLowerCase().trim();
 
-  // Пріоритетні відповіді (до будь-яких гейтів)
-  // 1) CEO / Євген Левченко
-  if (/\b(євген|yevhen|evhen|evgen|yevgen)\s+левченко\b/i.test(userMessage) || /levchenko\b/i.test(userMessage)) {
+  // ---- Пріоритетні відповіді (перед гейтами)
+
+  // (1) CEO / Євген Левченко — ширший матч (евген/євген/yevhen/evgen, "ceo vidzone" тощо)
+  const CEO_RX =
+    /\b((є|е)вген(ий)?|yevhen|evhen|evgen|yevgen)\s+левченко\b/i;
+  const CEO_ALT_RX =
+    /\b(ceo|сео|керівник|директор)\s+(vidzone|відзон\w*|видзон\w*)\b/i;
+
+  if (CEO_RX.test(userMessage) || CEO_ALT_RX.test(userMessage) || /levchenko\b/i.test(userMessage)) {
     await bot.sendMessage(id, 'CEO Vidzone — Євген Левченко.', mainMenuKeyboard);
     return res.status(200).send('CEO Answer Sent');
   }
 
-  // 2) Явні жарти
+  // (2) Жарти
   if (userMessage.includes('анекдот') || userMessage.includes('жарт') || userMessage.includes('смішне') || userMessage.includes('веселе')) {
     const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
     await bot.sendMessage(id, randomJoke, mainMenuKeyboard);
     return res.status(200).send('Joke Sent');
   }
 
-  // 3) Старт
+  // (3) Старт
   if (userMessage === '/start' || userMessage.includes('привіт')) {
     await bot.sendMessage(
       id,
@@ -312,7 +315,7 @@ export default async function handler(req, res) {
     return res.status(200).send('Welcome Sent');
   }
 
-  // 4) Жорсткі тригери ескалації: AVB/A-B та бренд-запити
+  // (4) Жорсткі тригери ескалації: AVB/A-B та бренд-запити
   if (AVB_RX.test(userMessage) || BRAND_SPECIFIC_RX.test(userMessage)) {
     const botResponse = TEMPLATES.ESCALATE_ANI;
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse, note: 'Hard escalate (AVB/brand)' });
@@ -354,7 +357,7 @@ export default async function handler(req, res) {
   const systemPrompt = `
 Ти — офіційний AI-помічник Vidzone. Відповідай стисло, професійно і дружньо.
 Використовуй ТІЛЬКИ наведені нижче фрагменти знань. Не вигадуй.
-Не згадуй у відповідях назви або шляхи внутрішніх документів/файлів (типу "# Кейси.txt") — пиши просто "внутрішні матеріали команди Vidzone".
+Не згадуй у відповідях назви або шляхи внутрішніх документів/файлів (типу "внутрішні кейси") — пиши просто "внутрішні матеріали команди Vidzone".
 Якщо у фрагментах немає чіткої відповіді — порадь ескалувати питання до ${CONTACT_ANI}.
 
 # База знань (релевантні фрагменти):
@@ -401,4 +404,3 @@ ${knowledgeBlock}
     return res.status(500).send('OpenAI error');
   }
 }
-
