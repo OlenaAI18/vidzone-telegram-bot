@@ -72,20 +72,37 @@ const TEMPLATES = {
     'Я допомагаю з усім, що стосується Vidzone: тарифи/CPM, пакети та аудиторії, OTT/CTV, технічні вимоги й документи. Також підкажу з плануванням кампаній.',
   OFFTOPIC_POLITE:
     'Вибачте, але я можу надавати інформацію лише про рекламні послуги та продукти компанії Vidzone. Якщо у вас є питання щодо реклами — із радістю допоможу.',
-  ESCALATE_ANI:
-    `Це краще уточнити з комерційним директором. Контакт: ${CONTACT_ANI}.`,
+  ESCALATE_ANI: `Це краще уточнити з комерційним директором. Контакт: ${CONTACT_ANI}.`,
 };
 
-// ключові слова, які роблять запит “очевидно дотичним” (обхід gate)
-const VIDZONE_HINT_RX = /\b(vidzone|відзон\w*|видзон\w*|ott|ctv|smart ?tv|dsp|ssp|programmatic|программатік|tv|телебач\w*|реклама|ролик|пакет|аудиторі\w*|таргет\w*|гео-?таргет\w*|cpm|cpt|vtr|спонсорств\w*|звіти|охопленн\w*|частот\w*)\b/i;
+// ===== Утиліти нормалізації та санітизації
 
-// AVB/A-B
-const AVB_RX = /\b(avb|audio\s*video\s*bridging|a\/?b|а\/?б|авб)\b/i;
+// Юнікод-дружня нормалізація вводу
+function normInput(s = '') {
+  return (s || '')
+    .normalize('NFKC')
+    .replace(/[’'`´]/g, '’')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
 
-// бренд-специфічні запити типу “для клієнта Nestle”
-const BRAND_SPECIFIC_RX = /\b(клієнт\w*|бренд\w*|для)\s+[A-Za-zА-Яа-яІЇЄҐієї0-9][\w&\-.]{1,}\b/i;
+// Нормалізація ключових назв: «відзон/видзон» -> "vidzone"
+function normalizeQuery(s = '') {
+  let t = normInput((s || '').toLowerCase());
+  t = t
+    .replace(/(?<!\p{L})відзон\p{L}*/gu, 'vidzone')
+    .replace(/(?<!\p{L})видзон\p{L}*/gu, 'vidzone')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+  return t;
+}
 
-// швидка санітизація внутр. посилань
+// Очищений запит для RAG (без «booster»-шуму)
+function expandForRetriever(s = '') {
+  return normalizeQuery(s);
+}
+
+// Прибрані згадки про внутрішні файли
 function sanitizeInternalRefs(text) {
   if (!text) return text;
   let out = text;
@@ -96,28 +113,11 @@ function sanitizeInternalRefs(text) {
   return out;
 }
 
-// Нормалізація запиту: «відзон/видзон» -> "vidzone", прибираємо зайве
-function normalizeQuery(s = '') {
-  let t = (s || '').toLowerCase();
-  t = t.replace(/\bвідзон\w*\b/gi, 'vidzone')
-       .replace(/\bвидзон\w*\b/gi, 'vidzone')
-       .replace(/\s{2,}/g, ' ')
-       .trim();
-  return t;
-}
-
-// Розширення запиту для ретрівера (додаємо корисні синоніми/контекст)
-function expandForRetriever(s = '') {
-  const base = normalizeQuery(s);
-  const booster = ' | синоніми: Vidzone, платформа Vidzone, DSP Vidzone, OTT/CTV, Smart TV, programmatic, що таке Vidzone, опис Vidzone';
-  return base.length < 20 ? (base + booster) : (base + ' ' + booster);
-}
-
-// коректна оцінка релевантності KB до запиту (Unicode)
+// Оцінка релевантності KB до запиту (Unicode)
 function overlapScore(userText, kb) {
   if (!kb) return 0;
   const stop = new Set(['та','і','й','або','на','в','у','до','про','за','що','як','чи','це','ми','ви','є','з','по','для','від','без']);
-  const tokens = (userText || '').toLowerCase().match(/\p{L}{3,}/gu) || []; // лише слова (будь-яка літера)
+  const tokens = (userText || '').toLowerCase().match(/\p{L}{3,}/gu) || [];
   const keys = tokens.filter(t => !stop.has(t) && t.length >= 4);
   if (!keys.length) return 0;
   const text = kb.toLowerCase();
@@ -125,6 +125,20 @@ function overlapScore(userText, kb) {
   for (const k of keys) if (text.includes(k)) hits++;
   return hits / keys.length;
 }
+
+// ===== Регекси з Юнікод-границями (без \b)
+const VIDZONE_HINT_RX =
+  /(?<!\p{L})(vidzone|відзон\p{L}*|видзон\p{L}*|ott|ctv|smart ?tv|dsp|ssp|programmatic|программатік|tv|телебач\p{L}*|реклама|ролик|пакет|аудиторі\p{L}*|таргет\p{L}*|гео-?таргет\p{L}*|cpm|cpt|vtr|спонсорств\p{L}*|звіти|охопленн\p{L}*|частот\p{L}*)(?!\p{L})/iu;
+
+const AVB_RX = /(?<!\p{L})(avb|audio\s*video\s*bridging|a\/?b|а\/?б|авб)(?!\p{L})/iu;
+
+const BRAND_SPECIFIC_RX =
+  /(?<!\p{L})(клієнт\p{L}*|бренд\p{L}*|для)\s+[A-Za-zА-Яа-яІЇЄҐієї0-9][\w&\-.]{1,}(?!\p{L})/u;
+
+const CEO_RX =
+  /(?<!\p{L})((є|е)вген(ий)?|yevhen|evhen|evgen|yevgen)\s+левченко(?!\p{L}))/iu;
+const CEO_ALT_RX =
+  /(?<!\p{L})(ceo|сео|керівник|директор)\s+(vidzone|відзон\p{L}*|видзон\p{L}*)(?!\p{L})/iu;
 
 // ===== Клавіатури
 const mainMenuKeyboard = {
@@ -183,7 +197,8 @@ async function isRelevantToVidzone(userText) {
     return answer.startsWith('relevant');
   } catch (e) {
     console.error('Relevance gate error:', e);
-    return false; // на збої — краще суворо (оффтоп)
+    // ВАЖЛИВО: при збої НЕ ріжемо — даємо пройти далі до RAG
+    return true;
   }
 }
 
@@ -201,7 +216,7 @@ export default async function handler(req, res) {
     if (data === 'menu_about') {
       await bot.sendMessage(
         chatId,
-        'Vidzone — технологічна DSP-платформа для автоматизованої реклами на цифровому телебаченні (Smart TV, OTT). Дає змогу запускати программатік-рекламу з гнучким таргетингом і контролем бюджету.',
+        'Vidzone — технологічна DSP-платформа для автоматизованої реклами на цифровому телебаченні (Smart TV, OTT). Дає змогу запускати програматик-рекламу з гнучким таргетингом і контролем бюджету.',
         mainMenuKeyboard
       );
       await bot.answerCallbackQuery(callbackQuery.id);
@@ -296,15 +311,13 @@ export default async function handler(req, res) {
   } = body.message;
 
   console.log(`User asked: ${text}`);
-  const userMessage = (text || '').toLowerCase().trim();
+  const rawText = text || '';
+  const userMessage = normInput(rawText.toLowerCase());
 
   // ---- Пріоритетні відповіді (перед гейтами)
 
-  // (1) CEO / Євген Левченко — ширший матч
-  const CEO_RX = /\b((є|е)вген(ий)?|yevhen|evhen|evgen|yevgen)\s+левченко\b/i;
-  const CEO_ALT_RX = /\b(ceo|сео|керівник|директор)\s+(vidzone|відзон\w*|видзон\w*)\b/i;
-
-  if (CEO_RX.test(userMessage) || CEO_ALT_RX.test(userMessage) || /levchenko\b/i.test(userMessage)) {
+  // (1) CEO / Євген Левченко
+  if (CEO_RX.test(userMessage) || CEO_ALT_RX.test(userMessage) || /levchenko/iu.test(userMessage)) {
     await bot.sendMessage(id, 'CEO Vidzone — Євген Левченко.', mainMenuKeyboard);
     return res.status(200).send('CEO Answer Sent');
   }
@@ -333,18 +346,18 @@ export default async function handler(req, res) {
   // (4) Жорсткі тригери ескалації: AVB/A-B та бренд-запити
   if (AVB_RX.test(userMessage) || BRAND_SPECIFIC_RX.test(userMessage)) {
     const botResponse = TEMPLATES.ESCALATE_ANI;
-    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse, note: 'Hard escalate (AVB/brand)' });
+    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'Hard escalate (AVB/brand)' });
     await bot.sendMessage(id, botResponse, mainMenuKeyboard);
     return res.status(200).send('HardEscalate');
   }
 
   // === КРОК 1. РЕЛЕВАНТНІСТЬ ===
-  let relevant = VIDZONE_HINT_RX.test(userMessage); // обхід gate, якщо є явні ключові
-  if (!relevant) relevant = await isRelevantToVidzone(text);
+  let relevant = VIDZONE_HINT_RX.test(userMessage); // обхід гейта, якщо є явні ключові
+  if (!relevant) relevant = await isRelevantToVidzone(userMessage);
 
   if (!relevant) {
     const botResponse = TEMPLATES.OFFTOPIC_POLITE;
-    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse });
+    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse });
     await bot.sendMessage(id, botResponse, mainMenuKeyboard);
     return res.status(200).send('OfftopicByGate');
   }
@@ -354,11 +367,11 @@ export default async function handler(req, res) {
   const vidzoneHint = VIDZONE_HINT_RX.test(userMessage);
 
   try {
-    // 1-а спроба: підсилений запит для ретрівера
-    const expandedQuery = expandForRetriever(text);
+    // 1-а спроба: чистий нормалізований запит
+    const expandedQuery = expandForRetriever(userMessage);
     relevantChunks = await retrieveRelevantChunks(expandedQuery, process.env.OPENAI_API_KEY);
 
-    // 2-а спроба: якщо явно про Vidzone і релевантність слабка — додатковий запит-уточнення
+    // 2-а спроба: якщо явно про Vidzone і релевантність слабка — додатковий уточнюючий запит
     const kbJoined1 = Array.isArray(relevantChunks) ? relevantChunks.join('\n\n---\n\n') : '';
     const score1 = overlapScore(normalizeQuery(userMessage), kbJoined1);
 
@@ -376,16 +389,31 @@ export default async function handler(req, res) {
 
   const knowledgeBlock = Array.isArray(relevantChunks) && relevantChunks.length ? relevantChunks.join('\n\n---\n\n') : '';
 
-  // Якщо KB порожній або “не про це” — ескалація (поріг м’якший для явних запитів про Vidzone)
+  // === КРОК 2.5. Політика ескалації: без зрізання «очевидних» запитів
   const kbRelevance = overlapScore(normalizeQuery(userMessage), knowledgeBlock);
   const MIN_SCORE = vidzoneHint ? 0.0 : 0.12;
 
   if (!knowledgeBlock || kbRelevance < MIN_SCORE) {
+    if (vidzoneHint) {
+      // М’який безпечний короткий опис замість ескалації
+      const safeShort =
+        'Vidzone — технологічна DSP-платформа для програматик-реклами на Smart TV/OTT із гнучким таргетингом, частотним контролем, SSAI та преміум-контентом. Можу допомогти з тарифами/пакетами й техвимогами.';
+      await bot.sendMessage(id, safeShort, mainMenuKeyboard);
+      await logToGoogleSheet({
+        timestamp: new Date().toISOString(),
+        userId,
+        userMessage: rawText,
+        botResponse: 'Short_SAFE',
+        note: `KB empty/low, score=${kbRelevance.toFixed(2)}, vidzoneHint=${vidzoneHint}`
+      });
+      return res.status(200).send('SoftShort_NoKB');
+    }
+
     const botResponse = TEMPLATES.ESCALATE_ANI;
     await logToGoogleSheet({
       timestamp: new Date().toISOString(),
       userId,
-      userMessage: text,
+      userMessage: rawText,
       botResponse,
       note: `Escalate: KB=${!!knowledgeBlock}, score=${kbRelevance.toFixed(2)}, vidzoneHint=${vidzoneHint}`
     });
@@ -397,7 +425,7 @@ export default async function handler(req, res) {
   const systemPrompt = `
 Ти — офіційний AI-помічник Vidzone. Відповідай стисло, професійно і дружньо.
 Використовуй ТІЛЬКИ наведені нижче фрагменти знань. Не вигадуй.
-Не згадуй у відповідях назви або шляхи внутрішніх документів/файлів (типу "внутрішні кейси") — пиши просто "внутрішні матеріали команди Vidzone".
+Не згадуй у відповідях назви або шляхи внутрішніх документів/файлів — пиши просто "внутрішні матеріали команди Vidzone".
 Якщо у фрагментах немає чіткої відповіді — порадь ескалувати питання до ${CONTACT_ANI}.
 
 # База знань (релевантні фрагменти):
@@ -413,7 +441,7 @@ ${knowledgeBlock}
         temperature: 0.2,
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: text },
+          { role: 'user', content: rawText },
         ],
       }),
     });
@@ -428,8 +456,16 @@ ${knowledgeBlock}
     reply = sanitizeInternalRefs(reply);
 
     if (!reply || containsSuspicious) {
+      // Замість миттєвої ескалації — короткий безпечний опис, якщо це «наша» тема
+      if (VIDZONE_HINT_RX.test(userMessage)) {
+        const safeShort =
+          'Vidzone — технологічна DSP-платформа для програматик-реклами на Smart TV/OTT із гнучким таргетингом, частотним контролем, SSAI та преміум-контентом.';
+        await bot.sendMessage(id, safeShort, mainMenuKeyboard);
+        await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: 'Short_SAFE (LLM uncertain)' });
+        return res.status(200).send('LLM_ShortSafe');
+      }
       const botResponse = TEMPLATES.ESCALATE_ANI;
-      await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: text, botResponse, note: 'LLM uncertain -> escalate' });
+      await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'LLM uncertain -> escalate' });
       await bot.sendMessage(id, botResponse, mainMenuKeyboard);
       return res.status(200).send('LLM_FallbackEscalated');
     }
@@ -440,6 +476,14 @@ ${knowledgeBlock}
 
   } catch (err) {
     console.error('OpenAI error:', err);
+    // На помилці відповідаємо коротко, без ескалації, якщо тема «наша»
+    if (VIDZONE_HINT_RX.test(userMessage)) {
+      const safeShort =
+        'Vidzone — технологічна DSP-платформа для програматик-реклами на Smart TV/OTT. Підкажу тарифи/пакети, аудиторії та технічні вимоги, коли сервіс відновиться.';
+      await bot.sendMessage(id, safeShort, mainMenuKeyboard);
+      await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: 'Short_SAFE (OpenAI error)' });
+      return res.status(200).send('OpenAI_ShortSafe');
+    }
     await bot.sendMessage(id, '⚠️ Помилка. Спробуйте ще раз пізніше.', mainMenuKeyboard);
     return res.status(500).send('OpenAI error');
   }
