@@ -46,7 +46,7 @@ function loadJokes() {
     }
   } catch {}
 
-  // Фолбек — твій попередній список
+  // Фолбек — твій попередній список (урізаний прикладом не обмежується; встав свої ~50 жартів)
   return [
     'Vidzone — єдине місце, де «Skip Ad» не кнопка, а життєва позиція.',
     'У нас 99% VTR. Той 1% — це кіт, що випадково наступив на пульт.',
@@ -92,9 +92,9 @@ function loadJokes() {
 }
 const jokes = loadJokes();
 
-const JOKE_COOLDOWN_MS = 30_000;
-const lastJokeByUser = new Map();
-const servedJokesByChat = new Map();
+const JOKE_COOLDOWN_MS = 30_000;                 // 30с кулдаун на користувача
+const lastJokeByUser = new Map();                // userId → ts
+const servedJokesByChat = new Map();             // chatId → Set<index>
 function getFreshJoke(chatId) {
   if (!Array.isArray(jokes) || jokes.length === 0) return null;
   let used = servedJokesByChat.get(chatId);
@@ -150,7 +150,7 @@ const mainMenuKeyboard = {
   reply_markup: {
     inline_keyboard: [
       [{ text: '📺 Про Vidzone', callback_data: 'menu_about' }, { text: '📄 Шаблони документів', callback_data: 'menu_documents' }],
-      [{ text: '😄 Веселе про Vidzone', callback_data: 'menu_jokes' }, { text: '❓ Задати питання', callback_data: 'menu_help' }],
+      [{ text: '😄 Веселе про Vidzone', callback_data: 'menu_jokes' }, { text: '❓ Задти питання', callback_data: 'menu_help' }],
     ],
   },
 };
@@ -310,6 +310,7 @@ export default async function handler(req, res) {
     const userId = cq.from.id;
     const data = String(cq.data || '');
 
+    // Дебаунс на повторні кліки
     if (!handler._cbDebounce) handler._cbDebounce = new Map();
     const key = `${userId}:${data}`;
     const prev = handler._cbDebounce.get(key) || 0;
@@ -323,7 +324,7 @@ export default async function handler(req, res) {
     if (data === 'menu_about') {
       await bot.sendMessage(
         chatId,
-        'Vidzone — технологічна DSP-платфора для автоматизованої реклами на цифровому телебаченні (Smart TV, OTT). Дає змогу запускати програматик-рекламу з гнучким таргетингом і контролем бюджету.',
+        'Vidzone — технологічна DSP-платформа для автоматизованої реклами на цифровому телебаченні (Smart TV, OTT). Дає змогу запускати програматик-рекламу з гнучким таргетином і контролем бюджету.',
         mainMenuKeyboard
       );
       await bot.answerCallbackQuery(cq.id);
@@ -430,6 +431,7 @@ export default async function handler(req, res) {
 
   console.log(`intent=${intent}; text="${rawText}"`);
 
+  // A) Старт
   if (intent === 'START') {
     await bot.sendMessage(
       chatId,
@@ -443,11 +445,13 @@ export default async function handler(req, res) {
     return res.status(200).send('Welcome Sent');
   }
 
+  // B) CEO
   if (intent === 'CEO') {
     await bot.sendMessage(chatId, 'CEO Vidzone — Євген Левченко.', mainMenuKeyboard);
     return res.status(200).send('CEO Answer');
   }
 
+  // C) Техвимоги — з pinned джерела (без LLM)
   if (intent === 'TECH_REQS') {
     const answer = `${TEMPLATES.TECH_REQS_HEADER}\n\n${techRequirements}`;
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: '[TECH_REQS] text' });
@@ -462,11 +466,13 @@ export default async function handler(req, res) {
     return res.status(200).send('TECH_REQS');
   }
 
+  // D) Меню документів
   if (intent === 'DOC_MENU') {
     await bot.sendMessage(chatId, 'Оберіть шаблон документа:', documentMenuKeyboard);
     return res.status(200).send('DOC_MENU');
   }
 
+  // E) Жарти
   if (intent === 'JOKE') {
     const last = lastJokeByUser.get(userId) || 0;
     if (Date.now() - last < JOKE_COOLDOWN_MS) {
@@ -479,6 +485,7 @@ export default async function handler(req, res) {
     return res.status(200).send('Joke Sent');
   }
 
+  // F) Жорстка ескалація
   if (intent === 'ESCALATE') {
     const botResponse = TEMPLATES.ESCALATE_ANI;
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'Hard escalate (AVB/brand)' });
@@ -486,6 +493,7 @@ export default async function handler(req, res) {
     return res.status(200).send('HardEscalate');
   }
 
+  // G) Офтоп/анти-джейлбрейк
   if (intent === 'OOS') {
     const botResponse = buildGuidedFallback(rawText);
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'Off-scope/jailbreak' });
@@ -493,6 +501,7 @@ export default async function handler(req, res) {
     return res.status(200).send('OOS');
   }
 
+  // H) RAG-FIRST (строгий “grounded only”)
   let relevantChunks = [];
   try {
     const expandedQuery = userText;
