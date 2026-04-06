@@ -16,6 +16,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const guaranteeLetter = fs.readFileSync(path.join(__dirname, '../data/guarantee_letter.md'), 'utf-8');
 const techRequirements = fs.readFileSync(path.join(__dirname, '../data/technical_requirements.md'), 'utf-8');
 const musicCertificate = fs.readFileSync(path.join(__dirname, '../data/music_certificate.md'), 'utf-8');
+const channelsCatalog = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '../data/ad_channels.json'), 'utf-8')
+);
 
 const guaranteeLetterDocx = path.join(__dirname, '../data/guarantee_letter.docx');
 const techRequirementsDocx = path.join(__dirname, '../data/technical_requirements.docx');
@@ -56,7 +59,7 @@ function loadJokes() {
     'Vidzone: коли хочеться купити, ще до того, як зрозумів, що хочеться.',
     'Vidzone — це коли «рекламу дивляться всі», і навіть собака.',
     'У Vidzone навіть реклама знає твоє ім’я… і улюблений серіал.',
-    'Vidzone: «Ми бачимо, що ти любиш риболовлю». — «Я ж просто один раз глянув!»',
+    'Vidzone: «Ми бачимо, що ти любиш риболовлю». — «Я  просто один раз глянув!»',
     'У Vidzone реклама таргетована так, що навіть холодильник починає сумніватися, чи він не людина.',
     'Vidzone — там, де твій телевізор знає більше про тебе, ніж твій найкращий друг.',
     'Vidzone — єдине місце, где 15 секунд реклами пролітають як 5.',
@@ -110,6 +113,19 @@ function getFreshJoke(chatId) {
  * 3) Тексти/шаблони
  * ========================= */
 const CONTACT_ANI = 'Анна Ільєнко — a.ilyenko@vidzone.com';
+const CHANNELS = Array.isArray(channelsCatalog?.items) ? channelsCatalog.items : [];
+const FALLBACK_GUIDE_TEMPLATES = [
+  'Цю інформацію ви могли б дізнатись у каналі «{channel}». А інформацію щодо розміщення краще уточнити у {contact}.',
+  'Щоб швидко знайти відповідь по темі, раджу канал «{channel}». Щодо розміщення реклами — найкраще звернутись до {contact}.',
+  'Релевантна інформація, ймовірно, є в каналі «{channel}». А деталі розміщення краще узгодити з {contact}.',
+  'Під ваш запит найкраще підходить канал «{channel}». Для питань розміщення, будь ласка, зверніться до {contact}.',
+  'Це питання найзручніше перевірити в каналі «{channel}». А щодо запуску/розміщення реклами — контакт: {contact}.',
+  'Рекомендую подивитись канал «{channel}» — там найбільш релевантний контент. Інформацію про розміщення надасть {contact}.',
+  'Найближче до вашої теми — канал «{channel}». А про умови та розміщення краще поспілкуватися з {contact}.',
+  'Схожі матеріали є в каналі «{channel}». Для комерційних деталей і розміщення звертайтесь до {contact}.',
+  'Відповідь на це зазвичай можна знайти в каналі «{channel}». А питання розміщення вирішує {contact}.',
+  'За контекстом найрелевантніший канал — «{channel}». Інформацію щодо розміщення, будь ласка, уточнюйте у {contact}.',
+];
 const TEMPLATES = {
   OFFTOPIC_POLITE:
     'Вибачте, але я можу надавати інформацію лише про рекламні послуги та продукти компанії Vidzone. Якщо у вас є питання щодо реклами — із радістю допоможу.',
@@ -184,6 +200,42 @@ function overlapScore(userText, kb) {
   let hits = 0;
   for (const k of keys) if (text.includes(k)) hits++;
   return hits / keys.length;
+}
+function pickRelevantChannel(userText = '') {
+  if (!CHANNELS.length) return null;
+  const text = normalizeQuery(userText).toLowerCase();
+  let best = null;
+  let bestScore = -1;
+
+  for (const item of CHANNELS) {
+    const keywords = Array.isArray(item?.keywords) ? item.keywords : [];
+    const nameTokens = String(item?.name || '')
+      .toLowerCase()
+      .split(/[^a-zа-яіїєґ0-9+]+/iu)
+      .filter(Boolean);
+    const allKeys = [...keywords, ...nameTokens];
+    let score = 0;
+    for (const key of allKeys) {
+      if (!key) continue;
+      if (text.includes(String(key).toLowerCase())) score += 1;
+    }
+    if (score > bestScore) {
+      bestScore = score;
+      best = item;
+    }
+  }
+
+  if (bestScore <= 0) {
+    return [...CHANNELS].sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999))[0] || CHANNELS[0];
+  }
+  return best;
+}
+function buildGuidedFallback(userText = '') {
+  const channel = pickRelevantChannel(userText) || { name: '1+1 Україна' };
+  const template = FALLBACK_GUIDE_TEMPLATES[Math.floor(Math.random() * FALLBACK_GUIDE_TEMPLATES.length)] || FALLBACK_GUIDE_TEMPLATES[0];
+  return template
+    .replace('{channel}', channel.name || '1+1 Україна')
+    .replace('{contact}', CONTACT_ANI);
 }
 
 /* =========================
@@ -423,7 +475,7 @@ export default async function handler(req, res) {
 
   // G) Офтоп/анти-джейлбрейк
   if (intent === 'OOS') {
-    const botResponse = TEMPLATES.OFFTOPIC_POLITE;
+    const botResponse = buildGuidedFallback(rawText);
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'Off-scope/jailbreak' });
     await bot.sendMessage(chatId, botResponse, mainMenuKeyboard);
     return res.status(200).send('OOS');
@@ -457,7 +509,7 @@ export default async function handler(req, res) {
     : '';
 
   if (!knowledgeBlock || overlapScore(userText, knowledgeBlock) < 0.25) {
-    const botResponse = TEMPLATES.OFFTOPIC_POLITE;
+    const botResponse = buildGuidedFallback(rawText);
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'Offtopic: KB weak/empty' });
     await bot.sendMessage(chatId, botResponse, mainMenuKeyboard);
     return res.status(200).send('Offtopic_NoKB');
@@ -505,7 +557,7 @@ ${knowledgeBlock}
     const containsSuspicious = reply && suspicious.some((p) => reply.toLowerCase().includes(p));
 
     if (!reply || containsSuspicious) {
-      const botResponse = TEMPLATES.OFFTOPIC_POLITE;
+      const botResponse = buildGuidedFallback(rawText);
       await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'LLM uncertain -> polite' });
       await bot.sendMessage(chatId, botResponse, mainMenuKeyboard);
       return res.status(200).send('LLM_Polite');
