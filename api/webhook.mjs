@@ -46,7 +46,7 @@ function loadJokes() {
     }
   } catch {}
 
-  // Фолбек — твій попередній список (урізаний прикладом не обмежується; встав свої ~50 жартів)
+  // Фолбек — твій попередній список
   return [
     'Vidzone — єдине місце, де «Skip Ad» не кнопка, а життєва позиція.',
     'У нас 99% VTR. Той 1% — це кіт, що випадково наступив на пульт.',
@@ -59,7 +59,7 @@ function loadJokes() {
     'Vidzone: коли хочеться купити, ще до того, як зрозумів, що хочеться.',
     'Vidzone — це коли «рекламу дивляться всі», і навіть собака.',
     'У Vidzone навіть реклама знає твоє ім’я… і улюблений серіал.',
-    'Vidzone: «Ми бачимо, що ти любиш риболовлю». — «Я  просто один раз глянув!»',
+    'Vidzone: «Ми бачимо, що ти любиш риболовлю». — «Я ж просто один раз глянув!»',
     'У Vidzone реклама таргетована так, що навіть холодильник починає сумніватися, чи він не людина.',
     'Vidzone — там, де твій телевізор знає більше про тебе, ніж твій найкращий друг.',
     'Vidzone — єдине місце, где 15 секунд реклами пролітають як 5.',
@@ -157,7 +157,7 @@ const documentFormatKeyboard = {
   reply_markup: {
     inline_keyboard: [
       [{ text: '📄 Текстом', callback_data: 'format_text' }, { text: '📝 Файлом Word', callback_data: 'format_word' }],
-      [{ text: '↩️ Повернутися до вибору документів', callback_data: 'back_to_documents' }],
+      [{ text: '↩️ Повернтися до вибору документів', callback_data: 'back_to_documents' }],
     ],
   },
 };
@@ -201,11 +201,15 @@ function overlapScore(userText, kb) {
   for (const k of keys) if (text.includes(k)) hits++;
   return hits / keys.length;
 }
+function randomItem(arr = []) {
+  if (!Array.isArray(arr) || arr.length === 0) return null;
+  return arr[Math.floor(Math.random() * arr.length)] || null;
+}
 function pickRelevantChannel(userText = '') {
   if (!CHANNELS.length) return null;
   const text = normalizeQuery(userText).toLowerCase();
-  let best = null;
   let bestScore = -1;
+  const scored = [];
 
   for (const item of CHANNELS) {
     const keywords = Array.isArray(item?.keywords) ? item.keywords : [];
@@ -219,16 +223,18 @@ function pickRelevantChannel(userText = '') {
       if (!key) continue;
       if (text.includes(String(key).toLowerCase())) score += 1;
     }
-    if (score > bestScore) {
-      bestScore = score;
-      best = item;
-    }
+    if (score > bestScore) bestScore = score;
+    scored.push({ item, score });
   }
 
   if (bestScore <= 0) {
-    return [...CHANNELS].sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999))[0] || CHANNELS[0];
+    const byPriority = [...CHANNELS].sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));
+    const topPool = byPriority.slice(0, Math.min(8, byPriority.length));
+    return randomItem(topPool) || byPriority[0] || CHANNELS[0];
   }
-  return best;
+
+  const bestCandidates = scored.filter(({ score }) => score === bestScore).map(({ item }) => item);
+  return randomItem(bestCandidates) || bestCandidates[0] || CHANNELS[0];
 }
 function buildGuidedFallback(userText = '') {
   const channel = pickRelevantChannel(userText) || { name: '1+1 Україна' };
