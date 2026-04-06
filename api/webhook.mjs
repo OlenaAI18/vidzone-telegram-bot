@@ -28,7 +28,6 @@ const musicCertificateDocx = path.join(__dirname, '../data/music_certificate.doc
  * 2) Жарти — зовнішній файл
  * ========================= */
 function loadJokes() {
-  // Пробуємо JSON: { "items": ["...", "..."] }
   try {
     const p = path.join(__dirname, '../data/jokes.json');
     if (fs.existsSync(p)) {
@@ -36,7 +35,6 @@ function loadJokes() {
       if (Array.isArray(items) && items.length) return items.map(s => String(s).trim()).filter(Boolean);
     }
   } catch {}
-  // Пробуємо TXT/MD — один жарт на рядок
   try {
     const p = path.join(__dirname, '../data/jokes.txt');
     if (fs.existsSync(p)) {
@@ -46,7 +44,6 @@ function loadJokes() {
     }
   } catch {}
 
-  // Фолбек — твій попередній список (урізаний прикладом не обмежується; встав свої ~50 жартів)
   return [
     'Vidzone — єдине місце, де «Skip Ad» не кнопка, а життєва позиція.',
     'У нас 99% VTR. Той 1% — це кіт, що випадково наступив на пульт.',
@@ -58,7 +55,7 @@ function loadJokes() {
     'Ми показуємо рекламу навіть тим, хто ховається за диваном.',
     'Vidzone: коли хочеться купити, ще до того, як зрозумів, що хочеться.',
     'Vidzone — це коли «рекламу дивляться всі», і навіть собака.',
-    'У Vidzone навіть реклама знає твоє ім’я… і улюблений серіал.',
+    'У Vidzone навіть реклама знає твоє ім'я… і улюблений серіал.',
     'Vidzone: «Ми бачимо, що ти любиш риболовлю». — «Я ж просто один раз глянув!»',
     'У Vidzone реклама таргетована так, що навіть холодильник починає сумніватися, чи він не людина.',
     'Vidzone — там, де твій телевізор знає більше про тебе, ніж твій найкращий друг.',
@@ -92,9 +89,9 @@ function loadJokes() {
 }
 const jokes = loadJokes();
 
-const JOKE_COOLDOWN_MS = 30_000;                 // 30с кулдаун на користувача
-const lastJokeByUser = new Map();                // userId → ts
-const servedJokesByChat = new Map();             // chatId → Set<index>
+const JOKE_COOLDOWN_MS = 30_000;
+const lastJokeByUser = new Map();
+const servedJokesByChat = new Map();
 function getFreshJoke(chatId) {
   if (!Array.isArray(jokes) || jokes.length === 0) return null;
   let used = servedJokesByChat.get(chatId);
@@ -123,35 +120,105 @@ const THEMATIC_FALLBACK_POOLS = [
   },
   {
     keywords: ['вареник', 'рецепт', 'кулінар', 'їжа', 'страва', 'кухн', 'готув', 'салат', 'борщ'],
-    channels: ['[М] ТОП HD'],
+    channels: ['[M] Блог Кухня UA HD', '[M] Кулінарія', 'Vidzone Кулінарний мікс HD'],
   },
   {
     keywords: ['спорт', 'футбол', 'матч', 'чемпіонат', 'бокс', 'єдинобор', 'тренування'],
-    channels: ['[М] ТОП HD', '[M] CEO Club'],
+    channels: ['[М] ТОП HD', '[M] CEO Club', 'Setanta Sports'],
   },
   {
-    keywords: ['бізнес', 'маркетинг', 'креатив', 'стартап', 'керівник', 'ceo', 'технолог', 'it'],
+    keywords: ['бізнес', 'маркетинг', 'стартап', 'керівник', 'ceo', 'технолог', 'it'],
     channels: ['[M] IT. Бізнес. Креатив.', '[M] CEO Club'],
   },
+  {
+    keywords: ['погод', 'клімат', 'природ', 'тварин', 'зоо', 'рослин'],
+    channels: ['Vidzone ONE PLANET+', 'Viasat Nature EU', '[M] Zoosvit'],
+  },
+  {
+    keywords: ['музик', 'пісн', 'концерт', 'виконавець'],
+    channels: ['MusicBox', 'М1', 'М2', '4ever Music'],
+  },
+  {
+    keywords: ['подорож', 'мандр', 'відпуст', 'туризм', 'країн'],
+    channels: ['[M] Блог Мандри 1 HD', '[M] Блог Подорожі', 'Vidzone Орел і Решка'],
+  },
+  {
+    keywords: ['політик', 'новин', 'війн', 'збройн', 'трамп', 'зеленськ', 'вибор'],
+    channels: ['24 Канал', 'EspresoTV', '5 канал'],
+  },
+  {
+    keywords: ['авто', 'мото', 'машин', 'автомобіл'],
+    channels: ['[M] Блог Авто/Мото UA HD', 'MGG Світ авто-мото техніки HD'],
+  },
+  {
+    keywords: ['ремонт', 'будівництв', 'інтерьєр', 'дача', 'сад', 'город'],
+    channels: ['[M] Блог Будівництво та ремонт HD', 'MGG Будівництво та ремонт HD', 'Дача'],
+  },
+  {
+    keywords: ['здоров', 'медицин', 'лікар', 'хвороб', 'дієт', 'вітамін'],
+    channels: ['Vidzone МЕДИЧНІ СЕРІАЛИ', '[М] Доктор Комаровський', '36.6'],
+  },
 ];
-const FALLBACK_GUIDE_TEMPLATES = [
-  'Цю інформацію ви могли б дізнатись у каналі «{channel}».',
-  'Щоб швидко знайти відповідь по темі, раджу канал «{channel}».',
-  'Релевантна інформація, ймовірно, є в каналі «{channel}».',
-  'Під ваш запит найкраще підходить канал «{channel}».',
-  'Це питання найзручніше перевірити в каналі «{channel}».',
-  'Рекомендую подивитись канал «{channel}» — там найбільш релевантний контент.',
-  'Найближче до вашої теми — канал «{channel}».',
-  'Схожі матеріали є в каналі «{channel}».',
-  'Відповідь на це зазвичай можна знайти в каналі «{channel}».',
-  'За контекстом найрелевантніший канал — «{channel}».',
+
+/* =========================
+ * Нативні fallback-шаблони
+ * Логіка: пом'якшене "не моя тема" → канал → реклама Vidzone
+ * ========================= */
+
+// Вступні фрази — чому бот не відповідає на це
+const FALLBACK_INTRO_TEMPLATES = [
+  'Це поза моєю зоною компетенції — я більше про рекламу на digital TV.',
+  'На це питання я чесно не маю відповіді — не моя територія.',
+  'Я спеціаліст з реклами, а не з цієї теми — тут не підкажу.',
+  'Я не маю думки з цього приводу — моя справа реклама, а не {topic}.',
+  'Точної відповіді немає — але є кое-що краще.',
+  'Тут я пасую — але є канал, який може зацікавити.',
+  'Не моя тема, але зате я знаю, де глянути.',
+  'Відповіді у мене немає, але є підказка.',
 ];
+
+// Перехід до каналу
+const FALLBACK_BRIDGE_TEMPLATES = [
+  'Зате для любителів такого контенту є канал «{channel}» — там якраз близька тематика.',
+  'Але якщо тебе цікавить щось у цьому напрямку, зверни увагу на канал «{channel}».',
+  'Натомість є канал «{channel}» — там схожий контент для твоєї аудиторії.',
+  'Схожі теми знайдеш на каналі «{channel}» — якраз для такої аудиторії.',
+  'Зате є «{channel}» — там саме цей тип контенту.',
+  'Але «{channel}» — канал, де це питання явно у темі.',
+  'Якщо тема близька твоїй аудиторії, «{channel}» — хороший варіант.',
+  'Пошукай на «{channel}» — там і близько, і в тему.',
+];
+
+// Хвіст про рекламу Vidzone
 const FALLBACK_AD_TAIL_TEMPLATES = [
-  'До речі, на цьому каналі розміщується реклама Vidzone, а деталі про розміщення краще уточнити у {contact}.',
-  'На цьому каналі також розміщується реклама Vidzone. Якщо потрібні деталі — зверніться до {contact}.',
-  'Там виходить реклама Vidzone; щодо умов і форматів найкраще написати {contact}.',
-  'На каналі розміщується реклама Vidzone, а всі деталі по розміщенню підкаже {contact}.',
+  'До речі, на цьому каналі виходить реклама Vidzone. Якщо цікавить розміщення — {contact}.',
+  'І так, на «{channel}» є реклама Vidzone. Деталі у {contact}.',
+  'На цьому каналі розміщується реклама Vidzone — усі умови підкаже {contact}.',
+  'Канал входить у мережу Vidzone — щодо розміщення пиши {contact}.',
+  'А ще «{channel}» — це частина інвентарю Vidzone. Питання по рекламі — до {contact}.',
 ];
+
+// Контекстні підказки залежно від теми запиту (щоб intro звучав природніше)
+const TOPIC_HINTS = [
+  { rx: /(трамп|зеленськ|байден|путін|політик|вибор|президент)/i, topic: 'політику' },
+  { rx: /(погод|дощ|сніг|спека|мороз|клімат)/i, topic: 'погоду' },
+  { rx: /(рецепт|борщ|вареник|тістечк|готував|їжа|страва)/i, topic: 'кулінарію' },
+  { rx: /(астролог|гороскоп|зодіак|козеріг|скорпіон)/i, topic: 'астрологію' },
+  { rx: /(анекдот|жарт|смішн|гумор)/i, topic: 'жарти' },
+  { rx: /(фільм|кіно|серіал)/i, topic: 'кіно' },
+  { rx: /(музик|пісн|виконавець)/i, topic: 'музику' },
+  { rx: /(спорт|футбол|баскетбол|теніс)/i, topic: 'спорт' },
+  { rx: /(кіт|собак|тварин|кот|пес)/i, topic: 'тварин' },
+  { rx: /(гра|ігор|steam|playstation)/i, topic: 'ігри' },
+];
+
+function detectTopic(text) {
+  for (const { rx, topic } of TOPIC_HINTS) {
+    if (rx.test(text)) return topic;
+  }
+  return null;
+}
+
 const TEMPLATES = {
   OFFTOPIC_POLITE:
     'Вибачте, але я можу надавати інформацію лише про рекламні послуги та продукти компанії Vidzone. Якщо у вас є питання щодо реклами — із радістю допоможу.',
@@ -195,7 +262,7 @@ const userDocumentRequests = new Map();
 function normInput(s = '') {
   return (s || '')
     .normalize('NFKC')
-    .replace(/[’'`´]/g, '’')
+    .replace(/[''`´]/g, ''')
     .replace(/\s{2,}/g, ' ')
     .trim();
 }
@@ -211,8 +278,8 @@ function normalizeQuery(s = '') {
 function sanitizeInternalRefs(text) {
   if (!text) return text;
   let out = text;
-  out = out.replace(/#\s*[^#"“”\n]+\.(txt|md|docx|doc|xlsx|xls|pptx|pdf)/gi, 'внутрішні матеріали команди Vidzone');
-  out = out.replace(/(?:документ(у|а|ом)?|файл(у|а|ом)?|document)\s+["“][^"”]+["”]/gi, 'внутрішні матеріали команди Vidzone');
+  out = out.replace(/#\s*[^#"""\n]+\.(txt|md|docx|doc|xlsx|xls|pptx|pdf)/gi, 'внутрішні матеріали команди Vidzone');
+  out = out.replace(/(?:документ(у|а|ом)?|файл(у|а|ом)?|document)\s+[""][^""]+[""]/gi, 'внутрішні матеріали команди Vidzone');
   out = out.replace(/зверну[тт]ися\s+до\s+документ[ауі][^.,;]*[, ]*/gi, 'звернутися до внутрішніх матеріалів команди Vidzone, ');
   return out.replace(/\s{2,}/g, ' ').replace(/,\s*,/g, ', ').trim();
 }
@@ -244,7 +311,6 @@ function pickRelevantChannel(userText = '') {
   if (!CHANNELS.length) return null;
   const text = normalizeQuery(userText).toLowerCase();
 
-  const channelByName = new Map(CHANNELS.map((item) => [String(item?.name || '').toLowerCase(), item]));
   const byPriority = CHANNELS
     .slice()
     .sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));
@@ -302,16 +368,36 @@ function pickRelevantChannel(userText = '') {
 
   return best || defaultChannel;
 }
+
 async function buildGuidedFallback(userText = '') {
   const ruleBasedChannel = pickRelevantChannel(userText) || { name: OFFTOPIC_DEFAULT_CHANNELS[0] };
   const llmChannel = await pickRelevantChannelByLLM(userText);
   const channel = llmChannel || ruleBasedChannel;
-  const template = pickVariantByText(FALLBACK_GUIDE_TEMPLATES, `${userText}:guide`) || FALLBACK_GUIDE_TEMPLATES[0];
-  const adTail = pickVariantByText(FALLBACK_AD_TAIL_TEMPLATES, `${userText}:tail`) || FALLBACK_AD_TAIL_TEMPLATES[0];
-  const base = template
-    .replace('{channel}', channel.name || OFFTOPIC_DEFAULT_CHANNELS[0]);
-  const tail = adTail.replace('{contact}', CONTACT_ANI);
-  return `${base} ${tail}`;
+  const channelName = channel.name || OFFTOPIC_DEFAULT_CHANNELS[0];
+
+  // Detect topic for more natural intro
+  const topic = detectTopic(userText);
+
+  // Pick intro phrase
+  let intro = pickVariantByText(FALLBACK_INTRO_TEMPLATES, `${userText}:intro`) || FALLBACK_INTRO_TEMPLATES[0];
+  if (topic) {
+    intro = intro.replace('{topic}', topic);
+  } else {
+    intro = intro.replace(' — не моя справа реклама, а {topic}', '');
+    intro = intro.replace(' — не моя справа, а {topic}', '');
+    intro = intro.replace('{topic}', 'цю тему');
+  }
+
+  // Pick bridge to channel
+  const bridge = (pickVariantByText(FALLBACK_BRIDGE_TEMPLATES, `${userText}:bridge`) || FALLBACK_BRIDGE_TEMPLATES[0])
+    .replace(/{channel}/g, channelName);
+
+  // Pick ad tail
+  const tail = (pickVariantByText(FALLBACK_AD_TAIL_TEMPLATES, `${userText}:tail`) || FALLBACK_AD_TAIL_TEMPLATES[0])
+    .replace(/{channel}/g, channelName)
+    .replace('{contact}', CONTACT_ANI);
+
+  return `${intro} ${bridge} ${tail}`;
 }
 
 /* =========================
@@ -425,7 +511,6 @@ export default async function handler(req, res) {
     const userId = cq.from.id;
     const data = String(cq.data || '');
 
-    // Дебаунс на повторні кліки
     if (!handler._cbDebounce) handler._cbDebounce = new Map();
     const key = `${userId}:${data}`;
     const prev = handler._cbDebounce.get(key) || 0;
@@ -566,7 +651,7 @@ export default async function handler(req, res) {
     return res.status(200).send('CEO Answer');
   }
 
-  // C) Техвимоги — з pinned джерела (без LLM)
+  // C) Техвимоги
   if (intent === 'TECH_REQS') {
     const answer = `${TEMPLATES.TECH_REQS_HEADER}\n\n${techRequirements}`;
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: '[TECH_REQS] text' });
@@ -616,11 +701,10 @@ export default async function handler(req, res) {
     return res.status(200).send('OOS');
   }
 
-  // H) RAG-FIRST (строгий “grounded only”)
+  // H) RAG-FIRST
   let relevantChunks = [];
   try {
-    const expandedQuery = userText;
-    relevantChunks = await retrieveRelevantChunks(expandedQuery, process.env.OPENAI_API_KEY);
+    relevantChunks = await retrieveRelevantChunks(userText, process.env.OPENAI_API_KEY);
   } catch (e) {
     console.error('RAG error (primary):', e);
   }
@@ -659,7 +743,7 @@ export default async function handler(req, res) {
 • Якщо інформації недостатньо — чемно скажи про це і порадь звернутись до ${CONTACT_ANI}.
 • Заборонено згадувати назви/шляхи внутрішніх документів — кажи «внутрішні матеріали команди Vidzone».
 • Твої теми: медіа, реклама, OTT/CTV, Vidzone та суміжні питання.
-• Поза цими темами — м’який офтоп з поверненням у тематику.
+• Поза цими темами — м'який офтоп з поверненням у тематику.
 
 ФОРМАТ:
 • Якщо питання про «технічні вимоги» — дай чіткі вимоги, пунктами (якщо є в KB).
@@ -708,3 +792,4 @@ ${knowledgeBlock}
     return res.status(500).send('OpenAI error');
   }
 }
+
