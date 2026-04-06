@@ -114,20 +114,24 @@ function getFreshJoke(chatId) {
  * ========================= */
 const CONTACT_ANI = 'Анна Ільєнко — a.ilyenko@vidzone.com';
 const CHANNELS = Array.isArray(channelsCatalog?.items) ? channelsCatalog.items : [];
-const OFFTOPIC_DEFAULT_CHANNEL = '[М] ТОП HD';
-const OFFTOPIC_KIDS_CHANNEL = 'ПЛЮСПЛЮС';
+const OFFTOPIC_DEFAULT_CHANNELS = ['[М] ТОП HD', '[M] CEO Club', '[M] IT. Бізнес. Креатив.'];
+const OFFTOPIC_KIDS_CHANNELS = ['ПЛЮСПЛЮС', 'PIXEL', 'Cine+ Kids', '[M] МУЛЬТПРЕМЬЕРА HD'];
 const THEMATIC_FALLBACK_POOLS = [
   {
-    keywords: ['дит', 'мульт', 'lego', 'казк', 'школ', 'іграшк', 'дошкіл'],
-    channels: ['ПЛЮСПЛЮС', 'PIXEL', 'Cine+ Kids', '[M] МУЛЬТПРЕМЬЕРА HD'],
+    keywords: ['дит', 'діт', 'мульт', 'lego', 'казк', 'школ', 'іграшк', 'дошкіл'],
+    channels: OFFTOPIC_KIDS_CHANNELS,
   },
   {
     keywords: ['вареник', 'рецепт', 'кулінар', 'їжа', 'страва', 'кухн', 'готув', 'салат', 'борщ'],
     channels: ['[М] ТОП HD'],
   },
   {
-    keywords: ['спорт', 'футбол', 'матч', 'чемпіонат', 'бокс'],
-    channels: ['[М] ТОП HD'],
+    keywords: ['спорт', 'футбол', 'матч', 'чемпіонат', 'бокс', 'єдинобор', 'тренування'],
+    channels: ['[М] ТОП HD', '[M] CEO Club'],
+  },
+  {
+    keywords: ['бізнес', 'маркетинг', 'креатив', 'стартап', 'керівник', 'ceo', 'технолог', 'it'],
+    channels: ['[M] IT. Бізнес. Креатив.', '[M] CEO Club'],
   },
 ];
 const FALLBACK_GUIDE_TEMPLATES = [
@@ -241,18 +245,26 @@ function pickRelevantChannel(userText = '') {
   const text = normalizeQuery(userText).toLowerCase();
 
   const channelByName = new Map(CHANNELS.map((item) => [String(item?.name || '').toLowerCase(), item]));
-  const defaultChannel = channelByName.get(OFFTOPIC_DEFAULT_CHANNEL.toLowerCase()) || CHANNELS[0];
-  const kidsDefault = channelByName.get(OFFTOPIC_KIDS_CHANNEL.toLowerCase()) || defaultChannel;
+  const byPriority = CHANNELS
+    .slice()
+    .sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));
+
+  const getPoolChannels = (names = []) => byPriority.filter((c) => names.includes(c?.name));
+  const pickFromPool = (names = [], seed = '') => {
+    const pool = getPoolChannels(names);
+    if (!pool.length) return null;
+    return pickVariantByText(pool, seed) || pool[0];
+  };
+
+  const defaultChannel = pickFromPool(OFFTOPIC_DEFAULT_CHANNELS, `${text}:default`) || byPriority[0] || CHANNELS[0];
+  const kidsDefault = pickFromPool(OFFTOPIC_KIDS_CHANNELS, `${text}:kids-default`) || defaultChannel;
 
   for (const pool of THEMATIC_FALLBACK_POOLS) {
     const hasTheme = pool.keywords.some((k) => text.includes(k));
     if (!hasTheme) continue;
-    const matched = CHANNELS.filter((c) => pool.channels.includes(c?.name));
+    const matched = getPoolChannels(pool.channels);
     if (!matched.length) continue;
-    const sorted = matched
-      .slice()
-      .sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));
-    return sorted[0];
+    return pickVariantByText(matched, `${text}:${pool.keywords[0]}`) || matched[0];
   }
 
   let bestScore = -1;
@@ -283,19 +295,21 @@ function pickRelevantChannel(userText = '') {
   }
 
   if (bestScore <= 0) {
-    const kidsHints = ['дит', 'мульт', 'казк', 'іграшк', 'школ', 'родин'];
+    const kidsHints = ['дит', 'діт', 'мульт', 'казк', 'іграшк', 'школ', 'родин'];
     if (kidsHints.some((hint) => text.includes(hint))) return kidsDefault;
     return defaultChannel;
   }
 
   return best || defaultChannel;
 }
-function buildGuidedFallback(userText = '') {
-  const channel = pickRelevantChannel(userText) || { name: OFFTOPIC_DEFAULT_CHANNEL };
+async function buildGuidedFallback(userText = '') {
+  const ruleBasedChannel = pickRelevantChannel(userText) || { name: OFFTOPIC_DEFAULT_CHANNELS[0] };
+  const llmChannel = await pickRelevantChannelByLLM(userText);
+  const channel = llmChannel || ruleBasedChannel;
   const template = pickVariantByText(FALLBACK_GUIDE_TEMPLATES, `${userText}:guide`) || FALLBACK_GUIDE_TEMPLATES[0];
   const adTail = pickVariantByText(FALLBACK_AD_TAIL_TEMPLATES, `${userText}:tail`) || FALLBACK_AD_TAIL_TEMPLATES[0];
   const base = template
-    .replace('{channel}', channel.name || OFFTOPIC_DEFAULT_CHANNEL);
+    .replace('{channel}', channel.name || OFFTOPIC_DEFAULT_CHANNELS[0]);
   const tail = adTail.replace('{contact}', CONTACT_ANI);
   return `${base} ${tail}`;
 }
@@ -337,6 +351,65 @@ function detectIntent(userTextNorm) {
  * ========================= */
 const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini';
 const TEMPERATURE = 0.1;
+const ENABLE_GPT_CHANNEL_ROUTER = process.env.ENABLE_GPT_CHANNEL_ROUTER !== 'false';
+
+async function pickRelevantChannelByLLM(userText = '') {
+  if (!ENABLE_GPT_CHANNEL_ROUTER) return null;
+  if (!process.env.OPENAI_API_KEY) return null;
+  if (!CHANNELS.length) return null;
+
+  const catalog = CHANNELS.map((c) => ({
+    name: c?.name,
+    theme: c?.theme || '',
+    keywords: Array.isArray(c?.keywords) ? c.keywords.slice(0, 8) : [],
+    priority: c?.priority ?? 999,
+  }));
+
+  const routerPrompt = `
+Ти маршрутизатор каналу для Vidzone.
+Обери ОДИН найбільш релевантний канал зі списку нижче для питання користувача.
+Поверни ЛИШЕ JSON без пояснень у форматі: {"channel":"<точна_назва_каналу>"}.
+Якщо питання загальне/офтоп — обери найкращий універсальний канал для широкої аудиторії.
+
+Список каналів:
+${JSON.stringify(catalog)}
+`.trim();
+
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: OPENAI_MODEL,
+        temperature: 0,
+        messages: [
+          { role: 'system', content: routerPrompt },
+          { role: 'user', content: userText },
+        ],
+      }),
+    });
+
+    const data = await res.json();
+    const raw = data?.choices?.[0]?.message?.content?.trim();
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw);
+    const pickedName = String(parsed?.channel || '').trim();
+    if (!pickedName) return null;
+
+    const exact = CHANNELS.find((c) => c?.name === pickedName);
+    if (exact) return exact;
+
+    const lowered = pickedName.toLowerCase();
+    return CHANNELS.find((c) => String(c?.name || '').toLowerCase() === lowered) || null;
+  } catch (e) {
+    console.error('Channel router LLM error:', e);
+    return null;
+  }
+}
 
 /* =========================
  * 8) Основний хендлер
@@ -366,7 +439,7 @@ export default async function handler(req, res) {
     if (data === 'menu_about') {
       await bot.sendMessage(
         chatId,
-        'Vidzone — технологічна DSP-платформа для автоматизованої реклами на цифровому телебаченні (Smart TV, OTT). Дає змогу запускати програмати-рекламу з гнучким таргетингом і контролем бюджету.',
+        'Vidzone — технологічна DSP-платформа для автоматизованої реклами на цифровому телебаченні (Smart TV, OTT). Дає змогу запускати програматик-рекламу з гнучким таргетингом і контролем бюджету.',
         mainMenuKeyboard
       );
       await bot.answerCallbackQuery(cq.id);
@@ -537,7 +610,7 @@ export default async function handler(req, res) {
 
   // G) Офтоп/анти-джейлбрейк
   if (intent === 'OOS') {
-    const botResponse = buildGuidedFallback(rawText);
+    const botResponse = await buildGuidedFallback(rawText);
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'Off-scope/jailbreak' });
     await bot.sendMessage(chatId, botResponse, mainMenuKeyboard);
     return res.status(200).send('OOS');
@@ -571,7 +644,7 @@ export default async function handler(req, res) {
     : '';
 
   if (!knowledgeBlock || overlapScore(userText, knowledgeBlock) < 0.25) {
-    const botResponse = buildGuidedFallback(rawText);
+    const botResponse = await buildGuidedFallback(rawText);
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'Offtopic: KB weak/empty' });
     await bot.sendMessage(chatId, botResponse, mainMenuKeyboard);
     return res.status(200).send('Offtopic_NoKB');
@@ -589,7 +662,7 @@ export default async function handler(req, res) {
 • Поза цими темами — м’який офтоп з поверненням у тематику.
 
 ФОРМАТ:
- Якщо питання про «технічні вимоги» — дай чіткі вимоги, пунктами (якщо є в KB).
+• Якщо питання про «технічні вимоги» — дай чіткі вимоги, пунктами (якщо є в KB).
 • Якщо про планування/пакети/CPM — дай практичні пункти, приклади, застереження.
 
 KB (релевантні фрагменти):
@@ -619,7 +692,7 @@ ${knowledgeBlock}
     const containsSuspicious = reply && suspicious.some((p) => reply.toLowerCase().includes(p));
 
     if (!reply || containsSuspicious) {
-      const botResponse = buildGuidedFallback(rawText);
+      const botResponse = await buildGuidedFallback(rawText);
       await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'LLM uncertain -> polite' });
       await bot.sendMessage(chatId, botResponse, mainMenuKeyboard);
       return res.status(200).send('LLM_Polite');
