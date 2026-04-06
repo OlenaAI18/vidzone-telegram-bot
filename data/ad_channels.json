@@ -1,161 +1,123 @@
 {
   "items": [
     {
-      "name": "1+1 Україна",
-      "group": "1+1 Media",
-      "priority": 1,
-      "keywords": ["новини", "шоу", "серіал", "розваги", "прайм", "сімейний"]
-    },
-    {
-      "name": "2+2",
-      "group": "1+1 Media",
-      "priority": 2,
-      "keywords": ["футбол", "спорт", "бойовик", "чоловіча", "активний"]
-    },
-    {
-      "name": "ТЕТ",
-      "group": "1+1 Media",
-      "priority": 3,
-      "keywords": ["молодь", "реаліті", "розваги", "гумор", "лайфстайл"]
-    },
-    {
-      "name": "Бігуді",
-      "group": "1+1 Media",
-      "priority": 4,
-      "keywords": ["жіночий", "серіал", "мелодрама", "стосунки"]
-    },
-    {
       "name": "ПЛЮСПЛЮС",
-      "group": "1+1 Media",
+      "group": "Other Channel",
+      "theme": "Дитячий",
+      "priority": 1,
+      "keywords": [
+        "дитячий",
+        "kids",
+        "мультфільми",
+        "родина",
+        "плюсплюс"
+      ]
+    },
+    {
+      "name": "PIXEL",
+      "group": "Other Channel",
+      "theme": "Дитячий",
+      "priority": 2,
+      "keywords": [
+        "дитячий",
+        "kids",
+        "мультфільми",
+        "родина",
+        "pixel"
+      ]
+    },
+    {
+      "name": "Cine+ Kids",
+      "group": "Other Channel",
+      "theme": "Дитячий",
+      "priority": 3,
+      "keywords": [
+        "дитячий",
+        "kids",
+        "мультфільми",
+        "родина",
+        "cine+"
+      ]
+    },
+    {
+      "name": "[M] МУЛЬТПРЕМЬЕРА HD",
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 4,
+      "keywords": [
+        "дитячий",
+        "kids",
+        "мультфільми",
+        "родина",
+        "мультпремьера"
+      ]
+    },
+    {
+      "name": "MGG Козаки HD",
+      "group": "MEGOGO",
+      "theme": "Дитячий",
       "priority": 5,
-      "keywords": ["діти", "мультфільм", "навчання", "родина", "kids"]
+      "keywords": [
+        "дитячий",
+        "kids",
+        "мультфільми",
+        "родина",
+        "козаки"
+      ]
     },
     {
-      "name": "К1",
-      "group": "Inter Media Group",
+      "name": "[M] Kids HD",
+      "group": "MEGOGO",
+      "theme": "Дитячий",
       "priority": 6,
-      "keywords": ["подорожі", "пізнавальне", "документальний", "лайфстайл"]
+      "keywords": [
+        "дитячий",
+        "kids",
+        "мультфільми",
+        "родина"
+      ]
     },
     {
-      "name": "К2",
-      "group": "Inter Media Group",
-      "priority": 7,
-      "keywords": ["жіночий", "дім", "кулінарія", "ремонт", "сім'я"]
+      "name": "[М] ТОП HD",
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 291,
+      "keywords": [
+        "чоловічий",
+        "спорт",
+        "детектив",
+        "екшн",
+        "документальний"
+      ]
     },
     {
-      "name": "НТН",
-      "group": "Inter Media Group",
-      "priority": 8,
-      "keywords": ["детектив", "кримінал", "розслідування", "true crime"]
+      "name": "[M] CEO Club",
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 292,
+      "keywords": [
+        "чоловічий",
+        "спорт",
+        "детектив",
+        "екшн",
+        "документальний",
+        "club"
+      ]
     },
     {
-      "name": "Мега",
-      "group": "Inter Media Group",
-      "priority": 9,
-      "keywords": ["історія", "документальний", "наука", "пізнавальне"]
-    },
-    {
-      "name": "Піксель",
-      "group": "Inter Media Group",
-      "priority": 10,
-      "keywords": ["діти", "мультсеріал", "kids", "анімація"]
-    },
-    {
-      "name": "Світло",
-      "group": "FilmUA Group",
-      "priority": 11,
-      "keywords": ["українське", "кіно", "серіали", "драма"]
-    },
-    {
-      "name": "FILMUADrama",
-      "group": "FilmUA Group",
-      "priority": 12,
-      "keywords": ["драма", "серіал", "мелодрама", "відносини"]
-    },
-    {
-      "name": "PROKINO",
-      "group": "FilmUA Group",
-      "priority": 13,
-      "keywords": ["кіно", "фільми", "прем'єра", "кіноман"]
-    },
-    {
-      "name": "Viasat Kino",
-      "group": "Viasat",
-      "priority": 14,
-      "keywords": ["кіно", "фільми", "прем'єри", "блокбастер"]
-    },
-    {
-      "name": "Viasat Kino Action",
-      "group": "Viasat",
-      "priority": 15,
-      "keywords": ["бойовик", "екшен", "адреналін", "чоловіча"]
-    },
-    {
-      "name": "Viasat Kino Comedy",
-      "group": "Viasat",
-      "priority": 16,
-      "keywords": ["комедія", "гумор", "розваги"]
-    },
-    {
-      "name": "Viasat True Crime",
-      "group": "Viasat",
-      "priority": 17,
-      "keywords": ["кримінал", "розслідування", "документальний", "true crime"]
-    },
-    {
-      "name": "Viasat Nature",
-      "group": "Viasat",
-      "priority": 18,
-      "keywords": ["природа", "тварини", "документальний", "екологія"]
-    },
-    {
-      "name": "Viasat Explore",
-      "group": "Viasat",
-      "priority": 19,
-      "keywords": ["технології", "авто", "чоловіча", "пригоди"]
-    },
-    {
-      "name": "CINE+",
-      "group": "CINE+",
-      "priority": 20,
-      "keywords": ["кіно", "фільми", "широка аудиторія"]
-    },
-    {
-      "name": "CINE+ HITS",
-      "group": "CINE+",
-      "priority": 21,
-      "keywords": ["хіти", "блокбастери", "прем'єри", "кіно"]
-    },
-    {
-      "name": "CINE+ LEGEND",
-      "group": "CINE+",
-      "priority": 22,
-      "keywords": ["класика", "легендарні", "кіно", "ретро"]
-    },
-    {
-      "name": "CINE+ KIDS",
-      "group": "CINE+",
-      "priority": 23,
-      "keywords": ["діти", "мультфільми", "сім'я", "kids"]
-    },
-    {
-      "name": "Setanta Sports",
-      "group": "Setanta",
-      "priority": 24,
-      "keywords": ["спорт", "футбол", "матч", "трансляція"]
-    },
-    {
-      "name": "Setanta Sports+",
-      "group": "Setanta",
-      "priority": 25,
-      "keywords": ["спорт", "live", "матч", "чемпіонат"]
-    },
-    {
-      "name": "Суспільне Спорт",
-      "group": "Суспільне",
-      "priority": 26,
-      "keywords": ["спорт", "суспільне", "національний", "події"]
+      "name": "[M] IT. Бізнес. Креатив.",
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 293,
+      "keywords": [
+        "чоловічий",
+        "спорт",
+        "детектив",
+        "екшн",
+        "документальний",
+        "бізнес",
+        "креатив"
+      ]
     }
   ]
 }
-
