@@ -92,9 +92,9 @@ function loadJokes() {
 }
 const jokes = loadJokes();
 
-const JOKE_COOLDOWN_MS = 30_000;                 // 30с кулдаун на користувача
-const lastJokeByUser = new Map();                // userId → ts
-const servedJokesByChat = new Map();             // chatId → Set<index>
+const JOKE_COOLDOWN_MS = 30_000;
+const lastJokeByUser = new Map();
+const servedJokesByChat = new Map();
 function getFreshJoke(chatId) {
   if (!Array.isArray(jokes) || jokes.length === 0) return null;
   let used = servedJokesByChat.get(chatId);
@@ -114,6 +114,16 @@ function getFreshJoke(chatId) {
  * ========================= */
 const CONTACT_ANI = 'Анна Ільєнко — a.ilyenko@vidzone.com';
 const CHANNELS = Array.isArray(channelsCatalog?.items) ? channelsCatalog.items : [];
+const PREFERRED_FALLBACK_CHANNELS = new Set([
+  '1+1 Україна',
+  '2+2',
+  'ТЕТ',
+  'CINE+',
+  'Viasat Kino',
+  'Setanta Sports',
+  'Суспільне Спорт',
+  'ПЛЮСПЛЮС',
+]);
 const FALLBACK_GUIDE_TEMPLATES = [
   'Цю інформацію ви могли б дізнатись у каналі «{channel}». А інформацію щодо розміщення краще уточнити у {contact}.',
   'Щоб швидко знайти відповідь по темі, раджу канал «{channel}». Щодо розміщення реклами — найкраще звернутись до {contact}.',
@@ -157,7 +167,7 @@ const documentFormatKeyboard = {
   reply_markup: {
     inline_keyboard: [
       [{ text: '📄 Текстом', callback_data: 'format_text' }, { text: '📝 Файлом Word', callback_data: 'format_word' }],
-      [{ text: '↩️ Повернтися до вибору документів', callback_data: 'back_to_documents' }],
+      [{ text: '↩️ Повернутися до вибору документів', callback_data: 'back_to_documents' }],
     ],
   },
 };
@@ -229,7 +239,10 @@ function pickRelevantChannel(userText = '') {
 
   if (bestScore <= 0) {
     const byPriority = [...CHANNELS].sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));
-    const topPool = byPriority.slice(0, Math.min(8, byPriority.length));
+    const preferredPool = byPriority.filter((c) => PREFERRED_FALLBACK_CHANNELS.has(c?.name));
+    const topPool = preferredPool.length
+      ? preferredPool
+      : byPriority.slice(0, Math.min(8, byPriority.length));
     return randomItem(topPool) || byPriority[0] || CHANNELS[0];
   }
 
@@ -239,9 +252,10 @@ function pickRelevantChannel(userText = '') {
 function buildGuidedFallback(userText = '') {
   const channel = pickRelevantChannel(userText) || { name: '1+1 Україна' };
   const template = FALLBACK_GUIDE_TEMPLATES[Math.floor(Math.random() * FALLBACK_GUIDE_TEMPLATES.length)] || FALLBACK_GUIDE_TEMPLATES[0];
-  return template
+  const base = template
     .replace('{channel}', channel.name || '1+1 Україна')
     .replace('{contact}', CONTACT_ANI);
+  return `${base} На цьому каналі розміщується реклама Vidzone.`;
 }
 
 /* =========================
@@ -296,7 +310,6 @@ export default async function handler(req, res) {
     const userId = cq.from.id;
     const data = String(cq.data || '');
 
-    // Дебаунс на повторні кліки
     if (!handler._cbDebounce) handler._cbDebounce = new Map();
     const key = `${userId}:${data}`;
     const prev = handler._cbDebounce.get(key) || 0;
@@ -310,7 +323,7 @@ export default async function handler(req, res) {
     if (data === 'menu_about') {
       await bot.sendMessage(
         chatId,
-        'Vidzone — технологічна DSP-платформа для автоматизованої реклами на цифровому телебаченні (Smart TV, OTT). Дає змогу запускати програматик-рекламу з гнучким таргетингом і контролем бюджету.',
+        'Vidzone — технологічна DSP-платфора для автоматизованої реклами на цифровому телебаченні (Smart TV, OTT). Дає змогу запускати програматик-рекламу з гнучким таргетингом і контролем бюджету.',
         mainMenuKeyboard
       );
       await bot.answerCallbackQuery(cq.id);
@@ -417,7 +430,6 @@ export default async function handler(req, res) {
 
   console.log(`intent=${intent}; text="${rawText}"`);
 
-  // A) Старт
   if (intent === 'START') {
     await bot.sendMessage(
       chatId,
@@ -431,13 +443,11 @@ export default async function handler(req, res) {
     return res.status(200).send('Welcome Sent');
   }
 
-  // B) CEO
   if (intent === 'CEO') {
     await bot.sendMessage(chatId, 'CEO Vidzone — Євген Левченко.', mainMenuKeyboard);
     return res.status(200).send('CEO Answer');
   }
 
-  // C) Техвимоги — з pinned джерела (без LLM)
   if (intent === 'TECH_REQS') {
     const answer = `${TEMPLATES.TECH_REQS_HEADER}\n\n${techRequirements}`;
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: '[TECH_REQS] text' });
@@ -452,13 +462,11 @@ export default async function handler(req, res) {
     return res.status(200).send('TECH_REQS');
   }
 
-  // D) Меню документів
   if (intent === 'DOC_MENU') {
     await bot.sendMessage(chatId, 'Оберіть шаблон документа:', documentMenuKeyboard);
     return res.status(200).send('DOC_MENU');
   }
 
-  // E) Жарти
   if (intent === 'JOKE') {
     const last = lastJokeByUser.get(userId) || 0;
     if (Date.now() - last < JOKE_COOLDOWN_MS) {
@@ -471,7 +479,6 @@ export default async function handler(req, res) {
     return res.status(200).send('Joke Sent');
   }
 
-  // F) Жорстка ескалація
   if (intent === 'ESCALATE') {
     const botResponse = TEMPLATES.ESCALATE_ANI;
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'Hard escalate (AVB/brand)' });
@@ -479,7 +486,6 @@ export default async function handler(req, res) {
     return res.status(200).send('HardEscalate');
   }
 
-  // G) Офтоп/анти-джейлбрейк
   if (intent === 'OOS') {
     const botResponse = buildGuidedFallback(rawText);
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'Off-scope/jailbreak' });
@@ -487,7 +493,6 @@ export default async function handler(req, res) {
     return res.status(200).send('OOS');
   }
 
-  // H) RAG-FIRST (строгий “grounded only”)
   let relevantChunks = [];
   try {
     const expandedQuery = userText;
