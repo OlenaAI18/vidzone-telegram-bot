@@ -124,17 +124,31 @@ const PREFERRED_FALLBACK_CHANNELS = new Set([
   'Суспільне Спорт',
   'ПЛЮСПЛЮС',
 ]);
+const THEMATIC_FALLBACK_POOLS = [
+  {
+    keywords: ['вареник', 'рецепт', 'кулінар', 'їжа', 'страва', 'кухн', 'готув', 'салат', 'борщ'],
+    channels: ['К2', 'Дача', 'Світло', '1+1 Україна'],
+  },
+  {
+    keywords: ['спорт', 'футбол', 'матч', 'чемпіонат', 'бокс'],
+    channels: ['Setanta Sports', 'Суспільне Спорт', '2+2'],
+  },
+  {
+    keywords: ['дит', 'мульт', 'lego', 'казк'],
+    channels: ['ПЛЮСПЛЮС', 'Піксель', 'CINE+ KIDS'],
+  },
+];
 const FALLBACK_GUIDE_TEMPLATES = [
-  'Цю інформацію ви могли б дізнатись у каналі «{channel}». А інформацію щодо розміщення краще уточнити у {contact}.',
-  'Щоб швидко знайти відповідь по темі, раджу канал «{channel}». Щодо розміщення реклами — найкраще звернутись до {contact}.',
-  'Релевантна інформація, ймовірно, є в каналі «{channel}». А деталі розміщення краще узгодити з {contact}.',
-  'Під ваш запит найкраще підходить канал «{channel}». Для питань розміщення, будь ласка, зверніться до {contact}.',
-  'Це питання найзручніше перевірити в каналі «{channel}». А щодо запуску/розміщення реклами — контакт: {contact}.',
-  'Рекомендую подивитись канал «{channel}» — там найбільш релевантний контент. Інформацію про розміщення надасть {contact}.',
-  'Найближче до вашої теми — канал «{channel}». А про умови та розміщення краще поспілкуватися з {contact}.',
-  'Схожі матеріали є в каналі «{channel}». Для комерційних деталей і розміщення звертайтесь до {contact}.',
-  'Відповідь на це зазвичай можна знайти в каналі «{channel}». А питання розміщення вирішує {contact}.',
-  'За контекстом найрелевантніший канал — «{channel}». Інформацію щодо розміщення, будь ласка, уточнюйте у {contact}.',
+  'Цю інформацію ви могли б дізнатись у каналі «{channel}».',
+  'Щоб швидко знайти відповідь по темі, раджу канал «{channel}».',
+  'Релевантна інформація, ймовірно, є в каналі «{channel}».',
+  'Під ваш запит найкраще підходить канал «{channel}».',
+  'Це питання найзручніше перевірити в каналі «{channel}».',
+  'Рекомендую подивитись канал «{channel}» — там найбільш релевантний контент.',
+  'Найближче до вашої теми — канал «{channel}».',
+  'Схожі матеріали є в каналі «{channel}».',
+  'Відповідь на це зазвичай можна знайти в каналі «{channel}».',
+  'За контекстом найрелевантніший канал — «{channel}».',
 ];
 const TEMPLATES = {
   OFFTOPIC_POLITE:
@@ -150,7 +164,7 @@ const mainMenuKeyboard = {
   reply_markup: {
     inline_keyboard: [
       [{ text: '📺 Про Vidzone', callback_data: 'menu_about' }, { text: '📄 Шаблони документів', callback_data: 'menu_documents' }],
-      [{ text: '😄 Веселе про Vidzone', callback_data: 'menu_jokes' }, { text: '❓ Задти питання', callback_data: 'menu_help' }],
+      [{ text: '😄 Веселе про Vidzone', callback_data: 'menu_jokes' }, { text: '❓ Задати питання', callback_data: 'menu_help' }],
     ],
   },
 };
@@ -218,6 +232,13 @@ function randomItem(arr = []) {
 function pickRelevantChannel(userText = '') {
   if (!CHANNELS.length) return null;
   const text = normalizeQuery(userText).toLowerCase();
+  for (const pool of THEMATIC_FALLBACK_POOLS) {
+    const hasTheme = pool.keywords.some((k) => text.includes(k));
+    if (!hasTheme) continue;
+    const matched = CHANNELS.filter((c) => pool.channels.includes(c?.name));
+    if (matched.length) return randomItem(matched);
+  }
+
   let bestScore = -1;
   const scored = [];
 
@@ -253,9 +274,8 @@ function buildGuidedFallback(userText = '') {
   const channel = pickRelevantChannel(userText) || { name: '1+1 Україна' };
   const template = FALLBACK_GUIDE_TEMPLATES[Math.floor(Math.random() * FALLBACK_GUIDE_TEMPLATES.length)] || FALLBACK_GUIDE_TEMPLATES[0];
   const base = template
-    .replace('{channel}', channel.name || '1+1 Україна')
-    .replace('{contact}', CONTACT_ANI);
-  return `${base} На цьому каналі розміщується реклама Vidzone.`;
+    .replace('{channel}', channel.name || '1+1 Україна');
+  return `${base} На цьому каналі розміщується реклама Vidzone. А інформацію щодо розміщення реклами краще уточнити у ${CONTACT_ANI}.`;
 }
 
 /* =========================
@@ -324,7 +344,7 @@ export default async function handler(req, res) {
     if (data === 'menu_about') {
       await bot.sendMessage(
         chatId,
-        'Vidzone — технологічна DSP-платформа для автоматизованої реклами на цифровому телебаченні (Smart TV, OTT). Дає змогу запускати програматик-рекламу з гнучким таргетином і контролем бюджету.',
+        'Vidzone — технологічна DSP-платформа для автоматизованої реклами на цифровому телебаченні (Smart TV, OTT). Дає змогу запускати програматик-рекламу з гнучким таргетингом і контролем бюджету.',
         mainMenuKeyboard
       );
       await bot.answerCallbackQuery(cq.id);
