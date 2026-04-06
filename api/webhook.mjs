@@ -201,11 +201,15 @@ function overlapScore(userText, kb) {
   for (const k of keys) if (text.includes(k)) hits++;
   return hits / keys.length;
 }
+function randomItem(arr = []) {
+  if (!Array.isArray(arr) || arr.length === 0) return null;
+  return arr[Math.floor(Math.random() * arr.length)] || null;
+}
 function pickRelevantChannel(userText = '') {
   if (!CHANNELS.length) return null;
   const text = normalizeQuery(userText).toLowerCase();
-  let best = null;
   let bestScore = -1;
+  const scored = [];
 
   for (const item of CHANNELS) {
     const keywords = Array.isArray(item?.keywords) ? item.keywords : [];
@@ -219,16 +223,18 @@ function pickRelevantChannel(userText = '') {
       if (!key) continue;
       if (text.includes(String(key).toLowerCase())) score += 1;
     }
-    if (score > bestScore) {
-      bestScore = score;
-      best = item;
-    }
+    if (score > bestScore) bestScore = score;
+    scored.push({ item, score });
   }
 
   if (bestScore <= 0) {
-    return [...CHANNELS].sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999))[0] || CHANNELS[0];
+    const byPriority = [...CHANNELS].sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));
+    const topPool = byPriority.slice(0, Math.min(8, byPriority.length));
+    return randomItem(topPool) || byPriority[0] || CHANNELS[0];
   }
-  return best;
+
+  const bestCandidates = scored.filter(({ score }) => score === bestScore).map(({ item }) => item);
+  return randomItem(bestCandidates) || bestCandidates[0] || CHANNELS[0];
 }
 function buildGuidedFallback(userText = '') {
   const channel = pickRelevantChannel(userText) || { name: '1+1 Україна' };
