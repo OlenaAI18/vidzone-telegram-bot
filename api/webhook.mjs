@@ -114,28 +114,20 @@ function getFreshJoke(chatId) {
  * ========================= */
 const CONTACT_ANI = 'Анна Ільєнко — a.ilyenko@vidzone.com';
 const CHANNELS = Array.isArray(channelsCatalog?.items) ? channelsCatalog.items : [];
-const PREFERRED_FALLBACK_CHANNELS = new Set([
-  '1+1 Україна',
-  '2+2',
-  'ТЕТ',
-  'CINE+',
-  'Viasat Kino',
-  'Setanta Sports',
-  'Суспільне Спорт',
-  'ПЛЮСПЛЮС',
-]);
+const OFFTOPIC_DEFAULT_CHANNEL = '[М] ТОП HD';
+const OFFTOPIC_KIDS_CHANNEL = 'ПЛЮСПЛЮС';
 const THEMATIC_FALLBACK_POOLS = [
   {
+    keywords: ['дит', 'мульт', 'lego', 'казк', 'школ', 'іграшк', 'дошкіл'],
+    channels: ['ПЛЮСПЛЮС', 'PIXEL', 'Cine+ Kids', '[M] МУЛЬТПРЕМЬЕРА HD'],
+  },
+  {
     keywords: ['вареник', 'рецепт', 'кулінар', 'їжа', 'страва', 'кухн', 'готув', 'салат', 'борщ'],
-    channels: ['К2', 'Дача', 'Світло', '1+1 Україна'],
+    channels: ['[М] ТОП HD'],
   },
   {
     keywords: ['спорт', 'футбол', 'матч', 'чемпіонат', 'бокс'],
-    channels: ['Setanta Sports', 'Суспільне Спорт', '2+2'],
-  },
-  {
-    keywords: ['дит', 'мульт', 'lego', 'казк'],
-    channels: ['ПЛЮСПЛЮС', 'Піксель', 'CINE+ KIDS'],
+    channels: ['[М] ТОП HD'],
   },
 ];
 const FALLBACK_GUIDE_TEMPLATES = [
@@ -149,6 +141,12 @@ const FALLBACK_GUIDE_TEMPLATES = [
   'Схожі матеріали є в каналі «{channel}».',
   'Відповідь на це зазвичай можна знайти в каналі «{channel}».',
   'За контекстом найрелевантніший канал — «{channel}».',
+];
+const FALLBACK_AD_TAIL_TEMPLATES = [
+  'До речі, на цьому каналі розміщується реклама Vidzone, а деталі про розміщення краще уточнити у {contact}.',
+  'На цьому каналі також розміщується реклама Vidzone. Якщо потрібні деталі — зверніться до {contact}.',
+  'Там виходить реклама Vidzone; щодо умов і форматів найкраще написати {contact}.',
+  'На каналі розміщується реклама Vidzone, а всі деталі по розміщенню підкаже {contact}.',
 ];
 const TEMPLATES = {
   OFFTOPIC_POLITE:
@@ -229,18 +227,36 @@ function randomItem(arr = []) {
   if (!Array.isArray(arr) || arr.length === 0) return null;
   return arr[Math.floor(Math.random() * arr.length)] || null;
 }
+function pickVariantByText(arr = [], seedText = '') {
+  if (!Array.isArray(arr) || arr.length === 0) return null;
+  const text = String(seedText || '');
+  let hash = 0;
+  for (let i = 0; i < text.length; i++) {
+    hash = (hash * 31 + text.charCodeAt(i)) >>> 0;
+  }
+  return arr[hash % arr.length] || arr[0];
+}
 function pickRelevantChannel(userText = '') {
   if (!CHANNELS.length) return null;
   const text = normalizeQuery(userText).toLowerCase();
+
+  const channelByName = new Map(CHANNELS.map((item) => [String(item?.name || '').toLowerCase(), item]));
+  const defaultChannel = channelByName.get(OFFTOPIC_DEFAULT_CHANNEL.toLowerCase()) || CHANNELS[0];
+  const kidsDefault = channelByName.get(OFFTOPIC_KIDS_CHANNEL.toLowerCase()) || defaultChannel;
+
   for (const pool of THEMATIC_FALLBACK_POOLS) {
     const hasTheme = pool.keywords.some((k) => text.includes(k));
     if (!hasTheme) continue;
     const matched = CHANNELS.filter((c) => pool.channels.includes(c?.name));
-    if (matched.length) return randomItem(matched);
+    if (!matched.length) continue;
+    const sorted = matched
+      .slice()
+      .sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));
+    return sorted[0];
   }
 
   let bestScore = -1;
-  const scored = [];
+  let best = null;
 
   for (const item of CHANNELS) {
     const keywords = Array.isArray(item?.keywords) ? item.keywords : [];
@@ -254,28 +270,34 @@ function pickRelevantChannel(userText = '') {
       if (!key) continue;
       if (text.includes(String(key).toLowerCase())) score += 1;
     }
-    if (score > bestScore) bestScore = score;
-    scored.push({ item, score });
+    if (score > bestScore) {
+      bestScore = score;
+      best = item;
+      continue;
+    }
+    if (score === bestScore && best) {
+      const bestPriority = best.priority ?? 999;
+      const currentPriority = item.priority ?? 999;
+      if (currentPriority < bestPriority) best = item;
+    }
   }
 
   if (bestScore <= 0) {
-    const byPriority = [...CHANNELS].sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));
-    const preferredPool = byPriority.filter((c) => PREFERRED_FALLBACK_CHANNELS.has(c?.name));
-    const topPool = preferredPool.length
-      ? preferredPool
-      : byPriority.slice(0, Math.min(8, byPriority.length));
-    return randomItem(topPool) || byPriority[0] || CHANNELS[0];
+    const kidsHints = ['дит', 'мульт', 'казк', 'іграшк', 'школ', 'родин'];
+    if (kidsHints.some((hint) => text.includes(hint))) return kidsDefault;
+    return defaultChannel;
   }
 
-  const bestCandidates = scored.filter(({ score }) => score === bestScore).map(({ item }) => item);
-  return randomItem(bestCandidates) || bestCandidates[0] || CHANNELS[0];
+  return best || defaultChannel;
 }
 function buildGuidedFallback(userText = '') {
-  const channel = pickRelevantChannel(userText) || { name: '1+1 Україна' };
-  const template = FALLBACK_GUIDE_TEMPLATES[Math.floor(Math.random() * FALLBACK_GUIDE_TEMPLATES.length)] || FALLBACK_GUIDE_TEMPLATES[0];
+  const channel = pickRelevantChannel(userText) || { name: OFFTOPIC_DEFAULT_CHANNEL };
+  const template = pickVariantByText(FALLBACK_GUIDE_TEMPLATES, `${userText}:guide`) || FALLBACK_GUIDE_TEMPLATES[0];
+  const adTail = pickVariantByText(FALLBACK_AD_TAIL_TEMPLATES, `${userText}:tail`) || FALLBACK_AD_TAIL_TEMPLATES[0];
   const base = template
-    .replace('{channel}', channel.name || '1+1 Україна');
-  return `${base} На цьому каналі розміщується реклама Vidzone. А інформацію щодо розміщення реклами краще уточнити у ${CONTACT_ANI}.`;
+    .replace('{channel}', channel.name || OFFTOPIC_DEFAULT_CHANNEL);
+  const tail = adTail.replace('{contact}', CONTACT_ANI);
+  return `${base} ${tail}`;
 }
 
 /* =========================
@@ -344,7 +366,7 @@ export default async function handler(req, res) {
     if (data === 'menu_about') {
       await bot.sendMessage(
         chatId,
-        'Vidzone — технологічна DSP-платформа для автоматизованої реклами на цифровому телебаченні (Smart TV, OTT). Дає змогу запускати програматик-рекламу з гнучким таргетингом і контролем бюджету.',
+        'Vidzone — технологічна DSP-платформа для автоматизованої реклами на цифровому телебаченні (Smart TV, OTT). Дає змогу запускати програмати-рекламу з гнучким таргетингом і контролем бюджету.',
         mainMenuKeyboard
       );
       await bot.answerCallbackQuery(cq.id);
@@ -567,7 +589,7 @@ export default async function handler(req, res) {
 • Поза цими темами — м’який офтоп з поверненням у тематику.
 
 ФОРМАТ:
-• Якщо питання про «технічні вимоги» — дай чіткі вимоги, пунктами (якщо є в KB).
+ Якщо питання про «технічні вимоги» — дай чіткі вимоги, пунктами (якщо є в KB).
 • Якщо про планування/пакети/CPM — дай практичні пункти, приклади, застереження.
 
 KB (релевантні фрагменти):
