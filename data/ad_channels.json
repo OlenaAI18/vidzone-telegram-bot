@@ -2,121 +2,5417 @@
   "items": [
     {
       "name": "ПЛЮСПЛЮС",
+      "id": 806136,
       "group": "Other Channel",
       "theme": "Дитячий",
-      "priority": 1,
+      "priority": 2,
+      "weekly_reach": 543000,
       "keywords": [
         "дитячий",
-        "kids",
         "мультфільми",
+        "діти",
         "родина",
-        "плюсплюс"
+        "kids"
       ]
     },
     {
       "name": "PIXEL",
+      "id": 699555,
       "group": "Other Channel",
       "theme": "Дитячий",
-      "priority": 2,
+      "priority": 3,
+      "weekly_reach": 248000,
       "keywords": [
         "дитячий",
-        "kids",
         "мультфільми",
+        "діти",
         "родина",
-        "pixel"
+        "kids"
       ]
     },
     {
       "name": "Cine+ Kids",
+      "id": 806026,
       "group": "Other Channel",
       "theme": "Дитячий",
-      "priority": 3,
-      "keywords": [
-        "дитячий",
-        "kids",
-        "мультфільми",
-        "родина",
-        "cine+"
-      ]
-    },
-    {
-      "name": "[M] МУЛЬТПРЕМЬЕРА HD",
-      "group": "MEGOGO",
-      "theme": "Дитячий",
       "priority": 4,
+      "weekly_reach": 147000,
       "keywords": [
-        "дитячий",
         "kids",
-        "мультфільми",
-        "родина",
-        "мультпремьера"
-      ]
-    },
-    {
-      "name": "MGG Козаки HD",
-      "group": "MEGOGO",
-      "theme": "Дитячий",
-      "priority": 5,
-      "keywords": [
         "дитячий",
-        "kids",
         "мультфільми",
-        "родина",
-        "козаки"
-      ]
-    },
-    {
-      "name": "[M] Kids HD",
-      "group": "MEGOGO",
-      "theme": "Дитячий",
-      "priority": 6,
-      "keywords": [
-        "дитячий",
-        "kids",
-        "мультфільми",
+        "діти",
         "родина"
       ]
     },
     {
-      "name": "[М] ТОП HD",
+      "name": "[M] МУЛЬТПРЕМЬЕРА HD",
+      "id": 665767,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 5,
+      "weekly_reach": 84000,
+      "keywords": [
+        "мультфільми",
+        "дитячий",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "MGG Козаки HD",
+      "id": 804072,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 5,
+      "weekly_reach": 81000,
+      "keywords": [
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "[M] Kids HD",
+      "id": 665769,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 5,
+      "weekly_reach": 60000,
+      "keywords": [
+        "kids",
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина"
+      ]
+    },
+    {
+      "name": "[M] МУЛЬТСЕРІАЛ HD",
+      "id": 665768,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 5,
+      "weekly_reach": 57000,
+      "keywords": [
+        "мультфільми",
+        "серіали",
+        "дитячий",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "[M] Блог дитячий пізнавальний HD",
+      "id": 665766,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 5,
+      "weekly_reach": 57000,
+      "keywords": [
+        "діти",
+        "пізнавальне",
+        "дитячий",
+        "мультфільми",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "[M] Дитячий UMa  UMi HD",
+      "id": 665764,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 5,
+      "weekly_reach": 54000,
+      "keywords": [
+        "діти",
+        "дитячий",
+        "мультфільми",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "[М] Доктор Комаровський",
+      "id": 796330,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 5,
+      "weekly_reach": 54000,
+      "keywords": [
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "[M] Блог Boys and Toys HD",
+      "id": 669397,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 5,
+      "weekly_reach": 51000,
+      "keywords": [
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "MGG Газун - Звірячі пригоди HD",
+      "id": 804076,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 6,
+      "weekly_reach": 48000,
+      "keywords": [
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "[М] Мультиленд HD",
+      "id": 699012,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 6,
+      "weekly_reach": 42000,
+      "keywords": [
+        "мультфільми",
+        "дитячий",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "[M] LEGO HD",
+      "id": 665765,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 6,
+      "weekly_reach": 42000,
+      "keywords": [
+        "lego",
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "[M] Блог для дітей 2 HD",
+      "id": 695212,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 6,
+      "weekly_reach": 39000,
+      "keywords": [
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "MGG Країна Мультиків HD",
+      "id": 804098,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 6,
+      "weekly_reach": 30000,
+      "keywords": [
+        "мультфільми",
+        "дитячий",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "MGG Малюк HD",
+      "id": 803710,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 6,
+      "weekly_reach": 21000,
+      "keywords": [
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "MGG Cartoons HD",
+      "id": 804096,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 7,
+      "weekly_reach": 18000,
+      "keywords": [
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "MGG Мішо та Робін HD",
+      "id": 804074,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 7,
+      "weekly_reach": 18000,
+      "keywords": [
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "MGG Книга-мандрівка HD",
+      "id": 804085,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 7,
+      "weekly_reach": 12000,
+      "keywords": [
+        "подорожі",
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "[М] Kids town",
+      "id": 806442,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 7,
+      "weekly_reach": 12000,
+      "keywords": [
+        "kids",
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина"
+      ]
+    },
+    {
+      "name": "Kinokazka",
+      "id": 700544,
+      "group": "Other Channel",
+      "theme": "Дитячий",
+      "priority": 7,
+      "weekly_reach": 9000,
+      "keywords": [
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "[M] Блог Каті та Макса HD",
+      "id": 695209,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 7,
+      "weekly_reach": 9000,
+      "keywords": [
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "АГУГУГУ HD",
+      "id": 803539,
+      "group": "Other Channel",
+      "theme": "Дитячий",
+      "priority": 7,
+      "weekly_reach": 6000,
+      "keywords": [
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "[M] Дивись як чутно. Діти HD",
+      "id": 665770,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "Vidzone DUCK TV",
+      "id": 803246,
+      "group": "Vidzone",
+      "theme": "Дитячий",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "[M] Блог Машини Машинки HD",
+      "id": 695211,
+      "group": "MEGOGO",
+      "theme": "Дитячий",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "дитячий",
+        "мультфільми",
+        "діти",
+        "родина",
+        "kids"
+      ]
+    },
+    {
+      "name": "1+1 Україна",
+      "id": 806126,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 1,
+      "weekly_reach": 5127000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Бігуді",
+      "id": 806132,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 1,
+      "weekly_reach": 3518000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "НТН",
+      "id": 698954,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 1,
+      "weekly_reach": 1606000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Viasat Kino Comedy EU",
+      "id": 806002,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 2,
+      "weekly_reach": 798000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Говорить вся країна,",
+      "id": 806169,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 2,
+      "weekly_reach": 745000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "УНІАН",
+      "id": 806134,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 2,
+      "weekly_reach": 741000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] ДРАМА HD",
+      "id": 665168,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 2,
+      "weekly_reach": 659000,
+      "keywords": [
+        "драма",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Стосується кожного",
+      "id": 798329,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 2,
+      "weekly_reach": 622000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] ПРАЙМ HD",
+      "id": 665755,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 2,
+      "weekly_reach": 599000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] ЛЮБОВ HD",
+      "id": 665164,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 2,
+      "weekly_reach": 539000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "К2 HD",
+      "id": 806346,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 2,
+      "weekly_reach": 503000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Сімейні мелодрами+",
+      "id": 795688,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 3,
+      "weekly_reach": 448000,
+      "keywords": [
+        "мелодрама",
+        "драма",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "ЖВЛ+",
+      "id": 795689,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 3,
+      "weekly_reach": 436000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Пригоди",
+      "id": 665775,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 3,
+      "weekly_reach": 431000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Українське кіно",
+      "id": 665781,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 3,
+      "weekly_reach": 420000,
+      "keywords": [
+        "кіно",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Панянка-селянка+",
+      "id": 802250,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 3,
+      "weekly_reach": 407000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Viasat Nature EU",
+      "id": 806220,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 3,
+      "weekly_reach": 388000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Євген Клопотенко Блогери",
+      "id": 788617,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 3,
+      "weekly_reach": 342000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Viasat Kino EU",
+      "id": 806222,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 3,
+      "weekly_reach": 321000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[М] Теленовели",
+      "id": 771565,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 3,
+      "weekly_reach": 243000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Блог Кухня UA HD",
+      "id": 665150,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 3,
+      "weekly_reach": 236000,
+      "keywords": [
+        "кухня",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Блог творчість та рукоділля HD",
+      "id": 665156,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 3,
+      "weekly_reach": 211000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Б'юті-блог",
+      "id": 665157,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 3,
+      "weekly_reach": 210000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Товари з AliExpress",
+      "id": 700441,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 3,
+      "weekly_reach": 208000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[М] Тренування онлайн",
+      "id": 700584,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 4,
+      "weekly_reach": 188000,
+      "keywords": [
+        "спорт",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[М] Мелодрами",
+      "id": 807166,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 4,
+      "weekly_reach": 180000,
+      "keywords": [
+        "мелодрама",
+        "драма",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "YouTV Стосується кожного+ HD",
+      "id": 802800,
+      "group": "YouTV",
+      "theme": "Жіночий",
+      "priority": 4,
+      "weekly_reach": 174000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Драматичний",
+      "id": 805964,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 4,
+      "weekly_reach": 116000,
+      "keywords": [
+        "драма",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Одруження наосліп+",
+      "id": 802249,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 4,
+      "weekly_reach": 105000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone МЕДИЧНІ СЕРІАЛИ",
+      "id": 802542,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 5,
+      "weekly_reach": 99000,
+      "keywords": [
+        "медицина",
+        "серіали",
+        "жіночий",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Криваві квіти HD",
+      "id": 803061,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 5,
+      "weekly_reach": 84000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Ентер Фільм",
+      "id": 698955,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 5,
+      "weekly_reach": 77000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Light cinema 1",
+      "id": 805714,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 5,
+      "weekly_reach": 74000,
+      "keywords": [
+        "кіно",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Light cinema 2",
+      "id": 805716,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 5,
+      "weekly_reach": 57000,
+      "keywords": [
+        "кіно",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Містика",
+      "id": 805791,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 5,
+      "weekly_reach": 56000,
+      "keywords": [
+        "містика",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Українські мелодрами HD",
+      "id": 802546,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 6,
+      "weekly_reach": 45000,
+      "keywords": [
+        "мелодрама",
+        "драма",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Найкращі мелодрами HD",
+      "id": 802925,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 6,
+      "weekly_reach": 43000,
+      "keywords": [
+        "мелодрама",
+        "драма",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Говорить вся країна HD",
+      "id": 803808,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 6,
+      "weekly_reach": 39000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Жіночий лікар HD",
+      "id": 802883,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 6,
+      "weekly_reach": 38000,
+      "keywords": [
+        "медицина",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Світло",
+      "id": 805973,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 6,
+      "weekly_reach": 38000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "YouTV Готуємо разом+ HD",
+      "id": 802798,
+      "group": "YouTV",
+      "theme": "Жіночий",
+      "priority": 6,
+      "weekly_reach": 36000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Драма HD",
+      "id": 802600,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 6,
+      "weekly_reach": 29000,
+      "keywords": [
+        "драма",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Випадковий свідок HD",
+      "id": 802937,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 6,
+      "weekly_reach": 26000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Улюблені мелодрами",
+      "id": 802853,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 6,
+      "weekly_reach": 26000,
+      "keywords": [
+        "мелодрама",
+        "драма",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "MGG Drama Prime HD",
+      "id": 803407,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 6,
+      "weekly_reach": 25000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[М] Movie Library",
+      "id": 806405,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 6,
+      "weekly_reach": 24000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Viasat Serial",
+      "id": 806218,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 6,
+      "weekly_reach": 21000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] РОМАНТИКА HD",
+      "id": 665166,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 19000,
+      "keywords": [
+        "романтика",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Сімейні мелодрами HD",
+      "id": 803857,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 19000,
+      "keywords": [
+        "мелодрама",
+        "драма",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Кінокласика",
+      "id": 805712,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 16000,
+      "keywords": [
+        "кіно",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "FILMUADRAMA",
+      "id": 805975,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 16000,
+      "keywords": [
+        "кіно",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone ДРАМА ТБ",
+      "id": 802544,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 16000,
+      "keywords": [
+        "драма",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Корисна програма HD",
+      "id": 802631,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 15000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Міняю дружину",
+      "id": 807242,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 15000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Кус кус",
+      "id": 805979,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 14000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Клон",
+      "id": 807329,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 12000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Готуємо Разом HD",
+      "id": 802977,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 11000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Панянка-селянка HD",
+      "id": 803861,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 10000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Дача",
+      "id": 805983,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 9000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Блог Кухня",
+      "id": 665154,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 8000,
+      "keywords": [
+        "кухня",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Кулінарія",
+      "id": 665153,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 7000,
+      "keywords": [
+        "кулінарія",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "YouTV Кріпосна+ HD",
+      "id": 802509,
+      "group": "YouTV",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 7000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Серіали - історії кохання HD",
+      "id": 803131,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 6000,
+      "keywords": [
+        "кохання",
+        "серіали",
+        "жіночий",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Hollywood Glow",
+      "id": 802330,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 6000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Кулінарний мікс HD",
+      "id": 802979,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 6000,
+      "keywords": [
+        "кулінарія",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Блог Кулінарія з Аллою Ковальчук HD",
+      "id": 665160,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 5000,
+      "keywords": [
+        "кулінарія",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Family Is",
+      "id": 802633,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 5000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "VIdzone Марко Черветті",
+      "id": 803387,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 7,
+      "weekly_reach": 5000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Серіали - кохання і мрії HD",
+      "id": 803228,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "кохання",
+        "серіали",
+        "жіночий",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Блог Українське HD",
+      "id": 695214,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "MGG Світ кулінарії HD",
+      "id": 803615,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "кулінарія",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Серіали - долі і випробування HD",
+      "id": 803226,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "серіали",
+        "жіночий",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "YouTV FlixSnip +",
+      "id": 801658,
+      "group": "YouTV",
+      "theme": "Жіночий",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "6 Соток",
+      "id": 700958,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone  ЖВЛ HD",
+      "id": 802635,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Лікарські серіали HD",
+      "id": 803085,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 8,
+      "weekly_reach": 2000,
+      "keywords": [
+        "медицина",
+        "серіали",
+        "жіночий",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "36.6",
+      "id": 805981,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 8,
+      "weekly_reach": 2000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "МЕДИЧНИЙ",
+      "id": 792865,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 8,
+      "weekly_reach": 2000,
+      "keywords": [
+        "медицина",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Vidzone Серіали - надихаюча драма HD",
+      "id": 803083,
+      "group": "Vidzone",
+      "theme": "Жіночий",
+      "priority": 8,
+      "weekly_reach": 2000,
+      "keywords": [
+        "серіали",
+        "драма",
+        "жіночий",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "Continent E",
+      "id": 773094,
+      "group": "Other Channel",
+      "theme": "Жіночий",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Блог Фітнес HD",
+      "id": 665162,
+      "group": "MEGOGO",
+      "theme": "Жіночий",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "фітнес",
+        "жіночий",
+        "серіали",
+        "мелодрами",
+        "стиль",
+        "краса"
+      ]
+    },
+    {
+      "name": "[M] Орел і решка",
+      "id": 665148,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 1,
+      "weekly_reach": 3692000,
+      "keywords": [
+        "орел і решка",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "24 Канал",
+      "id": 531555,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 1,
+      "weekly_reach": 2582000,
+      "keywords": [
+        "новини",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "TET",
+      "id": 806130,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 1,
+      "weekly_reach": 1646000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Комедія",
+      "id": 699939,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 1,
+      "weekly_reach": 1379000,
+      "keywords": [
+        "комедія",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Viasat Explorer EU",
+      "id": 806000,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 1,
+      "weekly_reach": 1239000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Сімейний",
+      "id": 665773,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 1,
+      "weekly_reach": 1205000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] ЕПОХА HD",
+      "id": 665758,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 1,
+      "weekly_reach": 1131000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Блог Мандри 1 HD",
+      "id": 695821,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 1,
+      "weekly_reach": 1005000,
+      "keywords": [
+        "подорожі",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Київ",
+      "id": 695793,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 2,
+      "weekly_reach": 959000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "HISTORY",
+      "id": 484881,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 2,
+      "weekly_reach": 902000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Світ Навиворіт+",
+      "id": 795127,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 2,
+      "weekly_reach": 699000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Одного разу під Полтавою",
+      "id": 805968,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 2,
+      "weekly_reach": 610000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Блог Подорожі",
+      "id": 696374,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 2,
+      "weekly_reach": 542000,
+      "keywords": [
+        "подорожі",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "EspresoTV",
+      "id": 622059,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 2,
+      "weekly_reach": 529000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] WALLPAPER HD",
+      "id": 665752,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 473000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Блог Lifestyle HD",
+      "id": 669367,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 473000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Блог Розваги",
+      "id": 669366,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 472000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Хіти Мегого Драма",
+      "id": 803291,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 469000,
+      "keywords": [
+        "драма",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Блог музичний HD",
+      "id": 669368,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 469000,
+      "keywords": [
+        "музика",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Блог DIY",
+      "id": 669370,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 469000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Кіно звучить HD",
+      "id": 665777,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 442000,
+      "keywords": [
+        "кіно",
+        "розваги",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Хіти Мегого Родина",
+      "id": 803289,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 404000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "K1 HD",
+      "id": 698957,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 403000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "М1",
+      "id": 1,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 400000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "MusicBox",
+      "id": 802351,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 378000,
+      "keywords": [
+        "музика",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "HISTORY 2",
+      "id": 795132,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 376000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Загублений світ+",
+      "id": 795687,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 374000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Setanta Sports+",
+      "id": 806144,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 349000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "KVARTAL TV",
+      "id": 806138,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 343000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "М2",
+      "id": 2,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 310000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "MusicBox+Classic",
+      "id": 800284,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 229000,
+      "keywords": [
+        "музика",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Zoosvit",
+      "id": 803535,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 3,
+      "weekly_reach": 207000,
+      "keywords": [
+        "тварини",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Viasat Kino World EU",
+      "id": 806224,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 4,
+      "weekly_reach": 189000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Танька і Володька",
+      "id": 805966,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 4,
+      "weekly_reach": 183000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "4ever Music",
+      "id": 700158,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 4,
+      "weekly_reach": 133000,
+      "keywords": [
+        "музика",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Орел і Решка",
+      "id": 802323,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 4,
+      "weekly_reach": 130000,
+      "keywords": [
+        "орел і решка",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Мега",
+      "id": 698956,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 4,
+      "weekly_reach": 126000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Орел та Решка+ HD",
+      "id": 802796,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 4,
+      "weekly_reach": 124000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Кіно та серіали+ HD",
+      "id": 802792,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 4,
+      "weekly_reach": 108000,
+      "keywords": [
+        "кіно",
+        "серіали",
+        "розваги",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Cinema Fantasy HD",
+      "id": 802953,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 4,
+      "weekly_reach": 107000,
+      "keywords": [
+        "кіно",
+        "розваги",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[М] Кінопортал",
+      "id": 799462,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 4,
+      "weekly_reach": 101000,
+      "keywords": [
+        "кіно",
+        "розваги",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Viasat History EU",
+      "id": 806006,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 4,
+      "weekly_reach": 100000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Cinema Action HD",
+      "id": 802957,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 95000,
+      "keywords": [
+        "бойовик",
+        "кіно",
+        "розваги",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Viasat Explore + HD",
+      "id": 802540,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 94000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Zoom",
+      "id": 806348,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 87000,
+      "keywords": [
+        "тварини",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "EU Music",
+      "id": 700154,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 83000,
+      "keywords": [
+        "музика",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Стосується кожного - Краще HD",
+      "id": 803070,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 83000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Світ Навиворіт +",
+      "id": 802902,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 81000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Cinema Comedy HD",
+      "id": 802959,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 78000,
+      "keywords": [
+        "кіно",
+        "розваги",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "5 канал",
+      "id": 700312,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 77000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "UA Music",
+      "id": 700152,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 73000,
+      "keywords": [
+        "музика",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Cinema Family HD",
+      "id": 802961,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 72000,
+      "keywords": [
+        "кіно",
+        "розваги",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] КИНОХИТ HD",
+      "id": 669349,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 66000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Орел і Решка. The best",
+      "id": 802586,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 66000,
+      "keywords": [
+        "орел і решка",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Cinema Legend HD",
+      "id": 802965,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 65000,
+      "keywords": [
+        "кіно",
+        "розваги",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Viasat History + HD",
+      "id": 802536,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 65000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Cinema Megahit HD",
+      "id": 802955,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 61000,
+      "keywords": [
+        "кіно",
+        "розваги",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Черговий лікар HD",
+      "id": 802885,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 61000,
+      "keywords": [
+        "медицина",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Cine+",
+      "id": 806020,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 60000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Орел+Решка - Морський сезон+ HD",
+      "id": 802502,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 59000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Фауна",
+      "id": 789325,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 57000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Viasat Nature + HD",
+      "id": 802538,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 56000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] ФАНТАСТИКА HD",
+      "id": 665757,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 55000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Cine+ Hit",
+      "id": 806022,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 52000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Cinema Prime HD",
+      "id": 802967,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 5,
+      "weekly_reach": 51000,
+      "keywords": [
+        "кіно",
+        "розваги",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Світ +",
+      "id": 806140,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 6,
+      "weekly_reach": 49000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[М] Віра",
+      "id": 796867,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 6,
+      "weekly_reach": 43000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Cinema Kinohit HD",
+      "id": 802963,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 6,
+      "weekly_reach": 42000,
+      "keywords": [
+        "кіно",
+        "розваги",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Реальні історії",
+      "id": 806171,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 6,
+      "weekly_reach": 42000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] eXplore",
+      "id": 802581,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 6,
+      "weekly_reach": 38000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "MGG Horrors Prime HD",
+      "id": 803409,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 6,
+      "weekly_reach": 38000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Дільничний з ДВРЗ HD",
+      "id": 803091,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 6,
+      "weekly_reach": 35000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Гумор+",
+      "id": 802248,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 6,
+      "weekly_reach": 30000,
+      "keywords": [
+        "гумор",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] ДІМ+",
+      "id": 803238,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 6,
+      "weekly_reach": 29000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "MGG Comedy Prime HD",
+      "id": 803411,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 6,
+      "weekly_reach": 26000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Гумор HD",
+      "id": 802598,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 6,
+      "weekly_reach": 23000,
+      "keywords": [
+        "гумор",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Хащі",
+      "id": 802247,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 6,
+      "weekly_reach": 22000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Cinema  Horrors HD",
+      "id": 803553,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 6,
+      "weekly_reach": 21000,
+      "keywords": [
+        "кіно",
+        "розваги",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone МІСТИЧНІ ІСТОРІЇ",
+      "id": 802548,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 6,
+      "weekly_reach": 21000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "One Planet",
+      "id": 773093,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 6,
+      "weekly_reach": 20000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Dorama",
+      "id": 600662,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 18000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Орел та Решка - Морський сезон HD",
+      "id": 802820,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 18000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "PROKINO",
+      "id": 805977,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 18000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "MGG Action Prime HD",
+      "id": 803413,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 18000,
+      "keywords": [
+        "бойовик",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Розтин Покаже HD",
+      "id": 803089,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 17000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Наука",
+      "id": 700118,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 16000,
+      "keywords": [
+        "наука",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone ІСТОРІЇ ПРО УКРАЇНЦІВ HD",
+      "id": 803863,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 16000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Невигадані Історії",
+      "id": 795788,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 13000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Viasat Explore Pro HD",
+      "id": 802818,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 13000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Містика і таємниці HD",
+      "id": 802939,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 12000,
+      "keywords": [
+        "містика",
+        "таємниці",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Серіали про родичів HD",
+      "id": 802994,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 12000,
+      "keywords": [
+        "серіали",
+        "розваги",
+        "кіно",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Black",
+      "id": 767912,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 10000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Viasat Nature Pro HD",
+      "id": 802816,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 10000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Містика HD",
+      "id": 803865,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 10000,
+      "keywords": [
+        "містика",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Коли ми вдома HD",
+      "id": 802927,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 10000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Хроніка+",
+      "id": 802292,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 9000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Біографер",
+      "id": 802311,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 9000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Дивись як чутно HD",
+      "id": 665778,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 9000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Загублений світ HD",
+      "id": 803859,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 9000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Viasat History Pro HD",
+      "id": 802814,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 8000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Хамелеон HD",
+      "id": 803867,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 8000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Бардак HD",
+      "id": 802596,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 8000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Шиканемо HD",
+      "id": 802849,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 8000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Viva Latino",
+      "id": 700156,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 7000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Конкурент Україна",
+      "id": 804232,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 7000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV One planet +",
+      "id": 801652,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 7000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Classic Movies+Cartoons+ HD",
+      "id": 802534,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 7000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "zoosweet",
+      "id": 805970,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 7000,
+      "keywords": [
+        "тварини",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Будьте здорові HD",
+      "id": 802923,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 7000,
+      "keywords": [
+        "здоров'я",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "MGG Музика HD",
+      "id": 803619,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 7000,
+      "keywords": [
+        "музика",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Ґазда+ HD",
+      "id": 802969,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 7000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "InRating",
+      "id": 665991,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 5000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Серіали про Село HD",
+      "id": 803081,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 5000,
+      "keywords": [
+        "серіали",
+        "розваги",
+        "кіно",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Iceland",
+      "id": 668409,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 5000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone ЛьвівЯЛюблюТБ",
+      "id": 802356,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 7,
+      "weekly_reach": 5000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Наше любимое кино",
+      "id": 700540,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Козаки. Абсолютно брехлива історія HD",
+      "id": 803333,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Dorama Hit HD",
+      "id": 801655,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Папаньки HD",
+      "id": 802996,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Серіали - родинний гумор HD",
+      "id": 803224,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "гумор",
+        "серіали",
+        "розваги",
+        "кіно",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Юрчишини HD",
+      "id": 802992,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone ЦИНІКИ HD",
+      "id": 803797,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "MGG Подорожі HD",
+      "id": 803621,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "подорожі",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "MGG Цікаві розваги HD",
+      "id": 803611,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "MGG Стрімтайм HD",
+      "id": 803708,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Екси HD",
+      "id": 802887,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Kinoliving",
+      "id": 700543,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "YouTV Таємниці ДНК HD",
+      "id": 803248,
+      "group": "YouTV",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "таємниці",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Капучино ТБ",
+      "id": 802309,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Хто Зна Шоу",
+      "id": 802454,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone У МОЇЙ ГОЛОВІ",
+      "id": 806265,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Молодіжні серіали HD",
+      "id": 803133,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "серіали",
+        "розваги",
+        "кіно",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Серіали - будні з гумором HD",
+      "id": 803137,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "гумор",
+        "серіали",
+        "розваги",
+        "кіно",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Вижити за будь-яку ціну HD",
+      "id": 802998,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Заробітчани HD",
+      "id": 802906,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Classical Harmony HD",
+      "id": 803541,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Блог про тварин HD",
+      "id": 695215,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "тварини",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Kinosweet",
+      "id": 700541,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Врятуйте нашу сім'ю HD",
+      "id": 802910,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone ЖАБАГАДЮКА",
+      "id": 803385,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Закон ТВ",
+      "id": 792864,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Аферисти в мережах HD",
+      "id": 802904,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "жахи",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "MGG Тінейджерам HD",
+      "id": 803706,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Гра Долі HD",
+      "id": 803537,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone ONE PLANET+",
+      "id": 803103,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone TRACE SPORT STARS- ЗІРКИ СПОРТУ",
+      "id": 802851,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "спорт",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone DORAMA+",
+      "id": 802896,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone ZOOSWEET",
+      "id": 803101,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "тварини",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone SEA TV",
+      "id": 802872,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "EuroNews Rus",
+      "id": 540196,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Креативна практика HD",
+      "id": 699015,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "EuroNews Eng",
+      "id": 540201,
+      "group": "Other Channel",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "MEGOGO освіта",
+      "id": 665754,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "освіта",
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[M] Популярні мови",
+      "id": 665751,
+      "group": "MEGOGO",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Хід Апострофа",
+      "id": 807136,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "Vidzone Контексти Апострофа",
+      "id": 807138,
+      "group": "Vidzone",
+      "theme": "Унісекс",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "розваги",
+        "кіно",
+        "серіали",
+        "пізнавальне",
+        "lifestyle"
+      ]
+    },
+    {
+      "name": "[М] БОЙОВИК HD",
+      "id": 665990,
       "group": "MEGOGO",
       "theme": "Чоловічий",
-      "priority": 291,
+      "priority": 1,
+      "weekly_reach": 2778000,
       "keywords": [
+        "бойовик",
         "чоловічий",
         "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "2+2",
+      "id": 806128,
+      "group": "Other Channel",
+      "theme": "Чоловічий",
+      "priority": 1,
+      "weekly_reach": 1801000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] МЕГАХИТ HD",
+      "id": 669355,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 1,
+      "weekly_reach": 1405000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Телесеріал HD",
+      "id": 665776,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 1,
+      "weekly_reach": 1387000,
+      "keywords": [
+        "серіали",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Речдок",
+      "id": 798328,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 2,
+      "weekly_reach": 960000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[М] ІСТОРІЇ HD",
+      "id": 665774,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 2,
+      "weekly_reach": 875000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] ТРИЛЛЕР HD",
+      "id": 665756,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 2,
+      "weekly_reach": 774000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Документальне кіно HD",
+      "id": 665782,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 2,
+      "weekly_reach": 714000,
+      "keywords": [
+        "документальне",
+        "кіно",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] ЖАХИ HD",
+      "id": 665762,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 2,
+      "weekly_reach": 687000,
+      "keywords": [
+        "жахи",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Документальний HD",
+      "id": 665760,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 2,
+      "weekly_reach": 677000,
+      "keywords": [
+        "документальне",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[М] Пуаро",
+      "id": 700978,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 2,
+      "weekly_reach": 575000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Огляд футболу HD",
+      "id": 665759,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 2,
+      "weekly_reach": 533000,
+      "keywords": [
+        "футбол",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Блог Риболовля HD",
+      "id": 669380,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 2,
+      "weekly_reach": 526000,
+      "keywords": [
+        "риболовля",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[М] Forbes",
+      "id": 773097,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 2,
+      "weekly_reach": 514000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Хіти Мегого Адреналін",
+      "id": 803293,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 2,
+      "weekly_reach": 506000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Гід техніки",
+      "id": 669393,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 470000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Setanta Sports",
+      "id": 806142,
+      "group": "Other Channel",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 436800,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Блог Спорт UA HD",
+      "id": 669392,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 397000,
+      "keywords": [
+        "спорт",
+        "чоловічий",
+        "бойовик",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Epic Drama EU",
+      "id": 806004,
+      "group": "Other Channel",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 392000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Історія без міфів",
+      "id": 669385,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 363000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Блог Авто/Мото UA HD",
+      "id": 669382,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 358000,
+      "keywords": [
+        "авто",
+        "мото",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Блог Сад та город HD",
+      "id": 669387,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 358000,
+      "keywords": [
+        "сад",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Блог Чоловіче хобі",
+      "id": 695820,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 356000,
+      "keywords": [
+        "хобі",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Блог Футбол HD",
+      "id": 669394,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 355000,
+      "keywords": [
+        "футбол",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Залипальне",
+      "id": 669375,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 355000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "YouTV Пес HD",
+      "id": 802617,
+      "group": "YouTV",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 347000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Блог Будівництво та ремонт HD",
+      "id": 669386,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 336000,
+      "keywords": [
+        "ремонт",
+        "будівництво",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Viasat Kino Action EU",
+      "id": 806228,
+      "group": "Other Channel",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 320000,
+      "keywords": [
+        "бойовик",
+        "чоловічий",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Блог Serginio Fishing TV HD",
+      "id": 669390,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 316000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Гумористичний",
+      "id": 805793,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 295000,
+      "keywords": [
+        "гумор",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Блог Пізнавальний HD",
+      "id": 669378,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 291000,
+      "keywords": [
+        "пізнавальне",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Блог Авто/Мото HD",
+      "id": 669383,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 254000,
+      "keywords": [
+        "авто",
+        "мото",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "YouTV Вещдок+ HD",
+      "id": 802794,
+      "group": "YouTV",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 246000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Vidzone Речдок",
+      "id": 802325,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 216000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[М] Кримінальне кіно",
+      "id": 807168,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 3,
+      "weekly_reach": 200000,
+      "keywords": [
+        "кримінальне",
+        "кіно",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Опер за викликом+",
+      "id": 795686,
+      "group": "Other Channel",
+      "theme": "Чоловічий",
+      "priority": 4,
+      "weekly_reach": 182000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Блог Minecraft HD Блогери",
+      "id": 696934,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 4,
+      "weekly_reach": 171000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[М] Розслідування - Мердока",
+      "id": 700976,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 4,
+      "weekly_reach": 171000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[М] Детективне кіно",
+      "id": 807164,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 4,
+      "weekly_reach": 150000,
+      "keywords": [
         "детектив",
-        "екшн",
-        "документальний"
+        "кіно",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка"
+      ]
+    },
+    {
+      "name": "[M] Солодкі фантазії 18+",
+      "id": 801533,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 4,
+      "weekly_reach": 124000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Megogo GONG",
+      "id": 528011,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 4,
+      "weekly_reach": 116000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[М] Детективні хроніки",
+      "id": 700974,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 4,
+      "weekly_reach": 101000,
+      "keywords": [
+        "детектив",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка"
+      ]
+    },
+    {
+      "name": "Vidzone Вікторина",
+      "id": 801993,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 5,
+      "weekly_reach": 89000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Vidzone Знаєм 24",
+      "id": 802082,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 5,
+      "weekly_reach": 83000,
+      "keywords": [
+        "новини",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Viasat True Crime",
+      "id": 806226,
+      "group": "Other Channel",
+      "theme": "Чоловічий",
+      "priority": 5,
+      "weekly_reach": 69000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Cine+ Legend",
+      "id": 806024,
+      "group": "Other Channel",
+      "theme": "Чоловічий",
+      "priority": 5,
+      "weekly_reach": 66000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Трофей Premium",
+      "id": 773101,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 5,
+      "weekly_reach": 57000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[М] Мovie mode 2",
+      "id": 806446,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 5,
+      "weekly_reach": 51000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Megogo Live",
+      "id": 527744,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 6,
+      "weekly_reach": 49000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Vidzone Машина Часу",
+      "id": 800982,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 6,
+      "weekly_reach": 48000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Vidzone Нюхач HD",
+      "id": 802772,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 6,
+      "weekly_reach": 46000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[М] Мovie mode 1",
+      "id": 806444,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 6,
+      "weekly_reach": 46000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Vidzone Речдок. Велика справа",
+      "id": 802588,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 6,
+      "weekly_reach": 40000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Vidzone Кримінальні історії HD",
+      "id": 803793,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 6,
+      "weekly_reach": 38000,
+      "keywords": [
+        "кримінальне",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Блог World of Tanks HD Блогери",
+      "id": 696935,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 6,
+      "weekly_reach": 36000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Gagsnetwork",
+      "id": 700542,
+      "group": "Other Channel",
+      "theme": "Чоловічий",
+      "priority": 6,
+      "weekly_reach": 30000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Vidzone Про Київ",
+      "id": 801755,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 6,
+      "weekly_reach": 29000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Vidzone Команда+",
+      "id": 802858,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 7,
+      "weekly_reach": 19000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Vidzone Опер за викликом",
+      "id": 802894,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 7,
+      "weekly_reach": 16000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Трофей",
+      "id": 700116,
+      "group": "Other Channel",
+      "theme": "Чоловічий",
+      "priority": 7,
+      "weekly_reach": 14000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] БарДак",
+      "id": 806167,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 7,
+      "weekly_reach": 14000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Vidzone ТРОФЕЙ Premium HD",
+      "id": 802288,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 7,
+      "weekly_reach": 13000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[M] Блог Життя у лісі HD",
+      "id": 660864,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 7,
+      "weekly_reach": 12000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "YouTV Action Prime HD",
+      "id": 803627,
+      "group": "YouTV",
+      "theme": "Чоловічий",
+      "priority": 7,
+      "weekly_reach": 11000,
+      "keywords": [
+        "бойовик",
+        "чоловічий",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Extreme",
+      "id": 804755,
+      "group": "Other Channel",
+      "theme": "Чоловічий",
+      "priority": 7,
+      "weekly_reach": 10000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Vidzone Коп з минулого HD",
+      "id": 803106,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 7,
+      "weekly_reach": 10000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "KinoWood",
+      "id": 600666,
+      "group": "Other Channel",
+      "theme": "Чоловічий",
+      "priority": 7,
+      "weekly_reach": 8000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "MGG Будівництво та ремонт HD",
+      "id": 803609,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 7,
+      "weekly_reach": 8000,
+      "keywords": [
+        "ремонт",
+        "будівництво",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "МАСОН ТБ",
+      "id": 792863,
+      "group": "Other Channel",
+      "theme": "Чоловічий",
+      "priority": 7,
+      "weekly_reach": 6000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Vidzone Серіали - фронтові історії HD",
+      "id": 803220,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "фронт",
+        "серіали",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "MGG Світ авто-мото техніки HD",
+      "id": 803698,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "авто",
+        "мото",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Фронт",
+      "id": 802346,
+      "group": "Other Channel",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "фронт",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[М] Ньюспалм",
+      "id": 771564,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 4000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "MGG Хоббі HD",
+      "id": 803700,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "хобі",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Vidzone Військові серіали HD",
+      "id": 803139,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "військове",
+        "серіали",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Vidzone Серіали - детективи й злочини HD",
+      "id": 803222,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "детектив",
+        "серіали",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка"
+      ]
+    },
+    {
+      "name": "MGG Все про спорт HD",
+      "id": 803704,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "спорт",
+        "чоловічий",
+        "бойовик",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "MGG Гумор ТБ HD",
+      "id": 803613,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "гумор",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Vidzone АНТИПОДИ HD",
+      "id": 803795,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 3000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "Vidzone Серіали - поліцейські історії HD",
+      "id": 803135,
+      "group": "Vidzone",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 2000,
+      "keywords": [
+        "серіали",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "MGG Мілітарі HD",
+      "id": 803696,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 2000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "MGG Все про техніку HD",
+      "id": 803702,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 2000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[М] ТОП HD",
+      "id": 700322,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 2000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "MGG Сад і город HD",
+      "id": 803617,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 2000,
+      "keywords": [
+        "сад",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "MGG Цікаво та пізнавально HD",
+      "id": 803623,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "пізнавальне",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "MGG Ваша найкраща професія HD",
+      "id": 803625,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
+      ]
+    },
+    {
+      "name": "[М] Блог Економічний",
+      "id": 786744,
+      "group": "MEGOGO",
+      "theme": "Чоловічий",
+      "priority": 8,
+      "weekly_reach": 1000,
+      "keywords": [
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
       ]
     },
     {
       "name": "[M] CEO Club",
+      "id": 795836,
       "group": "MEGOGO",
       "theme": "Чоловічий",
-      "priority": 292,
+      "priority": 8,
+      "weekly_reach": 1000,
       "keywords": [
+        "бізнес",
         "чоловічий",
+        "бойовик",
         "спорт",
-        "детектив",
-        "екшн",
-        "документальний",
-        "club"
+        "техніка",
+        "детектив"
       ]
     },
     {
-      "name": "[M] IT. Бізнес. Креатив.",
+      "name": "[M] IT. Бізнес. Креатив",
+      "id": 759534,
       "group": "MEGOGO",
       "theme": "Чоловічий",
-      "priority": 293,
+      "priority": 8,
+      "weekly_reach": 1000,
       "keywords": [
-        "чоловічий",
-        "спорт",
-        "детектив",
-        "екшн",
-        "документальний",
         "бізнес",
-        "креатив"
+        "it",
+        "чоловічий",
+        "бойовик",
+        "спорт",
+        "техніка",
+        "детектив"
       ]
     }
   ]
