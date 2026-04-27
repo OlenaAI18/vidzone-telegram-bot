@@ -111,52 +111,92 @@ function getFreshJoke(chatId) {
  * ========================= */
 const CONTACT_ANI = 'Анна Ільєнко — a.ilyenko@vidzone.com';
 const CHANNELS = Array.isArray(channelsCatalog?.items) ? channelsCatalog.items : [];
-const OFFTOPIC_DEFAULT_CHANNELS = ['[М] ТОП HD', '[M] CEO Club', '[M] IT. Бізнес. Креатив.'];
+
+// Дефолтні канали — загальний розважально-пізнавальний контент
+// Підбираються за темою запиту, не за охопленням
+const OFFTOPIC_DEFAULT_CHANNELS_BY_MOOD = [
+  { hint: /жінк|дівч|краса|мода|стил|парфум|серіал|романтик|коханн/i,    channel: '[M] Орел і решка' },
+  { hint: /гумор|смішн|розваг|шоу|квартал|стенд|весел/i,                  channel: '[M] Комедія' },
+  { hint: /кіно|фільм|дивит|актор|режисер/i,                              channel: 'Viasat Explorer EU' },
+  { hint: /чолові|хлопц|мужськ|сила|брутал/i,                             channel: '[M] Речдок' },
+  { hint: /родин|сім|діт|дитин/i,                                          channel: '[M] Сімейний' },
+  { hint: /наук|техн|штучн|програм|ai|ай|цифров/i,                        channel: 'HISTORY' },
+  { hint: /пізнавал|цікав|факт|дізнат/i,                                   channel: '[M] Блог Мандри 1 HD' },
+];
+// Справжній дефолт — коли взагалі нічого не зрозуміло
+const OFFTOPIC_DEFAULT_CHANNELS = ['[M] Орел і решка', 'TET', '[M] Комедія'];
 const OFFTOPIC_KIDS_CHANNELS = ['ПЛЮСПЛЮС', 'PIXEL', 'Cine+ Kids', '[M] МУЛЬТПРЕМЬЕРА HD'];
+
 const THEMATIC_FALLBACK_POOLS = [
+  // Діти / мультики
   {
-    keywords: ['дит', 'діт', 'мульт', 'lego', 'казк', 'школ', 'іграшк', 'дошкіл'],
+    keywords: ['дит', 'діт', 'мульт', 'lego', 'казк', 'школ', 'іграшк', 'дошкіл', 'мама', 'дитинств'],
     channels: OFFTOPIC_KIDS_CHANNELS,
   },
+  // Кулінарія
   {
-    keywords: ['вареник', 'рецепт', 'кулінар', 'їжа', 'страва', 'кухн', 'готув', 'салат', 'борщ'],
-    channels: ['[M] Блог Кухня UA HD', '[M] Кулінарія', 'Vidzone Кулінарний мікс HD'],
+    keywords: ['вареник', 'рецепт', 'кулінар', 'їжа', 'страва', 'кухн', 'готув', 'салат', 'борщ', 'суп', 'печив', 'торт'],
+    channels: ['[M] Блог Кухня UA HD', '[M] Блог Подорожі'],
   },
+  // Спорт / футбол
   {
-    keywords: ['спорт', 'футбол', 'матч', 'чемпіонат', 'бокс', 'єдинобор', 'тренування'],
-    channels: ['[М] ТОП HD', '[M] CEO Club', 'Setanta Sports'],
+    keywords: ['спорт', 'футбол', 'матч', 'чемпіонат', 'бокс', 'єдинобор', 'тренуван', 'волейбол', 'баскетбол', 'теніс', 'плаван', 'гол', 'ліга'],
+    channels: ['Setanta Sports', 'Setanta Sports+', '[M] Огляд футболу HD', '[M] Блог Спорт UA HD'],
   },
+  // Авто / мото
   {
-    keywords: ['бізнес', 'маркетинг', 'стартап', 'керівник', 'ceo', 'технолог', 'it'],
-    channels: ['[M] IT. Бізнес. Креатив.', '[M] CEO Club'],
+    keywords: ['авто', 'мото', 'машин', 'автомобіл', 'двигун', 'tesla', 'bmw', 'toyota', 'ford', 'пдд', 'водій', 'заправк'],
+    channels: ['[M] Блог Авто/Мото UA HD', '[M] Блог Авто/Мото HD'],
   },
+  // Природа / тварини
   {
-    keywords: ['погод', 'клімат', 'природ', 'тварин', 'зоо', 'рослин'],
-    channels: ['Vidzone ONE PLANET+', 'Viasat Nature EU', '[M] Zoosvit'],
+    keywords: ['погод', 'клімат', 'природ', 'тварин', 'зоо', 'рослин', 'ліс', 'море', 'риб', 'собак', 'кіт', 'пес', 'птах', 'дельфін'],
+    channels: ['Viasat Nature EU', '[M] Zoosvit', 'Фауна'],
   },
+  // Музика
   {
-    keywords: ['музик', 'пісн', 'концерт', 'виконавець'],
-    channels: ['MusicBox', 'М1', 'М2', '4ever Music'],
+    keywords: ['музик', 'пісн', 'концерт', 'виконавець', 'альбом', 'трек', 'хіт', 'поп', 'рок', 'реп', 'джаз'],
+    channels: ['[M] Блог музичний HD', 'MusicBox', 'М1', 'М2'],
   },
+  // Подорожі
   {
-    keywords: ['подорож', 'мандр', 'відпуст', 'туризм', 'країн'],
-    channels: ['[M] Блог Мандри 1 HD', '[M] Блог Подорожі', 'Vidzone Орел і Решка'],
+    keywords: ['подорож', 'мандр', 'відпуст', 'туризм', 'країн', 'місто', 'готел', 'літак', 'відвідат', 'пляж', 'море', 'гори'],
+    channels: ['[M] Блог Мандри 1 HD', '[M] Блог Подорожі', '[M] Орел і решка'],
   },
+  // Новини / політика
   {
-    keywords: ['політик', 'новин', 'війн', 'збройн', 'трамп', 'зеленськ', 'вибор'],
-    channels: ['24 Канал', 'EspresoTV', '5 канал'],
+    keywords: ['політик', 'новин', 'війн', 'збройн', 'трамп', 'зеленськ', 'вибор', 'кабмін', 'рада', 'корупц', 'путін', 'байден', 'нато', 'зсу'],
+    channels: ['24 Канал', 'EspresoTV', 'Київ'],
   },
+  // Кіно / серіали
   {
-    keywords: ['авто', 'мото', 'машин', 'автомобіл'],
-    channels: ['[M] Блог Авто/Мото UA HD', 'MGG Світ авто-мото техніки HD'],
+    keywords: ['фільм', 'кіно', 'серіал', 'дивит', 'актор', 'режисер', 'прем'єр', 'нетфлікс', 'netflix', 'кінотеатр'],
+    channels: ['[M] Орел і решка', '[M] Комедія', 'TET', 'Viasat Explorer EU'],
   },
+  // Детектив / кримінал
   {
-    keywords: ['ремонт', 'будівництв', 'інтерьєр', 'дача', 'сад', 'город'],
-    channels: ['[M] Блог Будівництво та ремонт HD', 'MGG Будівництво та ремонт HD', 'Дача'],
+    keywords: ['детектив', 'злочин', 'вбивств', 'слідств', 'поліц', 'кримінал', 'суд', 'тюрм'],
+    channels: ['[M] Речдок', '[М] БОЙОВИК HD', '[M] Телесеріал HD'],
   },
+  // Будівництво / ремонт
   {
-    keywords: ['здоров', 'медицин', 'лікар', 'хвороб', 'дієт', 'вітамін'],
-    channels: ['Vidzone МЕДИЧНІ СЕРІАЛИ', '[М] Доктор Комаровський', '36.6'],
+    keywords: ['ремонт', 'будівництв', 'інтерьєр', 'дача', 'сад', 'город', 'квартир', 'будинок', 'плитк', 'шпалер'],
+    channels: ['[M] Блог Будівництво та ремонт HD', '[M] Блог Подорожі'],
+  },
+  // Здоров'я / медицина
+  {
+    keywords: ['здоров', 'медицин', 'лікар', 'хвороб', 'дієт', 'вітамін', 'лікуван', 'симптом', 'таблетк', 'аптек', 'болить'],
+    channels: ['Vidzone МЕДИЧНІ СЕРІАЛИ', '[М] Доктор Комаровський'],
+  },
+  // Гумор / розваги
+  {
+    keywords: ['гумор', 'комедія', 'смішн', 'розваг', 'шоу', 'квартал', 'стенд'],
+    channels: ['[M] Комедія', 'TET', 'KVARTAL TV'],
+  },
+  // Історія / документалка
+  {
+    keywords: ['історі', 'документал', 'воєнн', 'минул', 'архів', 'дослідж', 'наук'],
+    channels: ['HISTORY', '[M] Речдок', '[М] БОЙОВИК HD'],
   },
 ];
 
@@ -307,7 +347,7 @@ function pickVariantByText(arr = [], seedText = '') {
   }
   return arr[hash % arr.length] || arr[0];
 }
-function pickRelevantChannel(userText = '') {
+function pickRelevantChannel(userText = '', rawText = '') {
   if (!CHANNELS.length) return null;
   const text = normalizeQuery(userText).toLowerCase();
 
@@ -363,6 +403,14 @@ function pickRelevantChannel(userText = '') {
   if (bestScore <= 0) {
     const kidsHints = ['дит', 'діт', 'мульт', 'казк', 'іграшк', 'школ', 'родин'];
     if (kidsHints.some((hint) => text.includes(hint))) return kidsDefault;
+
+    // Шукаємо дефолт по настрою/темі запиту
+    for (const { hint, channel: chName } of OFFTOPIC_DEFAULT_CHANNELS_BY_MOOD) {
+      if (hint.test(rawText || userText)) {
+        const found = CHANNELS.find(c => c.name === chName);
+        if (found) return found;
+      }
+    }
     return defaultChannel;
   }
 
@@ -370,7 +418,7 @@ function pickRelevantChannel(userText = '') {
 }
 
 async function buildGuidedFallback(userText = '') {
-  const ruleBasedChannel = pickRelevantChannel(userText) || { name: OFFTOPIC_DEFAULT_CHANNELS[0] };
+  const ruleBasedChannel = pickRelevantChannel(userText, rawText) || { name: OFFTOPIC_DEFAULT_CHANNELS[0] };
   const llmChannel = await pickRelevantChannelByLLM(userText);
   const channel = llmChannel || ruleBasedChannel;
   const channelName = channel.name || OFFTOPIC_DEFAULT_CHANNELS[0];
@@ -409,8 +457,9 @@ const RX = {
   CEO_ALT: /(^|[^\p{L}])(ceo|сео|керівник|директор)\s+(vidzone|відзон\p{L}*|видзон\p{L}*)(?!\p{L})/iu,
 
   TECH_REQS: /(тех(\s*|-)вимог\w*|технічн\w*\s+вимог\w*|техтреб\w*|тех\.?\s*вимог\w*|тех\.?\s*треб\w*|technical\s+requirements|tech\s*reqs?|ssai\s+вимог\w*)/iu,
-  DOC_MENU: /(шаблон(и)?\s+документ\w*|документ(и)?|довідк\w*|гарантійн\w*\s+лист|музичн\w*\s+довідк\w*)/iu,
+  DOC_MENU: /(шаблон(и)?\s+документ\w*|документ(и)?|довідк\w*|гарантійн\w*\с+лист|музичн\w*\s+довідк\w*)/iu,
   JOKE: /(жарт|смішн|анекдот|веселе)/iu,
+  CHANNELS_QUERY: /(яки(й|х|м)\s+канал|список\s+канал|пакет\s+канал|канал\w*\s+(є|маєт|доступ|включ|входит)|які\s+канал|скільки\s+канал|є\s+канал|дит(яч)?ий\s+пакет|жіноч\w+\s+пакет|чоловіч\w+\s+пакет|унісекс\s+пакет)/iu,
 
   AVB: /(^|[^\p{L}])(avb|audio\s*video\s*bridging|a\/?b|а\/?б|авб)(?!\p{L})/iu,
   BRAND_SPECIFIC: /(клієнт\p{L}*|бренд\p{L}*|для)\s+[A-Za-zА-Яа-яІЇЄҐієї0-9][\w&\-.]{1,}/u,
@@ -425,11 +474,42 @@ function detectIntent(userTextNorm) {
   if (RX.TECH_REQS.test(userTextNorm)) return 'TECH_REQS';
   if (RX.DOC_MENU.test(userTextNorm)) return 'DOC_MENU';
   if (RX.JOKE.test(userTextNorm)) return 'JOKE';
+  if (RX.CHANNELS_QUERY.test(userTextNorm)) return 'CHANNELS_QUERY';
   if (RX.AVB.test(userTextNorm) || RX.BRAND_SPECIFIC.test(userTextNorm)) return 'ESCALATE';
   if (RX.JAILBREAK.test(userTextNorm)) return 'OOS';
   if (RX.COFFEE.test(userTextNorm) && !RX.TECH_REQS.test(userTextNorm)) return 'OOS';
   if (RX.COSMOS.test(userTextNorm)) return 'OOS';
   return 'RAG';
+}
+
+/* =========================
+ * 6b) Каталог каналів для промпту
+ * ========================= */
+function buildChannelsSummary(userText = '') {
+  const text = normalizeQuery(userText).toLowerCase();
+  const PACKAGE_THEMES = ['Дитячий', 'Жіночий', 'Чоловічий', 'Унісекс'];
+  let filterTheme = null;
+  if (/дит(яч)?/.test(text)) filterTheme = 'Дитячий';
+  else if (/жіноч/.test(text)) filterTheme = 'Жіночий';
+  else if (/чоловіч/.test(text)) filterTheme = 'Чоловічий';
+  else if (/унісекс/.test(text)) filterTheme = 'Унісекс';
+
+  const items = Array.isArray(CHANNELS) ? CHANNELS : [];
+  const grouped = {};
+  for (const theme of PACKAGE_THEMES) {
+    const filtered = items
+      .filter(c => c.theme === theme && (!filterTheme || c.theme === filterTheme))
+      .sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999))
+      .slice(0, 10)
+      .map(c => c.name);
+    if (filtered.length) grouped[theme] = filtered;
+  }
+  const lines = ['Vidzone має понад 300 каналів у 4 тематичних пакетах. Ось приклади:'];
+  for (const [theme, names] of Object.entries(grouped)) {
+    lines.push(`${theme} пакет: ${names.join(', ')}`);
+  }
+  lines.push(`Повний каталог і умови розміщення — ${CONTACT_ANI}.`);
+  return lines.join('\n');
 }
 
 /* =========================
@@ -651,6 +731,14 @@ export default async function handler(req, res) {
     return res.status(200).send('CEO Answer');
   }
 
+  // B2) Каталог каналів — відповідаємо прямо з даних
+  if (intent === 'CHANNELS_QUERY') {
+    const summary = buildChannelsSummary(rawText);
+    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: '[CHANNELS_QUERY]' });
+    await bot.sendMessage(chatId, summary, mainMenuKeyboard);
+    return res.status(200).send('CHANNELS_QUERY');
+  }
+
   // C) Техвимоги
   if (intent === 'TECH_REQS') {
     const answer = `${TEMPLATES.TECH_REQS_HEADER}\n\n${techRequirements}`;
@@ -727,30 +815,59 @@ export default async function handler(req, res) {
     ? relevantChunks.join('\n\n---\n\n')
     : '';
 
-  if (!knowledgeBlock || overlapScore(userText, knowledgeBlock) < 0.25) {
+  // Перевіряємо чи питання взагалі про Vidzone/рекламу
+  const VIDZONE_TOPIC_RX = /(vidzone|відзон|видзон|реклам|ott|cpm|cpt|пакет|таргет|охоплен|показ|канал|digital\s*tv|програматик|ролик|бренд|рекламодав|агенц|медіа|ssai|fast|cpv|vtr|грн)/i;
+  const isVidzoneTopic = VIDZONE_TOPIC_RX.test(rawText);
+
+  if (!knowledgeBlock || overlapScore(userText, knowledgeBlock) < 0.12) {
+    if (isVidzoneTopic) {
+      // Питання про Vidzone, але KB не знайшов — чесна відповідь, не offtopic
+      const noInfoReply = \`На жаль, точної інформації з цього питання у мене немає. Зверніться до ${CONTACT_ANI} — вона підкаже.\`;
+      await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: noInfoReply, note: 'Vidzone topic: KB weak' });
+      await bot.sendMessage(chatId, noInfoReply, mainMenuKeyboard);
+      return res.status(200).send('NoKB_VidzoneTopic');
+    }
+    // Справжній офтоп
     const botResponse = await buildGuidedFallback(rawText);
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'Offtopic: KB weak/empty' });
     await bot.sendMessage(chatId, botResponse, mainMenuKeyboard);
     return res.status(200).send('Offtopic_NoKB');
   }
 
+  const channelHint = RX.CHANNELS_QUERY.test(userText) ? '\n\nКАТАЛОГ КАНАЛІВ:\n' + buildChannelsSummary(rawText) : '';
+
   const systemPrompt = `
-Ти — офіційний AI-помічник Vidzone.
+Ти — офіційний AI-помічник Vidzone, компанії з розміщення Digital TV реклами в Україні.
 
 ПРАВИЛА:
-• Відповідай українською стисло, професійно і дружньо.
-• Використовуй ТІЛЬКИ надані нижче фрагменти бази знань («KB»). НЕ вигадуй.
-• Якщо інформації недостатньо — чемно скажи про це і порадь звернутись до ${CONTACT_ANI}.
-• Заборонено згадувати назви/шляхи внутрішніх документів — кажи «внутрішні матеріали команди Vidzone».
-• Твої теми: медіа, реклама, OTT/CTV, Vidzone та суміжні питання.
-• Поза цими темами — м'який офтоп з поверненням у тематику.
+• Відповідай ЗАВЖДИ українською, стисло (3–6 речень), професійно та дружньо.
+• Використовуй ТІЛЬКИ інформацію з KB нижче. НЕ вигадуй цифри та факти.
+• Якщо в KB немає точної відповіді — скажи чесно: "Точних даних з цього питання у мене немає. Зверніться до ${CONTACT_ANI}". НЕ кажи "не знаю" без конкретного контакту.
+• Заборонено згадувати назви внутрішніх файлів — кажи «матеріали команди Vidzone».
+• Твоя спеціалізація: Digital TV реклама, OTT/CTV, Vidzone, медіапланування.
 
-ФОРМАТ:
-• Якщо питання про «технічні вимоги» — дай чіткі вимоги, пунктами (якщо є в KB).
-• Якщо про планування/пакети/CPM — дай практичні пункти, приклади, застереження.
+КАНАЛИ — відповідай конкретно:
+• Якщо питають про канали або пакети — назви конкретні канали та пакети (Унісекс, Жіночий, Чоловічий, Дитячий).
+• Підкажи що для детального підбору — звернутись до ${CONTACT_ANI}.
+
+ФОРМАТ ВІДПОВІДЕЙ:
+• Технічні вимоги → чіткий список пунктів
+• Ціна/CPM → конкретна цифра + що входить + контакт для деталей
+• Пакети/канали → назви пакетів + приклади каналів
+• Якщо інформація часткова → дай що є + контакт
+
+ПРИКЛАДИ:
+Питання: "Скільки коштує реклама?"
+Відповідь: "Базова ціна — 150 грн за 1 000 показів (ролик 15 сек). Є знижки: пакетні (до -15%), бюджетні (до -20%), сезонні. Для точного розрахунку — ${CONTACT_ANI}."
+
+Питання: "Які канали є у Vidzone?"
+Відповідь: "Понад 300 каналів у 4 пакетах: Унісекс (1+1 Україна, МЕГАХИТ, 24 Канал...), Жіночий (ЛЮБОВ, ДРАМА, Бігуді...), Чоловічий (БОЙОВИК, 2+2, Речдок...), Дитячий (ПЛЮСПЛЮС, PIXEL, Kids...). Детальний підбір — ${CONTACT_ANI}."
+
+Питання: "Що таке поведінковий таргетинг?"
+Відповідь: "Vidzone пропонує 14 поведінкових сегментів, розроблених Gradus Research. Наприклад: Мами, Леді, Джентльмени, Преміум ЦА, Мандрівники — реклама показується лише тим, хто відповідає профілю за патернами перегляду."
 
 KB (релевантні фрагменти):
-${knowledgeBlock}
+${knowledgeBlock}${channelHint}
 `.trim();
 
   try {
@@ -772,12 +889,20 @@ ${knowledgeBlock}
 
     reply = sanitizeInternalRefs(reply);
 
-    const suspicious = ['не впевнений', 'не знаю', 'немає інформації', 'не можу відповісти', 'передбачаю', 'гіпотетично', 'уявіть', 'в теорії'];
+    // Перевіряємо чи відповідь містить ознаки невпевненості
+    const suspicious = ['передбачаю', 'гіпотетично', 'уявіть', 'в теорії'];
     const containsSuspicious = reply && suspicious.some((p) => reply.toLowerCase().includes(p));
 
     if (!reply || containsSuspicious) {
+      if (isVidzoneTopic) {
+        // GPT не впевнений, але питання про Vidzone — не замінюємо на offtopic, просто відправляємо до менеджера
+        const fallbackReply = \`На це питання у мене немає повної інформації. Найкраще уточнити у ${CONTACT_ANI}.\`;
+        await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: fallbackReply, note: 'LLM uncertain Vidzone -> contact' });
+        await bot.sendMessage(chatId, fallbackReply, mainMenuKeyboard);
+        return res.status(200).send('LLM_VidzoneFallback');
+      }
       const botResponse = await buildGuidedFallback(rawText);
-      await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'LLM uncertain -> polite' });
+      await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'LLM uncertain -> offtopic' });
       await bot.sendMessage(chatId, botResponse, mainMenuKeyboard);
       return res.status(200).send('LLM_Polite');
     }
@@ -793,3 +918,4 @@ ${knowledgeBlock}
   }
 }
  
+
