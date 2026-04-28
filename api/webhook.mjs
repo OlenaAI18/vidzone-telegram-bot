@@ -170,7 +170,7 @@ const THEMATIC_FALLBACK_POOLS = [
   },
   // Кіно / серіали
   {
-    keywords: ['фільм', 'кіно', 'серіал', 'дивит', 'актор', 'режисер', 'прем'єр', 'нетфлікс', 'netflix', 'кінотеатр'],
+    keywords: ['фільм', 'кіно', 'серіал', 'дивит', 'актор', 'режисер', 'прем\u2019єр', 'нетфлікс', 'netflix', 'кінотеатр'],
     channels: ['[M] Орел і решка', '[M] Комедія', 'TET', 'Viasat Explorer EU'],
   },
   // Детектив / кримінал
@@ -822,7 +822,7 @@ export default async function handler(req, res) {
   if (!knowledgeBlock || overlapScore(userText, knowledgeBlock) < 0.12) {
     if (isVidzoneTopic) {
       // Питання про Vidzone, але KB не знайшов — чесна відповідь, не offtopic
-      const noInfoReply = \`На жаль, точної інформації з цього питання у мене немає. Зверніться до ${CONTACT_ANI} — вона підкаже.\`;
+      const noInfoReply = `На жаль, точної інформації з цього питання у мене немає. Зверніться до ${CONTACT_ANI} — вона підкаже.`;
       await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: noInfoReply, note: 'Vidzone topic: KB weak' });
       await bot.sendMessage(chatId, noInfoReply, mainMenuKeyboard);
       return res.status(200).send('NoKB_VidzoneTopic');
@@ -896,7 +896,7 @@ ${knowledgeBlock}${channelHint}
     if (!reply || containsSuspicious) {
       if (isVidzoneTopic) {
         // GPT не впевнений, але питання про Vidzone — не замінюємо на offtopic, просто відправляємо до менеджера
-        const fallbackReply = \`На це питання у мене немає повної інформації. Найкраще уточнити у ${CONTACT_ANI}.\`;
+        const fallbackReply = `На це питання у мене немає повної інформації. Найкраще уточнити у ${CONTACT_ANI}.`;
         await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: fallbackReply, note: 'LLM uncertain Vidzone -> contact' });
         await bot.sendMessage(chatId, fallbackReply, mainMenuKeyboard);
         return res.status(200).send('LLM_VidzoneFallback');
@@ -918,3 +918,4 @@ ${knowledgeBlock}${channelHint}
   }
 }
  
+
