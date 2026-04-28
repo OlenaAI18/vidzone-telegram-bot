@@ -584,9 +584,10 @@ async function routeMessage(text, apiKey) {
     const res = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model, max_tokens: 30, temperature: 0, messages: [{ role: 'user', content: prompt }] })
+      body: JSON.stringify({ model, max_tokens: 100, temperature: 0, messages: [{ role: 'user', content: prompt }] })
     });
     const data = await res.json();
+    if (data.error) console.error('routeMessage API error:', JSON.stringify(data.error));
     const raw = (data.choices?.[0]?.message?.content || '').trim().replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(raw);
     const action = parsed?.action;
@@ -649,6 +650,7 @@ export default async function handler(req, res) {
   }
 
   console.log('message:', JSON.stringify({ userId, rawText: rawText.slice(0, 100) }));
+  console.log('MODEL in use:', OPENAI_MODEL);
 
   // ── Jailbreak guard ──
   if (/ігноруй|ignore.*інструкц|обійди.*правил/i.test(rawText)) {
@@ -794,10 +796,18 @@ ${knowledgeBlock || 'Інформація не знайдена.'}
       })
     });
     const openaiData = await openaiRes.json();
+    if (openaiData.error) {
+      console.error('OpenAI API error:', JSON.stringify(openaiData.error));
+    }
     let reply = openaiData.choices?.[0]?.message?.content?.trim();
 
-    if (!reply || !knowledgeBlock) {
-      reply = `На жаль, точної інформації з цього питання у мене немає. Зверніться до ${CONTACT_ANI} — вона підкаже.`;
+    if (!reply) {
+      console.error('Empty reply from OpenAI. Model:', OPENAI_MODEL, 'Chunks found:', chunks.length);
+      if (chunks.length > 0) {
+        reply = `На це питання у мене немає точної відповіді. Зверніться до ${CONTACT_ANI} — вона підкаже.`;
+      } else {
+        reply = `Інформації з цього питання у базі немає. Зверніться до ${CONTACT_ANI}.`;
+      }
     }
 
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: reply });
