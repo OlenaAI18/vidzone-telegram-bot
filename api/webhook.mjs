@@ -109,6 +109,21 @@ const documentFormatKeyboard = {
 };
 const userDocumentRequests = new Map();
 
+// Історія розмов — останні 7 повідомлень на користувача
+const conversationHistory = new Map();
+const MAX_HISTORY = 7;
+
+function getHistory(userId) {
+  return conversationHistory.get(String(userId)) || [];
+}
+function addToHistory(userId, role, content) {
+  const uid = String(userId);
+  const hist = conversationHistory.get(uid) || [];
+  hist.push({ role, content: content.slice(0, 500) }); // обрізаємо довгі відповіді
+  if (hist.length > MAX_HISTORY * 2) hist.splice(0, 2); // видаляємо найстаріші пари
+  conversationHistory.set(uid, hist);
+}
+
 /* =========================
  * 5) Fallback-шаблони (офтоп)
  * ========================= */
@@ -356,6 +371,9 @@ export default async function handler(req, res) {
   console.log('[MSG]', JSON.stringify({ userId, text: rawText.slice(0, 80) }));
   console.log('[MODEL]', OPENAI_MODEL);
 
+  // Зберігаємо повідомлення користувача в історію
+  addToHistory(userId, 'user', rawText);
+
   // Перевірка доступу
   if (ALLOWED_USER_IDS.length && !ALLOWED_USER_IDS.includes(userId)) {
     await bot.sendMessage(chatId, 'Вибачте, у вас немає доступу до цього бота.');
@@ -435,11 +453,12 @@ export default async function handler(req, res) {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
         body: JSON.stringify({ model: OPENAI_MODEL, max_completion_tokens: 200, temperature: 0.7,
-          messages: [{ role: 'system', content: chatPrompt }, { role: 'user', content: rawText }] }),
+          messages: [{ role: 'system', content: chatPrompt }, ...getHistory(userId)] }),
       });
       const d = await r.json();
       if (d.error) console.error('[Chat] API error:', d.error.message);
       const reply = d.choices?.[0]?.message?.content?.trim() || 'Привіт! Чим можу допомогти?';
+      addToHistory(userId, 'assistant', reply);
       await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: reply });
       await bot.sendMessage(chatId, reply, mainMenuKeyboard);
     } catch (e) {
@@ -493,7 +512,7 @@ ${knowledgeBlock || 'Інформація не знайдена.'}`;
         model: OPENAI_MODEL,
         temperature: TEMPERATURE,
         max_completion_tokens: MAX_TOKENS,
-        messages: [{ role: 'system', content: ragPrompt }, { role: 'user', content: rawText }],
+        messages: [{ role: 'system', content: ragPrompt }, ...getHistory(userId)],
       }),
     });
     const d = await r.json();
@@ -508,6 +527,7 @@ ${knowledgeBlock || 'Інформація не знайдена.'}`;
     }
 
     reply = sanitizeInternalRefs(reply);
+    addToHistory(userId, 'assistant', reply);
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: reply });
     await bot.sendMessage(chatId, reply, mainMenuKeyboard);
     return res.status(200).send('rag_ok');
