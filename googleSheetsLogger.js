@@ -1,31 +1,47 @@
 import { google } from 'googleapis';
 
-const serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
-
 const SPREADSHEET_ID = '1OFqpUNXIayjpeq1ezX00fAtgNZt7fEQdpb77DNfDQLY';
-;
 
-const auth = new google.auth.GoogleAuth({
-  credentials: serviceAccount,
-  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-});
+// Ініціалізуємо клієнт тільки якщо є credentials
+let sheets = null;
+try {
+  if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON) {
+    const serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
+    const auth = new google.auth.GoogleAuth({
+      credentials: serviceAccount,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
+    sheets = google.sheets({ version: 'v4', auth });
+  }
+} catch (e) {
+  console.error('[Logger] Init error:', e.message);
+}
 
-const sheets = google.sheets({ version: 'v4', auth });
+export async function logToGoogleSheet({ timestamp, userId, userMessage, botResponse, note = '' }) {
+  // Завжди логуємо в консоль (видно у Vercel Logs)
+  console.log('[LOG]', JSON.stringify({
+    t: timestamp,
+    uid: userId,
+    q: userMessage?.slice(0, 80),
+    a: botResponse?.slice(0, 120),
+    note: note || undefined,
+  }));
 
-export async function logToGoogleSheet({ timestamp, userId, userMessage, botResponse }) {
+  // Спробуємо записати в Sheets — якщо не вийде, мовчимо (не смітимо в логи)
+  if (!sheets) return;
+
   try {
-    console.log('Trying to write log to Google Sheets:', { timestamp, userId, userMessage, botResponse });
-    const res = await sheets.spreadsheets.values.append({
+    await sheets.spreadsheets.values.append({
       spreadsheetId: SPREADSHEET_ID,
-      range: 'Логи!A:D',
+      range: 'Логи!A:E',
       valueInputOption: 'RAW',
       requestBody: {
-        values: [[timestamp, userId, userMessage, botResponse]],
+        values: [[timestamp, userId, userMessage, botResponse, note]],
       },
     });
-    console.log('Google Sheets API response status:', res.status);
-    console.log('Log successfully written to Google Sheets');
   } catch (error) {
-    console.error('Error writing log to Google Sheets:', error);
+    // Тільки коротке повідомлення — не весь stack trace
+    const msg = error?.response?.data?.error_description || error?.message || 'unknown';
+    console.error('[Logger] Sheets write failed:', msg);
   }
 }
