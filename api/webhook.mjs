@@ -167,35 +167,33 @@ const THEMATIC_FALLBACK_POOLS = [
 
 // Вступні фрази — чому бот не відповідає на це
 const FALLBACK_INTRO_TEMPLATES = [
-  'Це поза моєю зоною компетенції — я більше про рекламу на digital TV.',
-  'На це питання я чесно не маю відповіді — не моя територія.',
-  'Я спеціаліст з реклами, а не з цієї теми — тут не підкажу.',
-  'Я не маю думки з цього приводу — моя справа реклама, а не {topic}.',
-  'Точної відповіді немає — але є кое-що краще.',
-  'Тут я пасую — але є канал, який може зацікавити.',
-  'Не моя тема, але зате я знаю, де глянути.',
-  'Відповіді у мене немає, але є підказка.',
+  'Це не моя спеціалізація — я про Digital TV рекламу.',
+  'З цього питання я вам не помічник, але дещо підкажу.',
+  'Реклама і медіа — моя тема, а от {topic} — ні.',
+  'Про {topic} я не консультую, але є корисна підказка.',
+  'Моя експертиза — Digital TV реклама, а не {topic}.',
+  'Із цим не допоможу, проте маю до вас одну пропозицію.',
+  'Не моя тема — але знаю, куди звернути увагу.',
+  'Тут я не фахівець, однак є що запропонувати.',
 ];
 
 // Перехід до каналу
 const FALLBACK_BRIDGE_TEMPLATES = [
-  'Зате для любителів такого контенту є канал «{channel}» — там якраз близька тематика.',
-  'Але якщо тебе цікавить щось у цьому напрямку, зверни увагу на канал «{channel}».',
-  'Натомість є канал «{channel}» — там схожий контент для твоєї аудиторії.',
-  'Схожі теми знайдеш на каналі «{channel}» — якраз для такої аудиторії.',
-  'Зате є «{channel}» — там саме цей тип контенту.',
-  'Але «{channel}» — канал, де це питання явно у темі.',
-  'Якщо тема близька твоїй аудиторії, «{channel}» — хороший варіант.',
-  'Пошукай на «{channel}» — там і близько, і в тему.',
+  'Натомість є канал «{channel}» — там саме такий контент.',
+  'Зверніть увагу на «{channel}» — тематика якраз відповідає.',
+  'Для цієї теми підійде канал «{channel}» — там схожий контент.',
+  'Є чудовий варіант — канал «{channel}», де це у фокусі.',
+  'Канал «{channel}» якраз спеціалізується на подібному контенті.',
+  'На «{channel}» знайдете саме те, що шукаєте.',
+  'Рекомендую «{channel}» — там це питання точно в темі.',
 ];
 
 // Хвіст про рекламу Vidzone
 const FALLBACK_AD_TAIL_TEMPLATES = [
-  'До речі, на цьому каналі виходить реклама Vidzone. Якщо цікавить розміщення — {contact}.',
-  'І так, на «{channel}» є реклама Vidzone. Деталі у {contact}.',
-  'На цьому каналі розміщується реклама Vidzone — усі умови підкаже {contact}.',
-  'Канал входить у мережу Vidzone — щодо розміщення пиши {contact}.',
-  'А ще «{channel}» — це частина інвентарю Vidzone. Питання по рекламі — до {contact}.',
+  'До речі, «{channel}» входить до мережі Vidzone. Питання щодо розміщення реклами — {contact}.',
+  'Цей канал розміщується через Vidzone. Деталі щодо реклами — {contact}.',
+  'На «{channel}» виходить реклама Vidzone — умови розміщення уточніть у {contact}.',
+  '«{channel}» є частиною інвентарю Vidzone. Для рекламодавців — {contact}.',
 ];
 
 // Контекстні підказки залежно від теми запиту (щоб intro звучав природніше)
@@ -404,14 +402,13 @@ async function buildGuidedFallback(userText = '') {
  * 6) Intent detection
  * ========================= */
 const RX = {
-  START: /^\/start(\s|$)|^привіт(\s|$)|^добрий\s+день|^вітаю(\s|$)|^хай(\s|$)/i,
+  START: /^\/start\b|^привіт\b|^добрий\s+день\b|^вітаю\b/i,
   CEO: /(^|[^\p{L}])((?:є|е)вген(?:ий)?|yevhen|evhen|evgen|yevgen)\s+левченко(?!\p{L})/iu,
   CEO_ALT: /(^|[^\p{L}])(ceo|сео|керівник|директор)\s+(vidzone|відзон\p{L}*|видзон\p{L}*)(?!\p{L})/iu,
 
   TECH_REQS: /(тех(\s*|-)вимог\w*|технічн\w*\s+вимог\w*|техтреб\w*|тех\.?\s*вимог\w*|тех\.?\s*треб\w*|technical\s+requirements|tech\s*reqs?|ssai\s+вимог\w*)/iu,
   DOC_MENU: /(шаблон(и)?\s+документ\w*|документ(и)?|довідк\w*|гарантійн\w*\s+лист|музичн\w*\s+довідк\w*)/iu,
   JOKE: /(жарт|смішн|анекдот|веселе)/iu,
-  CHANNELS_QUERY: /(яки(й|х|м)\s+канал|список\s+канал|пакет\s+канал|які\s+канал|скільки\s+канал|є\s+канал|дит(яч)?ий\s+пакет|жіноч\w+\s+пакет|чоловіч\w+\s+пакет|унісекс\s+пакет)/iu,
 
   AVB: /(^|[^\p{L}])(avb|audio\s*video\s*bridging|a\/?b|а\/?б|авб)(?!\p{L})/iu,
   BRAND_SPECIFIC: /(клієнт\p{L}*|бренд\p{L}*|для)\s+[A-Za-zА-Яа-яІЇЄҐієї0-9][\w&\-.]{1,}/u,
@@ -426,7 +423,6 @@ function detectIntent(userTextNorm) {
   if (RX.TECH_REQS.test(userTextNorm)) return 'TECH_REQS';
   if (RX.DOC_MENU.test(userTextNorm)) return 'DOC_MENU';
   if (RX.JOKE.test(userTextNorm)) return 'JOKE';
-  if (RX.CHANNELS_QUERY.test(userTextNorm)) return 'CHANNELS_QUERY';
   if (RX.AVB.test(userTextNorm) || RX.BRAND_SPECIFIC.test(userTextNorm)) return 'ESCALATE';
   if (RX.JAILBREAK.test(userTextNorm)) return 'OOS';
   if (RX.COFFEE.test(userTextNorm) && !RX.TECH_REQS.test(userTextNorm)) return 'OOS';
@@ -442,351 +438,309 @@ const TEMPERATURE = 0.1;
 const ENABLE_GPT_CHANNEL_ROUTER = process.env.ENABLE_GPT_CHANNEL_ROUTER !== 'false';
 
 async function pickRelevantChannelByLLM(userText = '') {
+  if (!ENABLE_GPT_CHANNEL_ROUTER) return null;
   if (!process.env.OPENAI_API_KEY) return null;
   if (!CHANNELS.length) return null;
-  const CONTENT_CHANNELS = [
-    {name:'24 Канал',                         topic:'новини, політика, Україна, війна'},
-    {name:'EspresoTV',                         topic:'новини, аналітика, журналістика'},
-    {name:'Київ',                              topic:'новини Києва, місто, культура'},
-    {name:'Setanta Sports',                    topic:'спорт, футбол, матчі, змагання'},
-    {name:'[M] Блог Спорт UA HD',             topic:'спорт, тренування, огляди'},
-    {name:'[M] Блог Кухня UA HD',             topic:'кулінарія, рецепти, їжа, готування'},
-    {name:'[M] Блог Мандри 1 HD',             topic:'мандри, туризм, подорожі, відпустка'},
-    {name:'[M] Орел і решка',                 topic:'подорожі, розваги, лайфстайл'},
-    {name:'[M] Блог Авто/Мото UA HD',         topic:'автомобілі, машини, мото, техніка'},
-    {name:'Viasat Nature EU',                  topic:'природа, тварини, дика природа, екологія'},
-    {name:'[M] Zoosvit',                       topic:'тварини, домашні улюбленці, собаки, коти'},
-    {name:'[M] Блог музичний HD',             topic:'музика, кліпи, виконавці, пісні, концерти'},
-    {name:'М1',                                topic:'музика, хіти, поп, рок, українська музика'},
-    {name:'Viasat Explorer EU',                topic:'документальне кіно, пригоди, відкриття'},
-    {name:'[M] Телесеріал HD',                topic:'серіали, мелодрами, драми, кіно'},
-    {name:'[M] Речдок',                       topic:'детективи, кримінал, розслідування'},
-    {name:'HISTORY',                           topic:'історія, документалки, таємниці, наука'},
-    {name:'[M] Комедія',                      topic:'гумор, комедія, жарти, розваги'},
-    {name:'TET',                               topic:'реаліті-шоу, молодіжний контент, розваги'},
-    {name:'KVARTAL TV',                        topic:'гумор, квартал 95, шоу, комедія'},
-    {name:'[M] Блог Будівництво та ремонт HD', topic:'ремонт, будівництво, інтер\'єр, дача'},
-    {name:'Vidzone МЕДИЧНІ СЕРІАЛИ',           topic:'медицина, здоров\'я, лікарі, серіали'},
-    {name:'[М] Доктор Комаровський',          topic:'здоров\'я дітей, педіатрія, поради'},
-    {name:'ПЛЮСПЛЮС',                          topic:'мультфільми, діти, дитячий контент'},
-    {name:'PIXEL',                             topic:'мультфільми, анімація, діти'},
-    {name:'1+1 Україна',                       topic:'серіали, жіночий контент, реаліті'},
-    {name:'Бігуді',                            topic:'краса, мода, стиль, жіночий контент'},
-    {name:'[М] БОЙОВИК HD',                   topic:'бойовики, action, пригоди, чоловічий'},
-    {name:'2+2',                               topic:'спорт, розваги, гумор, чоловічий контент'},
-  ];
-  const prompt = 'Користувач написав: "' + userText.slice(0,200) + '"\nОбери ОДИН найрелевантніший канал. Поверни ТІЛЬКИ JSON: {"channel":"назва"}\n\n' +
-    CONTENT_CHANNELS.map(c => '- ' + c.name + ': ' + c.topic).join('\n');
+
+  const catalog = CHANNELS.map((c) => ({
+    name: c?.name,
+    theme: c?.theme || '',
+    keywords: Array.isArray(c?.keywords) ? c.keywords.slice(0, 8) : [],
+    priority: c?.priority ?? 999,
+  }));
+
+  const routerPrompt = `
+Ти маршрутизатор каналу для Vidzone.
+Обери ОДИН найбільш релевантний канал зі списку нижче для питання користувача.
+Поверни ЛИШЕ JSON без пояснень у форматі: {"channel":"<точна_назва_каналу>"}.
+Якщо питання загальне/офтоп — обери найкращий універсальний канал для широкої аудиторії.
+
+Список каналів:
+${JSON.stringify(catalog)}
+`.trim();
+
   try {
-    const model = process.env.OPENAI_MODEL || 'gpt-5.4-mini';
     const res = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + process.env.OPENAI_API_KEY, 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: OPENAI_MODEL,
+        temperature: 0,
+        messages: [
+          { role: 'system', content: routerPrompt },
+          { role: 'user', content: userText },
+        ],
+      }),
+    });
+
+    const data = await res.json();
+    const raw = data?.choices?.[0]?.message?.content?.trim();
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw);
+    const pickedName = String(parsed?.channel || '').trim();
+    if (!pickedName) return null;
+
+    const exact = CHANNELS.find((c) => c?.name === pickedName);
+    if (exact) return exact;
+
+    const lowered = pickedName.toLowerCase();
+    return CHANNELS.find((c) => String(c?.name || '').toLowerCase() === lowered) || null;
+  } catch (e) {
+    console.error('Channel router LLM error:', e);
+    return null;
+  }
+}
+
+
+function buildChannelsSummary(userText = '') {
+  const text = (userText || '').toLowerCase();
+  const THEMES = ['Дитячий','Жіночий','Чоловічий','Унісекс'];
+  let filterTheme = null;
+  if (/дит(яч)?/.test(text)) filterTheme = 'Дитячий';
+  else if (/жіноч/.test(text)) filterTheme = 'Жіночий';
+  else if (/чоловіч/.test(text)) filterTheme = 'Чоловічий';
+  else if (/унісекс/.test(text)) filterTheme = 'Унісекс';
+  const items = Array.isArray(CHANNELS) ? CHANNELS : [];
+  const grouped = {};
+  for (const theme of THEMES) {
+    if (filterTheme && theme !== filterTheme) continue;
+    const chs = items.filter(c => c.theme === theme)
+      .sort((a,b) => (a.priority??999)-(b.priority??999))
+      .slice(0,8).map(c => c.name);
+    if (chs.length) grouped[theme] = chs;
+  }
+  const lines = ['Vidzone має понад 300 каналів у 4 тематичних пакетах. Ось приклади:'];
+  for (const [theme, names] of Object.entries(grouped)) {
+    lines.push(theme + ' пакет: ' + names.join(', '));
+  }
+  lines.push('Повний каталог і умови розміщення — ' + CONTACT_ANI + '.');
+  return lines.join('\n');
+}
+
+/* =========================
+ * 8) GPT Router + Основний хендлер
+ * ========================= */
+
+// ── Таблиця контентних каналів для офтопу ──
+const CONTENT_CHANNELS = [
+  {name:'24 Канал',                         topic:'новини, політика, Україна, війна'},
+  {name:'EspresoTV',                         topic:'новини, аналітика, журналістика'},
+  {name:'Setanta Sports',                    topic:'спорт, футбол, матчі, змагання'},
+  {name:'[M] Блог Спорт UA HD',             topic:'спорт, тренування, огляди'},
+  {name:'[M] Блог Кухня UA HD',             topic:'кулінарія, рецепти, їжа, готування'},
+  {name:'[M] Блог Мандри 1 HD',             topic:'мандри, туризм, подорожі, відпустка'},
+  {name:'[M] Орел і решка',                 topic:'подорожі, розваги, лайфстайл, широка аудиторія'},
+  {name:'[M] Блог Авто/Мото UA HD',         topic:'автомобілі, машини, мото, техніка'},
+  {name:'Viasat Nature EU',                  topic:'природа, тварини, дика природа, екологія'},
+  {name:'[M] Zoosvit',                       topic:'тварини, домашні улюбленці, собаки, коти'},
+  {name:'[M] Блог музичний HD',             topic:'музика, кліпи, виконавці, пісні, концерти'},
+  {name:'М1',                                topic:'музика, хіти, поп, рок, українська музика'},
+  {name:'Viasat Explorer EU',                topic:'документальне кіно, пригоди, відкриття'},
+  {name:'[M] Телесеріал HD',                topic:'серіали, мелодрами, драми, кіно'},
+  {name:'[M] Речдок',                       topic:'детективи, кримінал, розслідування'},
+  {name:'HISTORY',                           topic:'історія, документалки, таємниці, наука'},
+  {name:'[M] Комедія',                      topic:'гумор, комедія, жарти, розваги'},
+  {name:'TET',                               topic:'реаліті-шоу, молодіжний контент, розваги'},
+  {name:'KVARTAL TV',                        topic:'гумор, квартал 95, шоу, комедія'},
+  {name:'[M] Блог Будівництво та ремонт HD', topic:"ремонт, будівництво, інтер'єр, дача"},
+  {name:'Vidzone МЕДИЧНІ СЕРІАЛИ',           topic:"медицина, здоров'я, лікарі, серіали"},
+  {name:'[М] Доктор Комаровський',          topic:"здоров'я дітей, педіатрія, поради"},
+  {name:'ПЛЮСПЛЮС',                          topic:'мультфільми, діти, дитячий контент'},
+  {name:'PIXEL',                             topic:'мультфільми, анімація, діти'},
+  {name:'1+1 Україна',                       topic:'серіали, жіночий контент, реаліті'},
+  {name:'Бігуді',                            topic:'краса, мода, стиль, жіночий контент'},
+  {name:'[М] БОЙОВИК HD',                   topic:'бойовики, action, пригоди, чоловічий'},
+  {name:'2+2',                               topic:'спорт, розваги, гумор, чоловічий контент'},
+];
+
+// ── GPT Router: визначає що робити з повідомленням ──
+async function routeMessage(text, apiKey) {
+  const model = process.env.OPENAI_MODEL || 'gpt-5.4-mini';
+  const prompt = `Ти роутер Telegram-бота Vidzone (Digital TV реклама в Україні).
+Визнач яка дія потрібна для повідомлення користувача.
+
+Повідомлення: "${text.slice(0, 400)}"
+
+Дії:
+- "chat"     — привітання, подяка, загальна балачка, питання не про рекламу і не про конкретний бренд/продукт
+- "rag"      — питання про Vidzone, Digital TV рекламу, OTT, CPM, ціни, знижки, пакети, таргетинг, аудиторію, технічні вимоги, кейси, ефективність
+- "channels" — питання про список каналів, пакети каналів (дитячий, жіночий і т.д.)
+- "offtopic" — питання про зовнішній світ (новини, погода, рецепти, спорт, кіно, музика, тварини, авто, політика)
+- "docs"     — просить шаблони документів, гарантійний лист, музична довідка
+- "joke"     — просить жарт, щось смішне, розсмішити
+
+Поверни ТІЛЬКИ JSON без пояснень: {"action":"назва_дії"}`;
+
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model, max_tokens: 30, temperature: 0, messages: [{ role: 'user', content: prompt }] })
+    });
+    const data = await res.json();
+    const raw = (data.choices?.[0]?.message?.content || '').trim().replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(raw);
+    const action = parsed?.action;
+    if (['chat','rag','channels','offtopic','docs','joke'].includes(action)) return action;
+    return 'rag'; // fallback
+  } catch(e) {
+    console.error('routeMessage error:', e.message);
+    return 'rag'; // fallback при помилці
+  }
+}
+
+// ── Офтоп: GPT вибирає канал зі списку ──
+async function pickChannelForOfftopic(userText, apiKey) {
+  const model = process.env.OPENAI_MODEL || 'gpt-5.4-mini';
+  const channelList = CONTENT_CHANNELS.map(c => '- ' + c.name + ': ' + c.topic).join('\n');
+  const prompt = 'Тема: "' + userText.slice(0,200) + '"\nОбери ОДИН найрелевантніший канал. Поверни ТІЛЬКИ JSON: {"channel":"назва"}\n\n' + channelList;
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
       body: JSON.stringify({ model, max_tokens: 60, temperature: 0, messages: [{ role: 'user', content: prompt }] })
     });
     const data = await res.json();
     const raw = (data.choices?.[0]?.message?.content || '').trim().replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(raw);
     const found = CHANNELS.find(c => c.name === parsed?.channel);
-    console.log('LLM channel:', parsed?.channel, found ? 'OK' : 'NOT FOUND');
-    return found || null;
+    console.log('pickChannel:', parsed?.channel, found ? 'OK' : 'NOT FOUND');
+    return found?.name || OFFTOPIC_DEFAULT_CHANNELS[Math.floor(Math.random() * OFFTOPIC_DEFAULT_CHANNELS.length)];
   } catch(e) {
-    console.error('LLM channel error:', e.message);
-    return null;
+    console.error('pickChannel error:', e.message);
+    return OFFTOPIC_DEFAULT_CHANNELS[0];
   }
 }
 
-
-/* =========================
- * Перевірка відповіді на здоровий глузд
- * ========================= */
-async function validateReply(userQuestion, botReply, apiKey) {
-  if (!apiKey || !botReply) return true; // якщо немає API key — пропускаємо
-  const model = process.env.OPENAI_MODEL || 'gpt-5.4-mini';
-  const prompt = `Перевір чи відповідь бота дійсно відповідає на питання користувача.
-
-Питання: "${userQuestion.slice(0, 300)}"
-Відповідь бота: "${botReply.slice(0, 500)}"
-
-Критерії валідності:
-- Відповідь стосується саме того, про що питали
-- Якщо питали про конкретний бренд/компанію (не Vidzone) — відповідь не підмінює його на Vidzone
-- Відповідь не є галюцинацією або вигадкою
-
-Поверни ТІЛЬКИ JSON без пояснень: {"valid": true} або {"valid": false, "reason": "коротка причина"}`;
-
-  try {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model, max_tokens: 60, temperature: 0,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-    const data = await res.json();
-    const raw = (data.choices?.[0]?.message?.content || '').trim().replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(raw);
-    console.log('validateReply:', parsed);
-    return parsed?.valid !== false; // true якщо valid=true або не розпарсилось
-  } catch(e) {
-    console.error('validateReply error:', e.message);
-    return true; // при помилці — пропускаємо, не блокуємо
-  }
-}
-
-/* =========================
- * 8) Основний хендлер
- * ========================= */
 export default async function handler(req, res) {
   const { body } = req;
-  if (!body?.message?.text && !body?.callback_query) return res.status(200).send('Non-message update skipped');
+  if (!body?.message?.text) return res.status(200).send('No text');
 
-  /* ---- CALLBACKS ---- */
-  if (body.callback_query) {
-    const cq = body.callback_query;
-    const chatId = cq.message.chat.id;
-    const userId = cq.from.id;
-    const data = String(cq.data || '');
+  const chatId   = body.message.chat.id;
+  const userId   = body.message.from?.id;
+  const rawText  = body.message.text.trim();
 
-    if (!handler._cbDebounce) handler._cbDebounce = new Map();
-    const key = `${userId}:${data}`;
-    const prev = handler._cbDebounce.get(key) || 0;
-    const now = Date.now();
-    if (now - prev < 1500) {
-      await bot.answerCallbackQuery(cq.id);
-      return res.status(200).send('debounced');
-    }
-    handler._cbDebounce.set(key, now);
+  const apiKey = process.env.OPENAI_API_KEY;
+  const model  = process.env.OPENAI_MODEL || 'gpt-5.4-mini';
 
-    if (data === 'menu_about') {
-      await bot.sendMessage(
-        chatId,
-        'Vidzone — технологічна DSP-платформа для автоматизованої реклами на цифровому телебаченні (Smart TV, OTT). Дає змогу запускати програматик-рекламу з гнучким таргетингом і контролем бюджету.',
-        mainMenuKeyboard
-      );
-      await bot.answerCallbackQuery(cq.id);
-      return res.status(200).send('ok');
-    }
-
-    if (data === 'menu_documents') {
-      await bot.sendMessage(chatId, 'Оберіть шаблон документа:', documentMenuKeyboard);
-      await bot.answerCallbackQuery(cq.id);
-      return res.status(200).send('ok');
-    }
-
-    if (data === 'menu_jokes') {
-      const last = lastJokeByUser.get(userId) || 0;
-      if (Date.now() - last < JOKE_COOLDOWN_MS) {
-        await bot.sendMessage(chatId, 'Трохи зачекайте перед наступним жартом 😉', mainMenuKeyboard);
-        await bot.answerCallbackQuery(cq.id);
-        return res.status(200).send('ok');
-      }
-      const joke = getFreshJoke(chatId) || '😉 (жарти тимчасово недоступні)';
-      lastJokeByUser.set(userId, Date.now());
-      await bot.sendMessage(chatId, joke, mainMenuKeyboard);
-      await bot.answerCallbackQuery(cq.id);
-      return res.status(200).send('ok');
-    }
-
-    if (data === 'menu_help') {
-      await bot.sendMessage(chatId, 'Пишіть будь-яке питання — допоможу знайти інформацію по Vidzone. Якщо не знаю, підкажу, до кого звернутися.', mainMenuKeyboard);
-      await bot.answerCallbackQuery(cq.id);
-      return res.status(200).send('ok');
-    }
-
-    if (data.startsWith('doc_')) {
-      userDocumentRequests.set(userId, data.replace('doc_', ''));
-      await bot.sendMessage(chatId, 'Оберіть формат документа:', documentFormatKeyboard);
-      await bot.answerCallbackQuery(cq.id);
-      return res.status(200).send('ok');
-    }
-
-    if (data === 'format_text' || data === 'format_word') {
-      const docKey = userDocumentRequests.get(userId);
-      if (!docKey) {
-        await bot.sendMessage(chatId, 'Вибачте, не можу визначити, який документ ви обрали. Будь ласка, спробуйте знову.', documentMenuKeyboard);
-        await bot.answerCallbackQuery(cq.id);
-        return res.status(200).send('ok');
-      }
-
-      if (data === 'format_text') {
-        const map = { guaranteeLetter, techRequirements, musicCertificate };
-        const payload = map[docKey];
-        if (payload) {
-          const title = docKey === 'techRequirements' ? TEMPLATES.TECH_REQS_HEADER + '\n\n' : '';
-          await bot.sendMessage(chatId, title + payload, documentMenuKeyboard);
-          await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: `Вибрав ${docKey} (текст)`, botResponse: `[${docKey}] text sent` });
-        } else {
-          await bot.sendMessage(chatId, 'Файл наразі недоступний.', documentMenuKeyboard);
-        }
-      } else {
-        const map = {
-          guaranteeLetter: guaranteeLetterDocx,
-          techRequirements: techRequirementsDocx,
-          musicCertificate: musicCertificateDocx,
-        };
-        const filePath = map[docKey] || null;
-        if (filePath) {
-          await bot.sendDocument(chatId, filePath);
-          await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: `Вибрав ${docKey} (Word-файл)`, botResponse: `Відправлено файл ${filePath}` });
-        } else {
-          await bot.sendMessage(chatId, 'Файл наразі недоступний.', documentMenuKeyboard);
-        }
-      }
-
-      userDocumentRequests.delete(userId);
-      await bot.answerCallbackQuery(cq.id);
-      return res.status(200).send('ok');
-    }
-
-    if (data === 'back_to_menu') {
-      await bot.sendMessage(chatId, 'Головне меню:', mainMenuKeyboard);
-      await bot.answerCallbackQuery(cq.id);
-      return res.status(200).send('ok');
-    }
-
-    if (data === 'back_to_documents') {
-      await bot.sendMessage(chatId, 'Оберіть шаблон документа:', documentMenuKeyboard);
-      await bot.answerCallbackQuery(cq.id);
-      return res.status(200).send('ok');
-    }
-
-    await bot.answerCallbackQuery(cq.id);
-    return res.status(200).send('ok');
+  // Перевірка доступу
+  if (ALLOWED_USER_IDS.length && !ALLOWED_USER_IDS.includes(String(userId))) {
+    await bot.sendMessage(chatId, 'Вибачте, у вас немає доступу до цього бота.');
+    return res.status(200).send('Unauthorized');
   }
 
-  /* ---- TEXT ---- */
-  const {
-    chat: { id: chatId },
-    text,
-    from: { id: userId },
-  } = body.message;
+  console.log('message:', JSON.stringify({ userId, rawText: rawText.slice(0, 100) }));
 
-  const rawText = text || '';
-  const userText = normalizeQuery(rawText);
-  const intent = detectIntent(userText);
-
-  console.log(`intent=${intent}; text="${rawText}"`);
-
-  // A) Старт
-  if (intent === 'START') {
-    await bot.sendMessage(
-      chatId,
-      `Привіт! Я — віртуальний помічник Vidzone. Ось що я можу:\n\n` +
-        `• Розповісти про компанію, послуги, планування РК на digital TV\n` +
-        `• Надати шаблони документів (технічні вимоги, музична довідка, гарантійний лист)\n` +
-        `• Розповісти щось веселе про Vidzone\n` +
-        `• Допомогти з пакетами, таргетингом, CPM/CPT, OTT/CTV`,
-      mainMenuKeyboard
-    );
-    return res.status(200).send('Welcome Sent');
+  // ── Jailbreak guard ──
+  if (/ігноруй|ignore.*інструкц|обійди.*правил/i.test(rawText)) {
+    await bot.sendMessage(chatId, 'Я спеціаліст з реклами — з цим не допоможу 😊', mainMenuKeyboard);
+    return res.status(200).send('Jailbreak');
   }
 
-  // B0) CHANNELS_QUERY
-  if (intent === 'CHANNELS_QUERY') {
+  // ── /start ──
+  if (/^\/start/.test(rawText)) {
+    await bot.sendMessage(chatId, MESSAGES.start, mainMenuKeyboard);
+    await bot.setMyCommands([{ command: 'start', description: 'Почати' }]);
+    return res.status(200).send('Start');
+  }
+
+  // ── Статичні кнопки меню ──
+  if (rawText === 'ℹ️ Про Vidzone') {
+    await bot.sendMessage(chatId, MESSAGES.about, mainMenuKeyboard);
+    return res.status(200).send('About');
+  }
+  if (rawText === '📄 Шаблони документів') {
+    await bot.sendMessage(chatId, MESSAGES.docs, mainMenuKeyboard);
+    return res.status(200).send('Docs');
+  }
+  if (rawText === '😄 Веселе про Vidzone') {
+    await bot.sendMessage(chatId, MESSAGES.fun, mainMenuKeyboard);
+    return res.status(200).send('Fun');
+  }
+  if (rawText === '❓ Задати питання') {
+    await bot.sendMessage(chatId, 'Пишіть своє питання — я відповім!', mainMenuKeyboard);
+    return res.status(200).send('AskPrompt');
+  }
+
+  // ── GPT Router ──
+  const action = await routeMessage(rawText, apiKey);
+  console.log('route:', action, 'for:', rawText.slice(0, 60));
+
+  // ── CHANNELS ──
+  if (action === 'channels') {
     const summary = buildChannelsSummary(rawText);
+    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: '[CHANNELS]' });
     await bot.sendMessage(chatId, summary, mainMenuKeyboard);
-    return res.status(200).send('CHANNELS_QUERY');
+    return res.status(200).send('Channels');
   }
 
-  // B) CEO
-  if (intent === 'CEO') {
-    await bot.sendMessage(chatId, 'CEO Vidzone — Євген Левченко.', mainMenuKeyboard);
-    return res.status(200).send('CEO Answer');
+  // ── DOCS ──
+  if (action === 'docs') {
+    await bot.sendMessage(chatId, MESSAGES.docs, mainMenuKeyboard);
+    return res.status(200).send('Docs');
   }
 
-  // C) Техвимоги
-  if (intent === 'TECH_REQS') {
-    const answer = `${TEMPLATES.TECH_REQS_HEADER}\n\n${techRequirements}`;
-    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: '[TECH_REQS] text' });
-    await bot.sendMessage(chatId, answer, {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: '📝 Завантажити Word', callback_data: 'doc_techRequirements' }],
-          [{ text: '↩️ Меню документів', callback_data: 'menu_documents' }],
-        ],
-      },
-    });
-    return res.status(200).send('TECH_REQS');
-  }
-
-  // D) Меню документів
-  if (intent === 'DOC_MENU') {
-    await bot.sendMessage(chatId, 'Оберіть шаблон документа:', documentMenuKeyboard);
-    return res.status(200).send('DOC_MENU');
-  }
-
-  // E) Жарти
-  if (intent === 'JOKE') {
-    const last = lastJokeByUser.get(userId) || 0;
-    if (Date.now() - last < JOKE_COOLDOWN_MS) {
-      await bot.sendMessage(chatId, 'Трохи зачекайте перед наступним жартом 😉', mainMenuKeyboard);
-      return res.status(200).send('JOKE_COOLDOWN');
-    }
-    const joke = getFreshJoke(chatId) || '😉 (жарти тимчасово недоступні)';
-    lastJokeByUser.set(userId, Date.now());
-    await bot.sendMessage(chatId, joke, mainMenuKeyboard);
-    return res.status(200).send('Joke Sent');
-  }
-
-  // F) Жорстка ескалація
-  if (intent === 'ESCALATE') {
-    const botResponse = TEMPLATES.ESCALATE_ANI;
-    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'Hard escalate (AVB/brand)' });
-    await bot.sendMessage(chatId, botResponse, mainMenuKeyboard);
-    return res.status(200).send('HardEscalate');
-  }
-
-  // G) Офтоп/анти-джейлбрейк
-  if (intent === 'OOS') {
-    const botResponse = await buildGuidedFallback(rawText);
-    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'Off-scope/jailbreak' });
-    await bot.sendMessage(chatId, botResponse, mainMenuKeyboard);
-    return res.status(200).send('OOS');
-  }
-
-  // H) RAG-FIRST
-  let relevantChunks = [];
-  try {
-    relevantChunks = await retrieveRelevantChunks(userText, process.env.OPENAI_API_KEY);
-  } catch (e) {
-    console.error('RAG error (primary):', e);
-  }
-
-  if (!Array.isArray(relevantChunks) || relevantChunks.length === 0) {
+  // ── JOKE ──
+  if (action === 'joke') {
+    const jokePrompt = 'Придумай короткий дотепний жарт або факт про Digital TV рекламу, OTT або медіаринок України. Україномовний, 2-4 речення, легко і по-людськи.';
     try {
-      const tokens = (normalizeQuery(userText).match(/\p{L}{3,}/gu) || []).filter(Boolean);
-      const dedup = [...new Set(tokens)];
-      const secondQuery = dedup.slice(0, 24).join(' ');
-      if (secondQuery) {
-        const sc = await retrieveRelevantChunks(secondQuery, process.env.OPENAI_API_KEY);
-        if (Array.isArray(sc) && sc.length) relevantChunks = sc;
-      }
-    } catch (e) {
-      console.error('RAG error (second chance):', e);
+      const jr = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model, max_tokens: 200, temperature: 0.9, messages: [{ role: 'user', content: jokePrompt }] })
+      });
+      const jd = await jr.json();
+      const joke = jd.choices?.[0]?.message?.content?.trim() || MESSAGES.fun;
+      await bot.sendMessage(chatId, joke, mainMenuKeyboard);
+    } catch(e) {
+      await bot.sendMessage(chatId, MESSAGES.fun, mainMenuKeyboard);
     }
+    return res.status(200).send('Joke');
   }
 
-  const knowledgeBlock = Array.isArray(relevantChunks) && relevantChunks.length
-    ? relevantChunks.join('\n\n---\n\n')
-    : '';
-
-  const VIDZONE_RX = /(vidzone|відзон|реклам|ott|cpm|пакет|таргет|охоплен|канал|digital|ролик|бренд|агенц|медіа|ssai|fast|грн|знижк|ціна|вартіст|бюджет|ефектив|фарм|аудиторі|розміщен|кампан|формат|сегмент)/i;
-  const isVidzoneTopic = VIDZONE_RX.test(rawText);
-  if (!knowledgeBlock || overlapScore(userText, knowledgeBlock) < 0.12) {
-    if (isVidzoneTopic) {
-      await bot.sendMessage(chatId, `На жаль, точної інформації з цього питання у мене немає. Зверніться до ${CONTACT_ANI} — вона підкаже.`, mainMenuKeyboard);
-      return res.status(200).send('NoKB_VidzoneTopic');
-    }
-    const botResponse = await buildGuidedFallback(rawText);
-    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'Offtopic: KB weak/empty' });
-    await bot.sendMessage(chatId, botResponse, mainMenuKeyboard);
-    return res.status(200).send('Offtopic_NoKB');
+  // ── OFFTOPIC ──
+  if (action === 'offtopic') {
+    const channelName = await pickChannelForOfftopic(rawText, apiKey);
+    const reply = 'Про це я не спеціаліст 😊 Але є канал «' + channelName + '» — там саме такий контент. До речі, на цьому каналі виходить реклама Vidzone. Якщо цікавить розміщення — ' + CONTACT_ANI + '.';
+    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: reply });
+    await bot.sendMessage(chatId, reply, mainMenuKeyboard);
+    return res.status(200).send('Offtopic');
   }
 
-  const systemPrompt = `
-Ти — офіційний AI-помічник Vidzone, компанії з розміщення Digital TV реклами в Україні.
+  // ── CHAT (смол-ток, привіт, дякую) ──
+  if (action === 'chat') {
+    const chatSystemPrompt = `Ти — дружній асистент Vidzone, компанії з Digital TV реклами в Україні.
+Спілкуйся природно і тепло, відповідай коротко (1-3 речення).
+Якщо це привітання — привітайся у відповідь і запропонуй допомогу з питань реклами.
+Якщо дякують — відповідай скромно.
+Не вигадуй інформацію про Vidzone якщо не впевнений.`;
+    try {
+      const cr = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model, max_tokens: 150, temperature: 0.7,
+          messages: [{ role: 'system', content: chatSystemPrompt }, { role: 'user', content: rawText }] })
+      });
+      const cd = await cr.json();
+      const reply = cd.choices?.[0]?.message?.content?.trim() || 'Привіт! Чим можу допомогти? 😊';
+      await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: reply });
+      await bot.sendMessage(chatId, reply, mainMenuKeyboard);
+    } catch(e) {
+      await bot.sendMessage(chatId, 'Привіт! Чим можу допомогти? 😊', mainMenuKeyboard);
+    }
+    return res.status(200).send('Chat');
+  }
+
+  // ── RAG (default) ──
+  try {
+    const chunks = await retrieveRelevantChunks(rawText, apiKey, { topK: 6, minSim: 0.20 });
+    const knowledgeBlock = chunks.join('\n\n---\n\n');
+
+    const systemPrompt = `Ти — офіційний AI-помічник Vidzone, компанії з Digital TV реклами в Україні.
 
 ПРАВИЛА:
 • Відповідай ЗАВЖДИ українською, стисло (3–6 речень), професійно та дружньо.
@@ -795,82 +749,50 @@ export default async function handler(req, res) {
 • Заборонено згадувати назви внутрішніх файлів.
 
 ФОРМАТ:
-• Ціна/CPM → конкретна цифра + що входить + контакт для деталей
+• Ціна/CPM → конкретна цифра + що входить + контакт
 • Канали/пакети → назви пакетів + конкретні канали
 • Технічні вимоги → чіткий список
-• Якщо інформація часткова → дай що є + ${CONTACT_ANI}
+• Кейси → назва бренду + результат у цифрах
 
 ПРИКЛАДИ:
-Питання: "Скільки коштує реклама?"
-Відповідь: "Базова ціна — 150 грн за 1 000 показів (ролик 15 сек). Є знижки: пакетні до -15%, бюджетні до -20%. Детальний розрахунок — ${CONTACT_ANI}."
+П: "Скільки коштує реклама?"
+В: "Базова ціна — 150 грн за 1 000 показів (ролик 15 сек). Знижки: пакетні до -15%, бюджетні до -20%. Детальний розрахунок — ${CONTACT_ANI}."
 
-Питання: "Яка аудиторія?"
-Відповідь: "Vidzone охоплює 2,5 млн домогосподарств та 6 млн людей на місяць. 93% глядачів дивляться через Smart TV."
+П: "Чому для фарми це ефективно?"
+В: "На Vidzone SOV фарми лише 14% проти 46% на ТБ — менший клаттер, більше уваги. У 1 кв. 2026 категорія +68%. Кейс Solgar: +52% продажів лише на Digital TV."
 
-Питання: "Чому для фарми це ефективно?"
-Відповідь: "На Vidzone SOV фарми лише 14% проти 46% на ТБ — менший клаттер, більше уваги до кожного ролика. У 1 кв. 2026 категорія зросла на +68%. Кейс Solgar: +52% продажів лише на Digital TV."
+П: "Яка аудиторія?"
+В: "Vidzone охоплює 2,5 млн домогосподарств та 6 млн людей на місяць. 93% — Smart TV. Середній вік глядача 35-54 роки."
 
-KB (релевантні фрагменти):
-${knowledgeBlock}
-`.trim();
+KB:
+${knowledgeBlock || 'Інформація не знайдена.'}
+`;
 
-
-  try {
     const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
+      headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: OPENAI_MODEL,
+        model,
         temperature: TEMPERATURE,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: rawText },
-        ],
-      }),
+        max_tokens: MAX_TOKENS,
+        messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: rawText }]
+      })
     });
+    const openaiData = await openaiRes.json();
+    let reply = openaiData.choices?.[0]?.message?.content?.trim();
 
-    const data = await openaiRes.json();
-    let reply = data?.choices?.[0]?.message?.content?.trim() || '';
-
-    reply = sanitizeInternalRefs(reply);
-
-    const suspicious = ['передбачаю', 'гіпотетично', 'уявіть', 'в теорії'];
-    const containsSuspicious = reply && suspicious.some((p) => reply.toLowerCase().includes(p));
-
-    // Перевірка на здоровий глузд
-    const isReplyValid = await validateReply(rawText, reply, process.env.OPENAI_API_KEY);
-    if (!isReplyValid) {
-      console.log('validateReply FAILED — reply does not match question');
-      if (isVidzoneTopic) {
-        await bot.sendMessage(chatId, `На це питання у мене немає точної відповіді. Зверніться до ${CONTACT_ANI}.`, mainMenuKeyboard);
-        return res.status(200).send('ValidateFail_Vidzone');
-      }
-      const fallback = await buildGuidedFallback(rawText);
-      await bot.sendMessage(chatId, fallback, mainMenuKeyboard);
-      return res.status(200).send('ValidateFail_Offtopic');
-    }
-
-    if (!reply || containsSuspicious) {
-      if (isVidzoneTopic) {
-        await bot.sendMessage(chatId, `На це питання у мене немає повної інформації. Найкраще уточнити у ${CONTACT_ANI}.`, mainMenuKeyboard);
-        return res.status(200).send('LLM_VidzoneFallback');
-      }
-      const botResponse = await buildGuidedFallback(rawText);
-      await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse, note: 'LLM uncertain -> offtopic' });
-      await bot.sendMessage(chatId, botResponse, mainMenuKeyboard);
-      return res.status(200).send('LLM_Polite');
+    if (!reply || !knowledgeBlock) {
+      reply = `На жаль, точної інформації з цього питання у мене немає. Зверніться до ${CONTACT_ANI} — вона підкаже.`;
     }
 
     await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: reply });
     await bot.sendMessage(chatId, reply, mainMenuKeyboard);
-    return res.status(200).send('ok');
+    return res.status(200).send('RAG_OK');
 
-  } catch (err) {
-    console.error('OpenAI error:', err);
-    await bot.sendMessage(chatId, '⚠️ Помилка. Спробуйте ще раз пізніше.', mainMenuKeyboard);
-    return res.status(500).send('OpenAI error');
+  } catch(err) {
+    console.error('RAG error:', err);
+    await bot.sendMessage(chatId, `Виникла помилка. Спробуйте ще раз або зверніться до ${CONTACT_ANI}.`, mainMenuKeyboard);
+    return res.status(200).send('RAG_Error');
   }
 }
- 
-
 
