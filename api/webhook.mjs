@@ -584,7 +584,7 @@ async function routeMessage(text, apiKey) {
     const res = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model, max_tokens: 100, temperature: 0, messages: [{ role: 'user', content: prompt }] })
+      body: JSON.stringify({ model, max_completion_tokens: 100, temperature: 0, messages: [{ role: 'user', content: prompt }] })
     });
     const data = await res.json();
     if (data.error) console.error('routeMessage API error:', JSON.stringify(data.error));
@@ -618,7 +618,7 @@ async function pickChannelForOfftopic(userText, apiKey, topic = null) {
     const res = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model, max_tokens: 60, temperature: 0, messages: [{ role: 'user', content: prompt }] })
+      body: JSON.stringify({ model, max_completion_tokens: 60, temperature: 0, messages: [{ role: 'user', content: prompt }] })
     });
     const data = await res.json();
     const raw = (data.choices?.[0]?.message?.content || '').trim().replace(/```json|```/g, '').trim();
@@ -708,7 +708,7 @@ export default async function handler(req, res) {
       const jr = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model, max_tokens: 200, temperature: 0.9, messages: [{ role: 'user', content: jokePrompt }] })
+        body: JSON.stringify({ model, max_completion_tokens: 200, temperature: 0.9, messages: [{ role: 'user', content: jokePrompt }] })
       });
       const jd = await jr.json();
       const joke = jd.choices?.[0]?.message?.content?.trim() || MESSAGES.fun;
@@ -739,7 +739,7 @@ export default async function handler(req, res) {
       const cr = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model, max_tokens: 150, temperature: 0.7,
+        body: JSON.stringify({ model, max_completion_tokens: 150, temperature: 0.7,
           messages: [{ role: 'system', content: chatSystemPrompt }, { role: 'user', content: rawText }] })
       });
       const cd = await cr.json();
@@ -791,7 +791,7 @@ ${knowledgeBlock || 'Інформація не знайдена.'}
       body: JSON.stringify({
         model,
         temperature: TEMPERATURE,
-        max_tokens: MAX_TOKENS,
+        max_completion_tokens: MAX_TOKENS,
         messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: rawText }]
       })
     });
