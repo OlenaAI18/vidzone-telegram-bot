@@ -375,6 +375,28 @@ export default async function handler(req, res) {
     return res.status(200).send('jailbreak');
   }
 
+  // CEO — статична швидка відповідь
+  if (/((?:є|е)вген(?:ий)?\s+левченко|levchenko|ceo\s+vidzone|сео\s+vidzone|керівник\s+vidzone|директор\s+vidzone|хто\s+(засну|засн|очол|керу|стоїть\s+на\s+чол)|хто\s+.{0,10}(сео|ceo))/i.test(rawText)) {
+    const reply = 'CEO Vidzone — Євген Левченко. Більше 20 років у сфері телереклами. Контакт для бізнес-питань: ' + CONTACT_ANI + '.';
+    await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: reply });
+    await bot.sendMessage(chatId, reply, mainMenuKeyboard);
+    return res.status(200).send('ceo');
+  }
+
+  // Якщо хтось пише "жарт" текстом — одразу даємо жарт
+  if (/(жарт|анекдот|смішн|веселе|розсміш)/i.test(rawText)) {
+    const last = lastJokeByUser.get(userId) || 0;
+    if (Date.now() - last < JOKE_COOLDOWN_MS) {
+      await bot.sendMessage(chatId, 'Трохи зачекайте перед наступним жартом 😉', mainMenuKeyboard);
+    } else {
+      const joke = getFreshJoke(chatId) || '😉';
+      lastJokeByUser.set(userId, Date.now());
+      await logToGoogleSheet({ timestamp: new Date().toISOString(), userId, userMessage: rawText, botResponse: joke });
+      await bot.sendMessage(chatId, joke, mainMenuKeyboard);
+    }
+    return res.status(200).send('joke');
+  }
+
   // ── GPT Router ──
   const action = await routeMessage(rawText, apiKey);
   console.log('[ROUTE]', action, '|', rawText.slice(0, 50));
@@ -406,6 +428,7 @@ export default async function handler(req, res) {
 Якщо це привітання — привітайся у відповідь і запропонуй допомогу з питань реклами.
 Якщо дякують — відповідай скромно.
 Не вигадуй інформацію про Vidzone якщо не впевнений.
+Що точно знаєш: CEO Vidzone — Євген Левченко. Контакт по рекламі — Анна Ільєнко (a.ilyenko@vidzone.com).
 НЕ використовуй markdown: зірочки **, решітки ##. Пиши звичайним текстом.`;
     try {
       const r = await fetch('https://api.openai.com/v1/chat/completions', {
