@@ -21,6 +21,9 @@ const channelsCatalog = JSON.parse(
 );
 
 const guaranteeLetterDocx = path.join(__dirname, '../data/guarantee_letter.docx');
+const offtopicChannels = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '../data/offtopic_channels.json'), 'utf-8')
+);
 const techRequirementsDocx = path.join(__dirname, '../data/technical_requirements.docx');
 const musicCertificateDocx = path.join(__dirname, '../data/music_certificate.docx');
 
@@ -111,6 +114,10 @@ function getFreshJoke(chatId) {
  * ========================= */
 const CONTACT_ANI = 'Анна Ільєнко — a.ilyenko@vidzone.com';
 const CHANNELS = Array.isArray(channelsCatalog?.items) ? channelsCatalog.items : [];
+const ALLOWED_USER_IDS = process.env.ALLOWED_USER_IDS ? process.env.ALLOWED_USER_IDS.split(',').map(s => s.trim()) : [];
+const MAX_TOKENS = 600;
+const TEMPERATURE = 0.2;
+const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-5.4-mini';
 const OFFTOPIC_DEFAULT_CHANNELS = ['[M] Орел і решка', 'TET', '[M] Комедія'];
 const OFFTOPIC_KIDS_CHANNELS = ['ПЛЮСПЛЮС', 'PIXEL', 'Cine+ Kids', '[M] МУЛЬТПРЕМЬЕРА HD'];
 const THEMATIC_FALLBACK_POOLS = [
@@ -433,8 +440,6 @@ function detectIntent(userTextNorm) {
 /* =========================
  * 7) LLM конфіг
  * ========================= */
-const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini';
-const TEMPERATURE = 0.1;
 const ENABLE_GPT_CHANNEL_ROUTER = process.env.ENABLE_GPT_CHANNEL_ROUTER !== 'false';
 
 async function pickRelevantChannelByLLM(userText = '') {
@@ -594,8 +599,18 @@ async function routeMessage(text, apiKey) {
 }
 
 // ── Офтоп: GPT вибирає канал зі списку ──
-async function pickChannelForOfftopic(userText, apiKey) {
+async function pickChannelForOfftopic(userText, apiKey, topic = null) {
   const model = process.env.OPENAI_MODEL || 'gpt-5.4-mini';
+
+  // Спочатку шукаємо по темі з JSON якщо тема вже відома
+  if (topic && offtopicChannels?.topics?.[topic]) {
+    const candidates = offtopicChannels.topics[topic];
+    const name = candidates[Math.floor(Math.random() * candidates.length)];
+    const found = CHANNELS.find(c => c.name === name);
+    if (found) { console.log('offtopic JSON hit:', topic, '->', name); return name; }
+  }
+
+  // Інакше GPT вибирає з повного списку
   const channelList = CONTENT_CHANNELS.map(c => '- ' + c.name + ': ' + c.topic).join('\n');
   const prompt = 'Тема: "' + userText.slice(0,200) + '"\nОбери ОДИН найрелевантніший канал. Поверни ТІЛЬКИ JSON: {"channel":"назва"}\n\n' + channelList;
   try {
@@ -795,4 +810,3 @@ ${knowledgeBlock || 'Інформація не знайдена.'}
     return res.status(200).send('RAG_Error');
   }
 }
-
