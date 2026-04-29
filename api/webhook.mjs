@@ -402,11 +402,7 @@ export default async function handler(req, res) {
   // Зберігаємо повідомлення користувача в історію
   addToHistory(userId, 'user', rawText);
 
-  // Перевірка доступу
-  if (ALLOWED_USER_IDS.length && !ALLOWED_USER_IDS.includes(userId)) {
-    await bot.sendMessage(chatId, 'Вибачте, у вас немає доступу до цього бота.');
-    return res.status(200).send('unauthorized');
-  }
+
 
   // /start
   if (/^\/start/.test(rawText)) {
